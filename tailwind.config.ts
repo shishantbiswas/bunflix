@@ -98,6 +98,7 @@ const config = {
     require("tailwindcss-motion"),
     require("tailwindcss-animate"),
     require("tailwind-scrollbar-hide"),
+    require('tailwindcss-intersect') 
   ],
 } satisfies Config;
 
