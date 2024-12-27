@@ -2,7 +2,7 @@
 
 import { createImageUrl } from "@/lib/utils";
 import { Info } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export function TmdbVideo({
   type,

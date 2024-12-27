@@ -1,6 +1,6 @@
 import AniwatchCategoryList from "@/components/aniwatch/aniwatch-category-list";
 import { MicIcon, CaptionsIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 type Params = Promise<{ type: string }>;
 

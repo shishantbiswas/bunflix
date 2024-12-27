@@ -2,7 +2,7 @@
 import { Search, CircleX, X, FileWarningIcon, HistoryIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useSearchBarFocus } from "@/context/searchContext";
 import { createImageUrl } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";

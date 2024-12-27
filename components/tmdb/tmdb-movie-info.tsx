@@ -1,6 +1,6 @@
 import { createImageUrl } from "@/lib/utils";
 import { Play } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export async function TmdbMovieInfo({ id }: { id: number }) {
   const data: tmdbMovieInfo = await fetchTmdbInfo("movie", id);

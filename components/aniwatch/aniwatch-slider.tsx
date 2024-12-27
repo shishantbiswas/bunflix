@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-import Link from "next/link";
+import Link from "@/components/link";
 
-export default function TmdbSlider({ anime }: { anime: aniwatchApi }) {
+export default function AnimeSlider({ anime }: { anime: aniwatchApi }) {
   const [imageindex, setImageindex] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);

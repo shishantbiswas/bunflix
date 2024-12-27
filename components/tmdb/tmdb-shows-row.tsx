@@ -1,5 +1,5 @@
 import MovieItem from "@/components/movie-item";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export default async function TmdbShowRow({
   title,

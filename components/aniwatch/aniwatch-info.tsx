@@ -1,6 +1,6 @@
 "use client";
 import { CaptionsIcon, MicIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
   return (

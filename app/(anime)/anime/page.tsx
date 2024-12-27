@@ -2,7 +2,7 @@
 import AniwatchHome from "@/components/aniwatch/aniwatch-home";
 import AniwatchSlider from "@/components/aniwatch/aniwatch-slider";
 import { MicIcon, CaptionsIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { Suspense } from "react";
 
 export async function generateMetadata() {

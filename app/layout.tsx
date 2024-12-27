@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { SearchBarFocusProvider } from "@/context/searchContext";
 import Providers from "@/context/tanstack-provider";
+import { TransitionProvider } from "@/context/transition-context";
+import { LoadingIndicator } from "@/components/loading-indicator";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,13 +17,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <SearchBarFocusProvider>
-          <body className={inter.className}>
-            <Navbar />
-            {children}
-            <Toaster closeButton richColors />
-          </body>
-        </SearchBarFocusProvider>
+        <TransitionProvider>
+          <SearchBarFocusProvider>
+            <body className={inter.className}>
+              <LoadingIndicator />
+              <Navbar />
+              {children}
+              <Toaster closeButton richColors />
+            </body>
+          </SearchBarFocusProvider>
+        </TransitionProvider>
       </Providers>
     </html>
   );

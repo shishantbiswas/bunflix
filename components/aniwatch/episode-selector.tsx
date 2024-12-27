@@ -1,6 +1,6 @@
 "use client";
 import { MicIcon, CaptionsIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import React, { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";

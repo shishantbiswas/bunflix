@@ -2,7 +2,7 @@
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { MicIcon, CaptionsIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 

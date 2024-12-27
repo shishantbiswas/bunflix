@@ -3,7 +3,7 @@
 import { searchHistory } from "@/lib/search-history";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Trash2Icon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 
 export default function HistoryPage() {
   const history = useLiveQuery(() => searchHistory.searches.toArray());

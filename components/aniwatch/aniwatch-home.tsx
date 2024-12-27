@@ -1,6 +1,6 @@
 "use client";
 import { CaptionsIcon, MicIcon } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useState } from "react";
 
 export default function AniwatchHome({ anime }: { anime: aniwatchApi }) {

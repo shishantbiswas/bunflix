@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation";
 import { useSearchBarFocus } from "@/context/searchContext";
 import NavLink from "./nav-link";
 import SearchInput from "./search-input";
-import Link from "next/link";
+import Link from "@/components/link";
 import favicon from "@/app/favicon.ico";
 import { URL } from "url";
 
