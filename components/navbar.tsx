@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { ForwardedRef, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useSearchBarFocus } from "@/context/searchContext";
+import { useSearchBarFocus } from "@/context/search-context";
 import NavLink from "./nav-link";
 import SearchInput from "./search-input";
 import Link from "@/components/link";
