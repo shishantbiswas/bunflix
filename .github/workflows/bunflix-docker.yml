@@ -7,6 +7,10 @@ on:
   push:
     branches:
       - main
+      
+permissions:
+  packages: write
+  contents: read
 
 jobs:
   build-and-push:
