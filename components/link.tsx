@@ -14,6 +14,7 @@ export default function Link({
   style?: React.CSSProperties | undefined;
   target?: HTMLAttributeAnchorTarget | undefined
 } & LinkProps & PropsWithChildren) {
+  
   const { startTransition } = useGlobalTransition();
   const router = useRouter();
 

@@ -79,7 +79,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: aniwatchApi }) {
           </div>
 
           <div className="flex flex-col gap-2 w-full lg:w-[350px] lg:max-w-[350px]">
-            {date.splice(0, 4).map((episode) => (
+            {date.slice(0, 4).map((episode) => (
               <Link
                 key={episode.id}
                 href={`/anime/${episode.id}`}
