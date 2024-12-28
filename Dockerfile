@@ -25,6 +25,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN rm next.config.mjs
+RUN mv next.config.standalone.mjs next.config.mjs
+
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN \
