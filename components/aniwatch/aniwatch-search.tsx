@@ -23,23 +23,25 @@ export default function AniwatchSearch({
       pageToFetch: 1,
     },
     getNextPageParam: (lastPage) => {
-      return {
-        hasNextPage: lastPage?.data.hasNextPage || false,
-        pageToFetch: lastPage?.data.currentPage ? lastPage.data.currentPage + 1 : 1,
-      };
+      if (lastPage) {
+        return {
+          hasNextPage: lastPage?.data.hasNextPage || false,
+          pageToFetch: lastPage?.data.currentPage ? lastPage.data.currentPage + 1 : 1,
+        };
+      }
     },
   });
 
   const fetchAnime = async (hasNextPage: boolean, pageToFetch: number) => {
     if (!hasNextPage) {
-      return;
+      return null;
     }
 
     const res = await fetch(
       `/api/search?q=${searchTerm}&type=anime&page=${pageToFetch}`,
-      {  cache:"no-store"  }
+      { cache: "no-store" }
     );
-    const data = (await res.json()) as aniwatchSearch;
+    const data = (await res.json()) as AniwatchSearch;
     return data;
   };
 
@@ -65,7 +67,7 @@ export default function AniwatchSearch({
                     href={`/anime/${episode.id}`}
                     className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
                   >
-                    <img
+                    <img loading="lazy"
                       className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                       src={episode.poster}
                       alt={episode.name}
@@ -96,7 +98,7 @@ export default function AniwatchSearch({
         })}
       </div>
 
-      <div ref={ref}></div>
+      <div ref={ref} className="size-12"></div>
     </div>
   );
 }

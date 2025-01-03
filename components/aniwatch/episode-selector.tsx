@@ -2,8 +2,8 @@
 import { MicIcon, CaptionsIcon } from "lucide-react";
 import Link from "@/components/link";
 import React, { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
+// import { Label } from "../ui/label";
+// import { Switch } from "../ui/switch";
 
 export default function EpisodeSelector({
   currentEpisodeNum,
@@ -12,12 +12,12 @@ export default function EpisodeSelector({
   lang,
 }: {
   currentEpisodeNum: string;
-  data: aniwatchInfo;
-  episode: aniwatchEpisodeData;
-  lang: "english" | "japanese";
+  data: AniwatchInfo;
+  episode: AniwatchEpisodeData;
+  lang: "en" | "jp";
 }) {
-  const [audioToogle, setAudioToogle] = useState<"english" | "japanese">(
-    lang ? lang : "japanese"
+  const [audioToogle, setAudioToogle] = useState<"en" | "jp">(
+    lang ? lang : "jp"
   );
   const [firstRender, setFirstRender] = useState(true);
   useEffect(() => setFirstRender(false), []);
@@ -25,15 +25,24 @@ export default function EpisodeSelector({
   return (
     <div className="p-4 lg:p-2 lg:pl-0 lg:w-1/4">
       <div className="flex items-center py-4 space-x-2 ">
-        <Label htmlFor="audio">English</Label>
-        <Switch
-          defaultChecked={lang === "english" ? false : true}
-          onCheckedChange={() =>
-            setAudioToogle(audioToogle === "english" ? "japanese" : "english")
-          }
-          id="audio"
-        />
-        <Label htmlFor="audio">japanese</Label>
+        <label className="inline-flex cursor-pointer items-center gap-2">
+          <span className=" text-sm font-medium dark:text-gray-300">English</span>
+          <input
+            type="checkbox"
+            checked={lang === "en" ? false : true}
+            onClick={() =>
+              setAudioToogle(audioToogle === "en" ? "jp" : "en")
+            }
+            className="peer sr-only"
+          />
+          <div
+            className="peer-focus:ring- peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-none duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-none peer-focus:ring-transparent  rtl:peer-checked:after:-translate-x-full 
+             dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
+          ></div>
+          <span className=" text-sm font-medium dark:text-gray-300">
+            Japanesse
+          </span>
+        </label>
       </div>
       <div className="flex items-center mb-6 text-sm">
         <ul
@@ -51,7 +60,7 @@ export default function EpisodeSelector({
               href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
               style={{
                 pointerEvents:
-                  audioToogle === "english"
+                  audioToogle === "en"
                     ? data.data.anime.info.stats.episodes.dub < episode.number
                       ? "none"
                       : "all"
@@ -60,27 +69,27 @@ export default function EpisodeSelector({
             >
               <button
                 disabled={
-                  audioToogle === "english"
+                  audioToogle === "en"
                     ? data.data.anime.info.stats.episodes.dub < episode.number
                     : data.data.anime.info.stats.episodes.sub < episode.number
                 }
                 style={{
                   backgroundColor:
                     Number(currentEpisodeNum) == Number(episode.number) &&
-                    audioToogle === lang
+                      audioToogle === lang
                       ? "#b91c1c"
-                      : audioToogle === "english"
-                      ? index % 2 === 0
-                        ? "#1f2937"
-                        : "#374151"
-                      : index % 2 === 0
-                      ? "#1e293b"
-                      : "#334155",
+                      : audioToogle === "en"
+                        ? index % 2 === 0
+                          ? "#1f2937"
+                          : "#374151"
+                        : index % 2 === 0
+                          ? "#1e293b"
+                          : "#334155",
                 }}
                 className="px-4 h-20 text-start text-[14px] flex w-full items-center justify-between disabled:opacity-35 leading-4"
               >
                 {episode.number}. {episode.title}
-                {audioToogle === "english" && (
+                {audioToogle === "en" && (
                   <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded text-nowrap ml-2">
                     <MicIcon size={15} />
                     {data.data.anime.info.stats.episodes.dub < episode.number
@@ -88,7 +97,7 @@ export default function EpisodeSelector({
                       : `EN`}
                   </span>
                 )}
-                {audioToogle === "japanese" && (
+                {audioToogle === "jp" && (
                   <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded text-nowrap ml-2">
                     <CaptionsIcon size={15} />
                     {data.data.anime.info.stats.episodes.sub < episode.number

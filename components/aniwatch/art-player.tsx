@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import Artplayer from "artplayer";
 import artplayerPluginHlsQuality from "artplayer-plugin-hls-quality";
-import Hls from "hls.js";
+import Hls from "hls.js/dist/hls.light.js";
 
 export default function Player({
   src,

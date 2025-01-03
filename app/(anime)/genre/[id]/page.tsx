@@ -5,7 +5,7 @@ type Params = Promise<{ id: string }>
 
 export async function generateMetadata({ params }: { params: Params }) {
   const {id} = await params
-  const data: aniwatchGenre = await fetchAnimeStudio(id);
+  const data: AniwatchGenre = await fetchAnimeStudio(id);
   return {
     title: `${data.data.genreName} - Genres`,
   };
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Params }) {
 
 export default async function Genre({ params }: { params: Params }) {
   const {id} = await params
-  const data: aniwatchGenre = await fetchAnimeStudio(id);
+  const data: AniwatchGenre = await fetchAnimeStudio(id);
   
   return (
     <div className="min-h-screen bg-black/80 p-4 pb-24">
@@ -25,7 +25,7 @@ export default async function Genre({ params }: { params: Params }) {
             key={show.id}
           >
             <Link href={`/anime/${show.id}`}>
-              <img
+              <img loading="lazy"
                 className="size-full object-cover group-hover:scale-105 transition-all"
                 src={show.poster}
                 alt={show.name}

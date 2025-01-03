@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import Link from "@/components/link";
 
-export default function AnimeSlider({ anime }: { anime: aniwatchApi }) {
+export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
   const [imageindex, setImageindex] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export default function AnimeSlider({ anime }: { anime: aniwatchApi }) {
               }}
               className="absolute size-full bg-gradient-to-br from-transparent to-black/20 rounded-md overflow-hidden cursor-pointer"
             >
-              <img
+              <img loading="lazy"
                 style={{
                   height: i === imageindex ? "" : "50%",
                   opacity: i === imageindex ? "100%" : "0%",
@@ -76,7 +76,7 @@ export default function AnimeSlider({ anime }: { anime: aniwatchApi }) {
             onClick={() => setImageindex(i)}
             className="flex w-full transition-all  duration-500 cursor-pointer rounded-md overflow-hidden  min-h-28 relative "
           >
-            <img
+            <img loading="lazy"
               src={res.poster}
               className="w-full h-full object-cover"
               alt=""

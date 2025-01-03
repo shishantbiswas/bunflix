@@ -43,7 +43,7 @@ export default function AniwatchCategoryList({ type }: { type: string }) {
       `/api/anime/category?category=${type}&page=${pageToFetch}`,
       { cache:"no-store"  }
     );
-    const data = (await res.json()) as aniwatchSearch;
+    const data = (await res.json()) as AniwatchSearch;
     return data;
   };
 
@@ -59,7 +59,7 @@ export default function AniwatchCategoryList({ type }: { type: string }) {
                   href={`/anime/${episode.id}`}
                   className="w-full h-[350px] rounded-md overflow-hidden group  relative text-end"
                 >
-                  <img
+                  <img loading="lazy"
                     className="size-full object-cover group-hover:scale-105 transition-all"
                     src={episode.poster}
                     alt={episode.name}

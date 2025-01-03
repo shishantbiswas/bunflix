@@ -1,17 +1,17 @@
-type aniwatchApi = {
+interface AniwatchHome {
   success: boolean;
   data: {
-    spotlightAnimes: spotlightAnimes[];
-    trendingAnimes: trendingAnimes[];
-    latestEpisodeAnimes: latestEpisodeAnimes[];
-    topUpcomingAnimes: topUpcomingAnimes[];
-    top10Animes: top10Animes;
-    topAiringAnimes: topAiringAnimes[];
+    spotlightAnimes: SpotlightAnimes[];
+    trendingAnimes: TrendingAnimes[];
+    latestEpisodeAnimes: LatestEpisodeAnimes[];
+    topUpcomingAnimes: TopUpcomingAnimes[];
+    top10Animes: Top10Animes;
+    topAiringAnimes: TopAiringAnimes[];
     genres: string[];
   };
 };
 
-type topAiringAnimes = {
+interface TopAiringAnimes {
   id: string;
   name: string;
   jname?: string;
@@ -21,13 +21,13 @@ type topAiringAnimes = {
   otherInfo: string[];
 };
 
-type top10Animes = {
-  today: top10AnimesResult[];
-  week: top10AnimesResult[];
-  month: top10AnimesResult[];
+interface Top10Animes {
+  today: Top10AnimesResult[];
+  week: Top10AnimesResult[];
+  month: Top10AnimesResult[];
 };
 
-type top10AnimesResult = {
+interface Top10AnimesResult {
   id: string;
   name: string;
   description: string;
@@ -35,7 +35,7 @@ type top10AnimesResult = {
   episodes: { sub: number; dub: number };
 };
 
-type topUpcomingAnimes = {
+interface TopUpcomingAnimes {
   id: string;
   name: string;
   duration: string;
@@ -45,7 +45,7 @@ type topUpcomingAnimes = {
   episodes: { sub: number; dub: number };
 };
 
-type latestEpisodeAnimes = {
+interface LatestEpisodeAnimes {
   id: string;
   name: string;
   description: string;
@@ -55,14 +55,14 @@ type latestEpisodeAnimes = {
   episodes: { sub: number; dub: number };
 };
 
-type trendingAnimes = {
+interface TrendingAnimes {
   rank: number;
   id: string;
   name: string;
   poster: string;
 };
 
-type spotlightAnimes = {
+interface SpotlightAnimes {
   rank: number;
   id: string;
   name: string;
@@ -73,7 +73,7 @@ type spotlightAnimes = {
   otherInfo: [string, string, string, string];
 };
 
-type aniwatchInfo = {
+interface AniwatchInfo {
   data: {
     anime: {
       info: {
@@ -149,7 +149,7 @@ type aniwatchInfo = {
   };
 };
 
-type aniwatchEpisodeData = {
+interface AniwatchEpisodeData {
   success: boolean;
   data: {
     totalEpisodes: number;
@@ -162,7 +162,7 @@ type aniwatchEpisodeData = {
   };
 };
 
-type aniwatchSearch = {
+interface AniwatchSearch {
   data: {
     animes: Anime[];
     mostPopularAnimes: {
@@ -181,7 +181,7 @@ type aniwatchSearch = {
   };
 };
 
-type Anime = {
+interface Anime {
   id: string;
   name: string;
   poster: string;
@@ -192,7 +192,7 @@ type Anime = {
   episodes: { sub: number; dub: number };
 };
 
-type aniwatchEpisodeSrc = {
+interface AniwatchEpisodeSrc {
   data: {
     tracks: { file: string; kind: string; label: string; default: boolean }[];
     intro: { start: number; end: number };
@@ -203,34 +203,34 @@ type aniwatchEpisodeSrc = {
   };
 };
 
-type aniwatchGenre = {
+interface AniwatchGenre {
   data: {
     genreName: string;
     animes: Anime[];
     genres: string[];
-    topAiringAnimes: topAiringAnimes[];
+    topAiringAnimes: TopAiringAnimes[];
     totalPages: number;
     hasNextPage: boolean;
     currentPage: number;
   };
 };
 
-type aniwatchStudio = {
+interface AniwatchStudio {
   producerName: string;
   animes: Anime[];
   genres: string[];
-  topAiringAnimes: topAiringAnimes[];
+  topAiringAnimes: TopAiringAnimes[];
   totalPages: number;
   hasNextPage: boolean;
   currentPage: number;
 };
 
-type aniwatchCategories = {
+interface AniwatchCategories {
   success: boolean;
   data: {
     genres: string[];
     animes: Anime[];
-    top10Animes: top10Animes;
+    top10Animes: Top10Animes;
     category: string;
     totalPages: number;
     hasNextPage: boolean;
@@ -238,7 +238,7 @@ type aniwatchCategories = {
   };
 };
 
-type aniwatchCategoriesName =
+type AniwatchCategoriesName =
   | "most-favorite"
   | "most-popular"
   | "subbed-anime"
@@ -253,3 +253,15 @@ type aniwatchCategoriesName =
   | "ona"
   | "tv"
   | "completed";
+
+interface AniwatchServer {
+  success: boolean;
+  data: {
+    dub: {
+      serverName: string
+    }[],
+    sub: {
+      serverName: string
+    }[]
+  }
+}

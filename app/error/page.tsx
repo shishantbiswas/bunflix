@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { RefreshCcw } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -39,10 +38,7 @@ export default async function Error({ searchParams }: { searchParams: SearchPara
                         href={'/'}
                         className="inline-flex items-center px-4 py-2"
                     >
-                        <Button>
-                            Go Home
-
-                        </Button>
+                        Go Home
                     </Link>
                 </div>
             </div>

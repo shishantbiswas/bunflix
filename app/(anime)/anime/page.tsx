@@ -10,7 +10,7 @@ export async function generateMetadata() {
 }
 
 export default async function Anime() {
-  const data: aniwatchApi = await aniwatchHomeApi();
+  const data: AniwatchHome = await aniwatchHomeApi();
 
   return (
     <div className="pb-24 bg-black/80 min-h-screen">
@@ -56,12 +56,12 @@ async function aniwatchHomeApi() {
     throw new Error(`Fetch failed at Anime Slider`);
   }
 
-  const data = (await response.json()) as aniwatchApi;
+  const data = (await response.json()) as AniwatchHome;
 
   return data;
 }
 
-const AniwatchCategories = ({ anime }: { anime: aniwatchApi }) => {
+const AniwatchCategories = ({ anime }: { anime: AniwatchHome }) => {
   const categories = [
     "most-favorite",
     "most-popular",
@@ -116,7 +116,7 @@ const AniwatchCategories = ({ anime }: { anime: aniwatchApi }) => {
 const AnimeCategoryList = async ({
   category,
 }: {
-  category: aniwatchCategoriesName;
+  category: AniwatchCategoriesName;
 }) => {
   const data = await fetchAniwatchCategories(category);
 
@@ -133,7 +133,7 @@ const AnimeCategoryList = async ({
             href={`/anime/${episode.id}`}
             className={`min-w-[190px] intersect-once intersect:motion-preset-slide-left motion-delay-100 lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end`}
           >
-            <img
+            <img loading="lazy"
               className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
               src={episode.poster}
               alt={episode.name}
@@ -161,7 +161,7 @@ const AnimeCategoryList = async ({
 };
 
 async function fetchAniwatchCategories(
-  category: aniwatchCategoriesName,
+  category: AniwatchCategoriesName,
   page?: number | string
 ) {
   const response = await fetch(
@@ -173,7 +173,7 @@ async function fetchAniwatchCategories(
   if (!response.ok) {
     throw new Error(`Search failed in Categories`);
   }
-  const data = (await response.json()) as aniwatchCategories;
+  const data = (await response.json()) as AniwatchCategories;
 
   return data;
 }

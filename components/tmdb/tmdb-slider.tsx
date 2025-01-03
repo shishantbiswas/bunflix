@@ -4,7 +4,7 @@ import { Ref, useEffect, useRef, useState } from "react";
 
 import Link from "@/components/link";
 
-export default function TmdbSlider({ data }: { data: TmdbMovie }) {
+export default function TmdbSlider({ data }: { data: TMDBMovie }) {
   const [imageindex, setImageindex] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export default function TmdbSlider({ data }: { data: TmdbMovie }) {
               }}
               className="absolute size-full bg-gradient-to-br from-transparent to-black/10 rounded-md overflow-hidden cursor-pointer"
             >
-              <img
+              <img loading="lazy"
                 style={{
                   height: i === imageindex ? "" : "50%",
                   opacity: i === imageindex ? "100%" : "0%",
@@ -82,7 +82,7 @@ export default function TmdbSlider({ data }: { data: TmdbMovie }) {
             onClick={() => setImageindex(i)}
             className="flex w-full transition-all  duration-500 cursor-pointer rounded-md overflow-hidden  min-h-28 relative "
           >
-            <img
+            <img loading="lazy"
               src={createImageUrl(
                 res.backdrop_path || res.poster_path,
                 "original"

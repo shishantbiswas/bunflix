@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   if (!response.ok) {
     return Response.json({ error: "failed to fetch category info" });
   }
-  const data = (await response.json()) as aniwatchCategories;
+  const data = (await response.json()) as AniwatchCategories;
 
   return Response.json(data, {
     headers: {

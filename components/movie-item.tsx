@@ -53,10 +53,9 @@ export default function MovieItem({
         <div className="absolute top-0 size-full animate-pulse bg-gray-400"></div>
       )}
       {!error ? (
-        <img
+        <img loading="lazy"
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}
-          loading="lazy"
           className={`absolute top-0 size-full object-cover object-center`}
           src={
             image

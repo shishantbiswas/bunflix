@@ -1,17 +1,10 @@
 import AniwatchSearch from "@/components/aniwatch/aniwatch-search";
-import AnimeSearchSidebar from "@/components/aniwatch/aniwatch-search-sidebar";
+import {TmdbSearchSidebar,AnimeSearchSidebar} from "@/components/aniwatch/aniwatch-search-sidebar";
 import SearchSkeleton from "@/components/fallback-ui/search-skeleton";
 import TmdbSearch from "@/components/tmdb/tmdb-search";
 import { Suspense } from "react";
 
-type Params = Promise<{ query: [string, string] }>;
-type SearchParams = Promise<{
-  type: AnimeType;
-  lang: AnimeLanguage;
-  sort: AnimeSort;
-  status: AnimeStaus;
-  page?: string;
-}>;
+type Params = Promise<{ query: ["anime" | "multi" | (string & {}), string] }>;
 
 export async function generateMetadata({ params }: { params: Params }) {
   const { query } = await params;
@@ -19,60 +12,40 @@ export async function generateMetadata({ params }: { params: Params }) {
   const searchTerm = query[1];
 
   return {
-    title: `'${decodeURIComponent(searchTerm)}' in ${
-      type == "movie" ? "Movie" : type === "anime" ? "Anime" : "TV Shows"
-    } - Nextflix`,
+    title: `'${decodeURIComponent(searchTerm)}' in ${type == "movie" ? "Movie" : type === "anime" ? "Anime" : "TV Shows"
+      } - Nextflix`,
   };
 }
 export default async function Query({
   params,
-  searchParams,
 }: {
   params: Params;
-  searchParams?: SearchParams
 }) {
   const { query } = await params;
-  const awaitedSearchParams = await searchParams;
 
   const type = query[0];
   const searchTerm = query[1];
 
-  if (type === "anime") {
-
-    return (
-      <div className=" bg-black/80 min-h-screen">
-        <Suspense fallback={<SearchSkeleton />}>
-          <div className="pb-24 p-4 md:flex-row flex-col flex gap-4">
-            <AnimeSearchSidebar search={searchTerm} />
-            <AniwatchSearch searchTerm={searchTerm} />
-          </div>
-        </Suspense>
-      </div>
-    );
-  }
 
   return (
     <div className=" bg-black/80 min-h-screen">
-      <Suspense fallback={<SearchSkeleton />}>
-        <TmdbSearch search={searchTerm} />
-      </Suspense>
+      <div className="pb-24 p-4 md:flex-row flex-col flex gap-4">
+        {type == "anime" ? (
+          <>
+            <AnimeSearchSidebar search={searchTerm} />
+            <Suspense fallback={<SearchSkeleton />}>
+              <AniwatchSearch searchTerm={searchTerm} />
+            </Suspense>
+          </>
+        ) : (
+          <>
+            <TmdbSearchSidebar search={searchTerm} />
+            <Suspense fallback={<SearchSkeleton />}>
+              <TmdbSearch searchTerm={searchTerm} />
+            </Suspense>
+          </>
+        )}
+      </div>
     </div>
   );
 }
-
-type AnimeType = "all" | "ona" | "special" | "movie" | "tv" | "ova" | "music";
-type AnimeLanguage = "sub-&-dub" | "sub" | "dub";
-type AnimeStaus =
-  | "finished-airing"
-  | "currently-airing"
-  | "not-yet-aired"
-  | "all";
-type AnimeSort =
-  | "default"
-  | "recently-added"
-  | "name-az"
-  | "most-watched"
-  | "score"
-  | "released-date"
-  | "recently-updated";
-

@@ -20,24 +20,24 @@ type MovieResults = {
   known_for?: any[];
   profile_path?: string;
   media_type: "movie" | "tv" | "person" | "collection";
-  seasons: tmdbMultiSeason[];
+  seasons: TMDBMultiSeason[];
 };
 
-type TmdbMovie = {
+type TMDBMovie = {
   page: number;
   results: MovieResults[];
   total_pages: number;
   total_results: number;
 };
 
-type tmdbMultiSearch = {
-  results: tmdbMultiResult[];
+type TMDBMultiSearch = {
+  results: TMDBMultiResult[];
   total_pages: number;
   total_results: number;
   page: number;
 };
 
-type tmdbMultiResult = {
+type TMDBMultiResult = {
   id: number;
   genre_ids: string[];
   video: boolean;
@@ -58,11 +58,11 @@ type tmdbMultiResult = {
   imdb_id: number;
   name: string;
   image: string;
-  media_type: "movie" | "tv" | "person" | "collection";
-  seasons: tmdbMultiSeason[];
+  media_type: "movie" | "tv" | "person" | "collection" | &(string);
+  seasons: TMDBMultiSeason[];
 };
 
-type tmdbMultiSeason = {
+type TMDBMultiSeason = {
   air_date: string;
   episode_count: number;
   id: number;
@@ -73,7 +73,7 @@ type tmdbMultiSeason = {
   vote_average: number;
 };
 
-type tmdbMovieInfo = {
+type TMDBMovieInfo = {
   adult: boolean;
   backdrop_path: string;
   belongs_to_collection: {
@@ -112,7 +112,7 @@ type tmdbMovieInfo = {
   vote_count: boolean;
 };
 
-type tmdbTvInfo = {
+type TMDBTvInfo = {
   adult: boolean;
   title: string;
   backdrop_path: string;
@@ -176,9 +176,9 @@ type tmdbTvInfo = {
   vote_count: number;
 };
 
-type tmdbEpisodesInfo = {
+type TMDBEpisodesInfo = {
   air_date: string;
-  episodes: tmdbEpisodeResult[];
+  episodes: TMDBEpisodeResult[];
   name: string;
   overview: string;
   id: number;
@@ -187,7 +187,7 @@ type tmdbEpisodesInfo = {
   vote_average: number;
 };
 
-type tmdbEpisodeResult = {
+type TMDBEpisodeResult = {
   air_date: string;
   season: number | string;
   episode: number | string;

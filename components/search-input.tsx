@@ -8,13 +8,14 @@ import { createImageUrl } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
 import { searchHistory } from "@/lib/search-history";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function SearchInput() {
   const [term, setTerm] = useState("");
   const [IsEmpty, setIsEmpty] = useState(false);
   const [type, setType] = useState<"multi" | "anime">("multi");
-  const [result, setResult] = useState<tmdbMultiSearch | null>();
-  const [anime, setAnime] = useState<aniwatchSearch | null>();
+  const [result, setResult] = useState<TMDBMultiSearch | null>();
+  const [anime, setAnime] = useState<AniwatchSearch | null>();
 
   const debounceSearch = useDebounce(term);
   const router = useRouter();
@@ -222,7 +223,7 @@ const TmdbInSearchArray = ({
   show,
   term,
 }: {
-  show: tmdbMultiResult;
+  show: TMDBMultiResult;
   term: string;
 }) => {
   const [isloaded, setIsloaded] = useState(false);
@@ -243,7 +244,7 @@ const TmdbInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img
+            <img loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{
@@ -315,7 +316,7 @@ const AnimeInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img
+            <img loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{
@@ -369,18 +370,3 @@ const highlightSearchText = (text: string, highlight: string) => {
     </span>
   );
 };
-
-
-function useDebounce<T>(value: T, delay = 700) {
-  const [debounceValue, setDebounceValue] = useState<T>(value);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDebounceValue(value);
-    }, delay);
-
-    return () => clearTimeout(timeout);
-  }, [value, delay]);
-
-  return debounceValue
-}

@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import Player from "./art-player";
 
+
 export default async function AniwatchPlayer({
   episodeId,
   ep,
@@ -9,17 +10,17 @@ export default async function AniwatchPlayer({
 }: {
   episodeId: string;
   ep: string;
-  lang: "english" | "japanese";
+  lang: "en" | "jp";
 }) {
   if (!ep) return;
   const server = await fetchAniwatchEpisodeServer(episodeId, ep);
-  if (lang === "english") {
+  if (lang === "en") {
 
     if (server.data.dub.length === 0) {
       redirect(`/error?err=${encodeURIComponent("No Dub Available")}`)
     }
 
-    const dub: aniwatchEpisodeSrc = await fetchAniwatchEpisodeSrcDub(
+    const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrcDub(
       episodeId,
       ep,
       server.data.dub[0].serverName
@@ -31,10 +32,10 @@ export default async function AniwatchPlayer({
   } else {
 
     if (server.data.sub.length === 0) {
-      redirect(`/anime/${episodeId}?ep=${ep}&lang=english&num=1`)
+      redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`)
     }
 
-    const sub: aniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
+    const sub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
       server.data.sub[0].serverName
@@ -87,7 +88,7 @@ async function fetchAniwatchEpisodeServer(id: string, ep: string) {
       `${process.env.ANIWATCH_API}/api/v2/hianime/episode/servers?animeEpisodeId=${id}?ep=${ep}`,
       { cache: "no-store" }
     );
-    const data = await response.json();
+    const data = await response.json() as AniwatchServer;
 
     return data;
   } catch (error) {

@@ -51,7 +51,7 @@ export default async function Page({
 
   const data: MovieResults = await fetchTmdbInfo(type, id);
 
-  let seasonData: tmdbEpisodesInfo | undefined;
+  let seasonData: TMDBEpisodesInfo | undefined;
   if (type === "tv") {
     seasonData = await fetchSeasonData(
       data.id,

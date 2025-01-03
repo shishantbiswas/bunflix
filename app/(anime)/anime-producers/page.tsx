@@ -46,7 +46,7 @@ export default async function Categories({
             href={`/anime/${episode.id}`}
             className="w-full h-[350px] rounded-md overflow-hidden group  relative text-end"
           >
-            <img
+            <img loading="lazy"
               className="size-full object-cover group-hover:scale-105 transition-all"
               src={episode.poster}
               alt={episode.name}
@@ -87,6 +87,6 @@ const fetchAniwatchProducer = async (
     `${process.env.ANIWATCH_API}/api/v2/hianime/producer/${name}`,
     { cache: "no-store" }
   );
-  const data = (await res.json()) as aniwatchSearch;
+  const data = (await res.json()) as AniwatchSearch;
   return data;
 };

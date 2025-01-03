@@ -9,7 +9,7 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const data: TmdbMovie = await fetchHeroData();
+  const data: TMDBMovie = await fetchHeroData();
 
   const key = process.env.TMDB_KEY;
   const baseUrl = "https://api.themoviedb.org/3";

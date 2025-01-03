@@ -21,8 +21,8 @@ If you wish to deploy it there's a guide below screenshots
 
 
 ### Screenshots
-<img src='./images/Screenshot_20241227_225145.webp' style="border-radius:5px;"/>
-<img src='./images/Screenshot_20241227_231423.webp' style="border-radius:5px;"/>
+<img src='./assets/images/Screenshot_20241227_225145.webp' style="border-radius:5px;"/>
+<img src='./assets/images/Screenshot_20241227_231423.webp' style="border-radius:5px;"/>
 
 
 ### Setup

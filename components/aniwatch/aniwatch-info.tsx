@@ -2,11 +2,11 @@
 import { CaptionsIcon, MicIcon } from "lucide-react";
 import Link from "@/components/link";
 
-export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
+export function AniwatchInfo({ data }: { data: AniwatchInfo }) {
   return (
     <div className="p-4">
       <div>
-        <img
+        <img loading="lazy"
           className="-z-10 fixed top-0 size-full object-cover blur-2xl "
           src={data.data.anime.info.poster}
           alt={data.data.anime.info.name}
@@ -108,7 +108,7 @@ export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
                 href={`/anime/${episode.id}`}
                 className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
               >
-                <img
+                <img loading="lazy"
                   className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                   src={episode.poster}
                   alt={episode.name}
@@ -144,7 +144,7 @@ export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
                 href={`/anime/${episode.id}`}
                 className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
               >
-                <img
+                <img loading="lazy"
                   className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                   src={episode.poster}
                   alt={episode.name}
@@ -183,7 +183,7 @@ export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
                     key={episode.id}
                     className="flex gap-2"
                   >
-                    <img
+                    <img loading="lazy"
                       src={episode.poster}
                       className="h-20 rounded-sm"
                       alt={episode.name}
@@ -209,7 +209,7 @@ export function AniwatchInfo({ data }: { data: aniwatchInfo }) {
                 key={episode.id}
                 className="flex gap-2"
               >
-                <img
+                <img loading="lazy"
                   src={episode.poster}
                   className="h-20 rounded-sm"
                   alt={episode.name}

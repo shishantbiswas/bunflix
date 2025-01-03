@@ -9,11 +9,14 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page");
   const key = process.env.TMDB_KEY;
 
+  if(!q){
+    return Response.json({ Error: "query not provided" });
+  }
+
   if (type === "multi") {
     try {
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/multi?query=${q}&page=${
-          page || 1
+        `https://api.themoviedb.org/3/search/multi?query=${q}&page=${page || 1
         }&api_key=${key}`,
         { cache: "no-store" }
       );
@@ -30,8 +33,7 @@ export async function GET(request: NextRequest) {
   } else {
     try {
       const response = await fetch(
-        `${process.env.ANIWATCH_API}/api/v2/hianime/search?q=${q}&page=${
-          page || 1
+        `${process.env.ANIWATCH_API}/api/v2/hianime/search?q=${q}&page=${page || 1
         }`,
         {
           cache: "no-store",

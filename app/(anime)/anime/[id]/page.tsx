@@ -1,12 +1,11 @@
 import { AniwatchInfo } from "@/components/aniwatch/aniwatch-info";
 import AniwatchPlayer from "@/components/aniwatch/aniwatch-player";
 import EpisodeSelector from "@/components/aniwatch/episode-selector";
-import { CircleArrowDownIcon } from "lucide-react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 type Params = Promise<{ id: string }>
-type SearchParams = Promise<{ ep: string; num: string; lang: "english" | "japanese" }>
+type SearchParams = Promise<{ ep: string; num: string; lang: "en" | "jp" }>
 
 export async function generateMetadata({
   params,
@@ -18,7 +17,7 @@ export async function generateMetadata({
   const { id } = await params
   const { num, ep, lang } = await searchParams
 
-  const data: aniwatchInfo = await fetchAniwatchId(id);
+  const data: AniwatchInfo = await fetchAniwatchId(id);
 
   const title = `${num ? `${num}` : "1"}  - ${data.data.anime?.info.name
     }`;
@@ -50,13 +49,13 @@ export default async function Anime({
   const { id } = await params
   const { num, ep, lang } = await searchParams
 
-  const episode: aniwatchEpisodeData = await fetchAniwatchEpisode(id);
+  const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
 
   if (!ep) {
-    redirect(`/anime/${episode.data.episodes[0].episodeId}&lang=japanese&num=1`);
+    redirect(`/anime/${episode.data.episodes[0].episodeId}&lang=jp&num=1`);
   }
 
-  const data: aniwatchInfo = await fetchAniwatchId(id);
+  const data: AniwatchInfo = await fetchAniwatchId(id);
 
   return (
     <div className="bg-black/60 min-h-screen space-y-6 pb-24">
@@ -95,14 +94,14 @@ async function fetchAniwatchEpisode(seasonId: string) {
   }
 }
 
-async function fetchAniwatchId(id: string): Promise<aniwatchInfo> {
+async function fetchAniwatchId(id: string): Promise<AniwatchInfo> {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API}/api/v2/hianime/anime/${id}`,
       { cache: "no-store" }
     );
 
-    const data: aniwatchInfo = await response.json();
+    const data: AniwatchInfo = await response.json();
 
     return data;
   } catch (error) {

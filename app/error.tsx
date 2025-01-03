@@ -1,5 +1,4 @@
 "use client"
-import { Button } from "@/components/ui/button"
 import { RefreshCcw } from "lucide-react"
 
 export default function ErrorPage() {
@@ -25,13 +24,13 @@ export default function ErrorPage() {
           We apologize for the inconvenience. Please try again later or refresh the page.
         </p>
         <div className="mt-8">
-          <Button
+          <button
             onClick={() => window.location.reload()}
             className="inline-flex items-center px-4 py-2"
           >
             <RefreshCcw className="mr-2 h-4 w-4" />
             Refresh Page
-          </Button>
+          </button>
         </div>
       </div>
     </div>

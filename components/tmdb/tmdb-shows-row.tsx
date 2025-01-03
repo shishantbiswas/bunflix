@@ -38,7 +38,7 @@ export default async function TmdbShowRow({
   );
 }
 
-export async function fetchData(endpoint: string): Promise<TmdbMovie | null> {
+export async function fetchData(endpoint: string): Promise<TMDBMovie | null> {
   try {
     const response = await fetch(endpoint, {
       

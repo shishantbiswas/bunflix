@@ -1,12 +1,17 @@
-import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import "./globals.css";
 import { Toaster } from "sonner";
-
+import localFont from 'next/font/local'
 import { LoadingIndicator } from "@/components/loading-indicator";
 import Providers from "@/context/providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = localFont({
+  src: [
+    {
+      path: "../assets/fonts/Inter-VariableFont.ttf",
+    }
+  ]
+})
 
 export default function RootLayout({
   children,

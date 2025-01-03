@@ -1,11 +1,12 @@
+'use client'
 import Link from "@/components/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function NavLink({
   icon,
   linkName,
   href,
-  currentRoute,
   onMouseEnter,
   onClick,
   showIcon,
@@ -13,11 +14,11 @@ export default function NavLink({
   icon?: React.ReactNode;
   linkName: string;
   href: string;
-  currentRoute?: boolean;
   onMouseEnter: () => void;
   onClick: () => void;
   showIcon?: boolean;
 }) {
+const currentRoute = usePathname()===href
   return (
     <Link
       href={href}

@@ -1,7 +1,7 @@
 import AniwatchCategoryList from "@/components/aniwatch/aniwatch-category-list";
 
 // https://stackoverflow.com/questions/79119608/pageprops-type-resolution-with-basic-example
-type SearchParams = Promise<{ type: aniwatchCategoriesName }>
+type SearchParams = Promise<{ type: AniwatchCategoriesName }>
 
 export async function generateMetadata({
   searchParams,

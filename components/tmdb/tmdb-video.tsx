@@ -18,12 +18,12 @@ export function TmdbVideo({
   data: MovieResults;
   url: string;
   provider: string;
-  seasonData?: tmdbEpisodesInfo | undefined;
+  seasonData?: TMDBEpisodesInfo | undefined;
   epNo?: number | string;
 }) {
   return (
     <div className=" pb-24 bg-black/60">
-      <img
+      <img loading="lazy"
         className="-z-10 fixed top-0 size-full object-cover blur-2xl "
         src={createImageUrl(data.backdrop_path, "original")}
         alt={data.name}
@@ -152,7 +152,7 @@ export function TmdbVideo({
                     key={e.id}
                     className="flex gap-2 w-full bg-black/10 hover:bg-black/40 rounded-md p-2"
                   >
-                    <img
+                    <img loading="lazy"
                       className=" rounded-sm  h-full w-[200px]"
                       src={createImageUrl(e.still_path, "w500")}
                       alt={e.name}
