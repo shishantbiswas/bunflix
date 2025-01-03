@@ -43,7 +43,7 @@ export default function TmdbShowGrid({
   useEffect(() => {
     fetchNextPage();
   }, [inView]);
-   
+
   return (
     <div className="flex flex-col w-full">
       <h1 className="font-bold text-3xl lg:text-5xl p-4 capitalize">
@@ -57,7 +57,7 @@ export default function TmdbShowGrid({
                 .map((episode, i) => (
                   <Link
                     key={episode.id + i}
-                    href={`/video/${type}/${episode.id}?provider=vidsrc`}
+                    href={`/video/${type}/${episode.id}${type.toLocaleLowerCase() == "tv" ? "?season=1&episode=1&provider=vidsrc" : "?provider=vidsrc"}`}
                     className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
                   >
                     <img
@@ -81,7 +81,7 @@ export default function TmdbShowGrid({
           );
         })}
       </div>
-      <div ref={ref} className="size-12"/>
+      <div ref={ref} className="size-12" />
     </div>
   );
 }

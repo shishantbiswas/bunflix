@@ -29,7 +29,7 @@ export default function Navbar() {
   const [navIndex, setNavIndex] = useState(2);
   const { isSearchOpen, setIsSearchOpen } = useSearchBarFocus();
   const linkref = useRef<HTMLDivElement>(null);
-  const [openDropdown, setOpenDropdown] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(false);
   const y = useWindowScroll(60)
 
   const navLinks: LinkArray[] = [

@@ -153,7 +153,7 @@ export function TmdbVideo({
                     className="flex gap-2 w-full bg-black/10 hover:bg-black/40 rounded-md p-2"
                   >
                     <img loading="lazy"
-                      className=" rounded-sm  h-full w-[200px]"
+                      className=" rounded-sm  h-full aspect-video"
                       src={createImageUrl(e.still_path, "w500")}
                       alt={e.name}
                     />
