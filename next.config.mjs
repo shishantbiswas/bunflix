@@ -4,14 +4,14 @@ const nextConfig = {
     experimental: {
         reactCompiler: true,
     },
-    logging: {
-        fetches: {
-            fullUrl: true
-        }
-    },
-    devIndicators: {
-        appIsrStatus: false,
-    },
+    // logging: {
+    //     fetches: {
+    //         fullUrl: true
+    //     }
+    // },
+    // devIndicators: {
+    //     appIsrStatus: false,
+    // },
 
 };
 

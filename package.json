@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:skip-output-check": "NEXT_SKIP_OUTPUT_CHECK=true next build",
     "start": "next start",
     "lint": "next lint"
   },

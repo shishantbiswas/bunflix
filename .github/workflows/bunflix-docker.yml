@@ -24,8 +24,10 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker Image
+        env:
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest .
+          docker build --build-arg TMDB_KEY=${{ secrets.TMDB_KEY }} -t ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest .
           docker tag ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
 
       - name: Push Docker Image
