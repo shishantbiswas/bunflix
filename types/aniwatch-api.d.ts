@@ -258,10 +258,16 @@ interface AniwatchServer {
   success: boolean;
   data: {
     dub: {
-      serverName: string
+      serverName: string, serverId: number
     }[],
     sub: {
-      serverName: string
+      serverName: string, serverId: number
     }[]
+    raw: {
+      serverName: string, serverId: number
+    }[]
+    episodeId: string,
+    episodeNo: number
+
   }
 }

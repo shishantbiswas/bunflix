@@ -20,10 +20,11 @@ export default async function AniwatchPlayer({
       redirect(`/error?err=${encodeURIComponent("No Dub Available")}`)
     }
 
-    const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrcDub(
+    const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
-      server.data.dub[0].serverName
+      server.data.dub[0].serverName,
+      "dub"
     );
 
     return (
@@ -31,14 +32,15 @@ export default async function AniwatchPlayer({
     );
   } else {
 
-    if (server.data.sub.length === 0) {
+    if (server.data.sub.length === 0 && server.data.raw.length === 0) {
       redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`)
     }
 
     const sub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
-      server.data.sub[0].serverName
+      !server.data.sub[0] ? server.data.raw[0].serverName : server.data.sub[0].serverName,
+      !server.data.sub[0] ? "raw" : "sub"
     );
 
     if (sub.data.sources.length === 0) {
@@ -51,28 +53,19 @@ export default async function AniwatchPlayer({
   }
 }
 
-async function fetchAniwatchEpisodeSrc(id: string, ep: string, server: string) {
-  const response = await fetch(
-    `${process.env.ANIWATCH_API}/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? server : "vidstreaming"
-    }`,
-    { cache: "force-cache" }
-  );
 
-  const data = await response.json();
-  return data;
-}
-
-async function fetchAniwatchEpisodeSrcDub(
+async function fetchAniwatchEpisodeSrc(
   id: string,
   ep: string,
-  server: string
+  server: string,
+  category: string
 ) {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API
       }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? server : "vidstreaming"
-      }&category=dub`,
-      { cache: "no-store" }
+      }&category=${category}`,
+      { next: { revalidate: 3000, tags: ["anime"] } }
     );
     const data = await response.json();
 
@@ -86,7 +79,7 @@ async function fetchAniwatchEpisodeServer(id: string, ep: string) {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API}/api/v2/hianime/episode/servers?animeEpisodeId=${id}?ep=${ep}`,
-      { cache: "no-store" }
+      { next: { revalidate: 3000, tags: ["anime"] } }
     );
     const data = await response.json() as AniwatchServer;
 

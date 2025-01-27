@@ -102,12 +102,12 @@ export default function Navbar() {
 
 
   return (
-    <section className="h-20 bg-black/80 w-full relative flex justify-center">
+    <section className="h-20 bg-black/80 w-full relative sm:flex justify-center hidden">
       <nav className={`bg-black/30 backdrop-blur h-20 transition-all ${y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-[500] top-0 flex items-center justify-between `}>
         <div className="flex items-center">
           <img loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />
           <div ref={linkref} className="group flex">
-            {navLinks.slice(0, 2).map((link) => (
+            {navLinks.slice(0, 3).map((link) => (
               <NavLink
                 key={link.id}
                 onClick={link.onClick}
@@ -139,7 +139,6 @@ export default function Navbar() {
             className=" flex items-center gap-2 py-1.5 px-3"
           >
             <Search color="white" className=" size-6" />
-            <span className="hidden lg:flex">Search</span>
           </button>
           <Link
             target="_blank"
@@ -174,7 +173,7 @@ function Dropdown({ navLinks, openDropdown, setOpenDropdown }: {
       <div className={`h-12 w-24 -bottom-12 absolute ${openDropdown ? " pointer-events-auto" : "pointer-events-none"}`} />
       <div className={`rounded-lg bg-black/70 space-y-2 backdrop-blur-3xl p-2 absolute top-20 translate-x-1/2 -right-1/2 transition-all duration-300
         ${openDropdown ? "opacity-100 pointer-events-auto translate-y-[-30px]" : "opacity-0 pointer-events-none translate-y-0"} `}>
-        {navLinks.slice(2).map((link) => (
+        {navLinks.slice(3).map((link) => (
           <Link
             onClick={() => setOpenDropdown(!openDropdown)}
             href={link.href}

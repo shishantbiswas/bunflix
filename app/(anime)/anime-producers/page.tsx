@@ -85,7 +85,7 @@ const fetchAniwatchProducer = async (
 
   const res = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/producer/${name}`,
-    { cache: "no-store" }
+    { next: { revalidate: 3000, tags: ["anime"] } }
   );
   const data = (await res.json()) as AniwatchSearch;
   return data;

@@ -1,7 +1,7 @@
 "use client";
 import { Search, CircleX, X, FileWarningIcon, HistoryIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "@/components/link";
 import { useSearchBarFocus } from "@/context/search-context";
 import { createImageUrl } from "@/lib/utils";
@@ -29,8 +29,8 @@ export default function SearchInput() {
       return;
     } else {
       fetch(`/api/search?q=${debounceSearch}&type=${type}`, {
-        
-        cache:"no-store" ,
+
+        cache: "no-store",
       })
         .then((response) => {
           if (!response.ok) {
@@ -68,6 +68,8 @@ export default function SearchInput() {
     }
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   // allows the search to be opened from anywhere when '/' is pressed
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -75,6 +77,11 @@ export default function SearchInput() {
         case "Slash":
           event.preventDefault();
           setIsSearchOpen(!isSearchOpen);
+          if (!isSearchOpen) {
+            setTimeout(() => {
+              inputRef.current?.focus();
+            }, 100);
+          }
           break;
       }
     };
@@ -110,7 +117,7 @@ export default function SearchInput() {
           </button>
         </div>
         <div className=" flex items-center gap-2 ">
-          <p
+          <button
             style={{
               backgroundColor: type === "multi" ? "lightgreen" : "",
               color: type === "multi" ? "green" : "",
@@ -122,8 +129,8 @@ export default function SearchInput() {
             className=" px-2 py-.5 rounded bg-gray-500 cursor-pointer"
           >
             Movie/TV
-          </p>
-          <p
+          </button>
+          <button
             style={{
               backgroundColor: type === "anime" ? "lightgreen" : "",
               color: type === "anime" ? "green" : "",
@@ -135,7 +142,7 @@ export default function SearchInput() {
             className=" px-2 py-.5 rounded bg-gray-500 cursor-pointer"
           >
             Anime
-          </p>
+          </button>
         </div>
         <div
           style={{ padding: term.length > 0 ? "8px" : "0px" }}
@@ -159,6 +166,7 @@ export default function SearchInput() {
         >
           <input
             type="text"
+            ref={inputRef}
             className=" w-full placeholder:text-white/50 focus:outline-none bg-transparent  h-full px-2 "
             placeholder="Press '/' to open Search anywhere"
             value={term}

@@ -13,6 +13,7 @@ export default function AniwatchSearch({
 }) {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+  const lang = searchParams.get("lang");
 
   const { data, fetchNextPage } = useInfiniteQuery({
     queryKey: ["anime-search", { searchTerm }],
@@ -74,10 +75,7 @@ export default function AniwatchSearch({
                     />
                     <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                       <h1 className="text-lg font-semibold leading-tight">
-                        {episode.name}
-                      </h1>
-                      <h1 className="text-sm leading-tight my-1.5">
-                        {episode.jname}
+                        {!lang || lang == "english" ? episode.name : episode.jname}
                       </h1>
                       <div className="flex text-sm gap-1">
                         <p>{episode.type}</p>

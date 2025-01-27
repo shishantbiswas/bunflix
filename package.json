@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.53.3",
-    "artplayer": "^5.1.7",
-    "artplayer-plugin-hls-quality": "^2.0.0",
+    "artplayer": "^5.2.2",
+    "artplayer-plugin-hls-control": "^1.0.1",
+    "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dexie": "^4.0.8",

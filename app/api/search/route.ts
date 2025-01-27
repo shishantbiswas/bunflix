@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page");
   const key = process.env.TMDB_KEY;
 
-  if(!q){
+  if (!q) {
     return Response.json({ Error: "query not provided" });
   }
 
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?query=${q}&page=${page || 1
         }&api_key=${key}`,
-        { cache: "no-store" }
+        { next: { revalidate: 3000, tags: ["tmdb"] } }
       );
 
       const data = await response.json();
@@ -35,9 +35,7 @@ export async function GET(request: NextRequest) {
       const response = await fetch(
         `${process.env.ANIWATCH_API}/api/v2/hianime/search?q=${q}&page=${page || 1
         }`,
-        {
-          cache: "no-store",
-        }
+        { next: { revalidate: 3000, tags: ["anime"] } }
       );
       const data = await response.json();
 

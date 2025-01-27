@@ -92,9 +92,9 @@ export async function fetchData(hasNextPage: boolean, pageToFetch: number, endpo
   }
 
   try {
-    const response = await fetch(`/api/tmdb-category/${endpoint}?page=${pageToFetch}`, {
-      cache: "no-store",
-    });
+    const response = await fetch(`/api/tmdb-category/${endpoint}?page=${pageToFetch}`, 
+      { next: { revalidate: 3000, tags: ["tmdb"] } }
+    );
     const data = await response.json() as TMDBMultiSearch;
     return data;
   } catch (error) {

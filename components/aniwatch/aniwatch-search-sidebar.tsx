@@ -11,7 +11,7 @@ export function AnimeSearchSidebar({
 }) {
   const types = ["ONA", "Special", "Movie", "TV", "OVA"];
 
-  const [type, setType] = useState("");
+  // const [type, setType] = useState("");
   const searchParams = useSearchParams();
   const contentType = searchParams.get("type");
 
@@ -23,7 +23,9 @@ export function AnimeSearchSidebar({
       </label>
       <select
         onChange={(e) => {
-          setType(e.target.value);
+          const params = new URLSearchParams(searchParams.toString());
+          params.set("type", e.target.value);
+          window.location.search = params.toString();
         }}
         id="types"
         className="bg-black/50 p-2 rounded-sm capitalize"
@@ -35,7 +37,27 @@ export function AnimeSearchSidebar({
         ))}
       </select>
 
-      <Link
+      <label className="my-3" htmlFor="lang">
+        Language
+      </label>
+      <select
+        onChange={(e) => {
+          const params = new URLSearchParams(searchParams.toString());
+          params.set("lang", e.target.value);
+          window.location.search = params.toString();
+        }}
+        id="lang"
+        className="bg-black/50 p-2 rounded-sm capitalize"
+      >
+        {["english","japanese"].map((lang) => (
+          <option value={lang} key={lang} className="capitalize">
+            {lang}
+          </option>
+        ))}
+      </select>
+
+
+      {/* <Link
         className="w-full text-center"
         href={`/search/anime/${search}${type ? `?type=${type}` : ""}`}
       >
@@ -47,7 +69,7 @@ export function AnimeSearchSidebar({
             Clear
           </button>
         </Link>
-      )}
+      )} */}
 
     </div>
   );
@@ -83,6 +105,8 @@ export const TmdbSearchSidebar = ({
           </option>
         ))}
       </select>
+
+      
 
       <Link
         className="w-full text-center"

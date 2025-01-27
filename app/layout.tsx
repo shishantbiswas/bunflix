@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import localFont from 'next/font/local'
 import { LoadingIndicator } from "@/components/loading-indicator";
 import Providers from "@/context/providers";
+import MobileNavbar from "@/components/mobile-navbar";
 
 const inter = localFont({
   src: [
@@ -24,6 +25,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <LoadingIndicator />
           <Navbar />
+          <MobileNavbar />
           {children}
           <Toaster closeButton richColors />
         </body>

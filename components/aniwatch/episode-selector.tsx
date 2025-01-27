@@ -2,8 +2,6 @@
 import { MicIcon, CaptionsIcon } from "lucide-react";
 import Link from "@/components/link";
 import React, { useEffect, useState } from "react";
-// import { Label } from "../ui/label";
-// import { Switch } from "../ui/switch";
 
 export default function EpisodeSelector({
   currentEpisodeNum,
@@ -29,14 +27,14 @@ export default function EpisodeSelector({
           <span className=" text-sm font-medium dark:text-gray-300">English</span>
           <input
             type="checkbox"
-            checked={lang === "en" ? false : true}
-            onClick={() =>
+            defaultChecked={lang === "en" || !lang ? false : true}
+            onChange={() =>
               setAudioToogle(audioToogle === "en" ? "jp" : "en")
             }
             className="peer sr-only"
           />
           <div
-            className="peer-focus:ring- peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-none duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-none peer-focus:ring-transparent  rtl:peer-checked:after:-translate-x-full 
+            className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-none duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-none peer-focus:ring-transparent  rtl:peer-checked:after:-translate-x-full 
              dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
           ></div>
           <span className=" text-sm font-medium dark:text-gray-300">

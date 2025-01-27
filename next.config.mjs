@@ -1,4 +1,18 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
 
-export default nextConfig;
+const nextConfig = {
+    experimental: {
+        reactCompiler: true,
+    },
+    logging: {
+        fetches: {
+            fullUrl: true
+        }
+    },
+    devIndicators: {
+        appIsrStatus: false,
+    },
+
+};
+
+export default nextConfig; 

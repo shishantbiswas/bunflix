@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Artplayer from "artplayer";
-import artplayerPluginHlsQuality from "artplayer-plugin-hls-quality";
 import Hls from "hls.js/dist/hls.light.js";
+import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
 
 export default function Player({
   src,
@@ -20,8 +20,11 @@ export default function Player({
 }) {
   const artRef = useRef<HTMLDivElement>(null);
 
+  const artInstanceRef = useRef<Artplayer | null>(null);
+
   useEffect(() => {
     if (!artRef.current) return;
+
     const art = new Artplayer({
       url: src,
       container: artRef.current,
@@ -37,15 +40,57 @@ export default function Player({
         crossOrigin: "anonymous",
       },
       plugins: [
-        artplayerPluginHlsQuality({
-          control: true,
-          setting: true,
-          getResolution: (level) => level.height + "P",
-          title: "Quality",
-          auto: "Auto",
+        artplayerPluginHlsControl({
+          quality: {
+            control: true,
+            setting: true,
+            getName: (level: { height: string }) => level.height + 'P',
+            title: 'Quality',
+            auto: 'Auto',
+          },
+          audio: {
+            control: true,
+            setting: true,
+            getName: (track: { name: string }) => track.name,
+            title: 'Audio',
+            auto: 'Auto',
+          }
         }),
       ],
       settings: [
+        {
+          name: 'Speed',
+          position: 'right',
+          html: 'Speed',
+          tooltip: 'Playback Speed',
+          selector: [
+            {
+              html: '0.5x',
+              value: 0.5
+            },
+            {
+              html: '0.75x',
+              value: 0.75
+            },
+            {
+              html: 'Normal',
+              value: 1,
+              default: true
+            },
+            {
+              html: '1.25x',
+              value: 1.25
+            },
+            {
+              html: '1.5x',
+              value: 1.5
+            },
+            {
+              html: '2x',
+              value: 2
+            },
+          ]
+        },
         {
           width: 200,
           html: "Subtitle",
@@ -97,7 +142,7 @@ export default function Player({
             const hls = new Hls({
               fragLoadingMaxRetry: 200,
               fragLoadingRetryDelay: 500,
-              fragLoadingTimeOut:30000,
+              fragLoadingTimeOut: 30000,
               fragLoadingMaxRetryTimeout: 1000,
               maxBufferLength: 300,
               maxMaxBufferLength: 300,
@@ -109,8 +154,8 @@ export default function Player({
             art.on("destroy", () => hls.destroy());
             video.addEventListener("ended", () => {
               if (hls) {
-                hls.destroy();
-                console.log("HLS instance destroyed");
+                // hls.destroy();
+                // console.log("HLS instance destroyed");
               }
             });
           } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -122,16 +167,19 @@ export default function Player({
       },
     });
 
+    artInstanceRef.current = art;
+
     if (getInstance && typeof getInstance === "function") {
-      getInstance(art);
+      console.log(getInstance(art));
     }
 
     return () => {
-      if (art && art.destroy) {
-        art.destroy(false);
+      if (artInstanceRef.current) {
+        artInstanceRef.current.destroy(false);
+        artInstanceRef.current = null;
       }
     };
-  }, [src]);
+  }, [src, track]);
 
   return (
     <div

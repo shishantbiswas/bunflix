@@ -48,9 +48,7 @@ function CategoryFallback() {
 async function aniwatchHomeApi() {
   const response = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/home`,
-    {
-      cache: "no-store",
-    }
+    { next: { revalidate: 3000, tags: ["anime"] } }
   );
   if (!response.ok) {
     throw new Error(`Fetch failed at Anime Slider`);
@@ -165,10 +163,9 @@ async function fetchAniwatchCategories(
   page?: number | string
 ) {
   const response = await fetch(
-    `${process.env.ANIWATCH_API}/api/v2/hianime/category/${category}?page=${
-      page || 1
+    `${process.env.ANIWATCH_API}/api/v2/hianime/category/${category}?page=${page || 1
     }`,
-    { cache: "no-store" }
+    { next: { revalidate: 3000, tags: ["anime"] } }
   );
   if (!response.ok) {
     throw new Error(`Search failed in Categories`);
