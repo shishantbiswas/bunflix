@@ -8,6 +8,13 @@ FROM base AS deps
 RUN apk update && apk add --no-cache libc6-compat
 WORKDIR /app
 
+ARG TMDB_KEY
+ARG ANIWATCH_API
+
+ENV TMDB_KEY=$TMDB_KEY
+ENV ANIWATCH_API=$ANIWATCH_API
+
+
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* bun.lockb* .npmrc* ./
 RUN \
