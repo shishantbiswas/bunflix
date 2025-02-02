@@ -15,14 +15,6 @@ const config = {
         'xs': '475px',
       },
       keyframes: {
-        jumpForward: {
-          "0%, 100%": { opacity: "0", transform: "translateX(0)" },
-          "50%": { opacity: "1", transform: "translateX(50px)" },
-        },
-        jumpBackward: {
-          "0%, 100%": { opacity: "0", transform: "translateX(0)" },
-          "50%": { opacity: "1", transform: "translateX(-50px)" },
-        },
         timer: {
           from: { width: "0%" },
           to: { width: "100%" },
@@ -33,10 +25,6 @@ const config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "jump-forward": "jumpForward 1s ease-in-out",
-        "jump-backward": "jumpBackward 1s ease-in-out",
         timer: "timer 1s ease-out",
         loading: "loading 1.5s infinite",
       },

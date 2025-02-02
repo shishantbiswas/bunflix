@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Artplayer from "artplayer";
-import Hls from "hls.js/dist/hls.light.js";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
+import Hls, { HlsConfig } from "hls.js";
 
 export default function Player({
   src,
@@ -19,15 +19,31 @@ export default function Player({
   }[];
 }) {
   const artRef = useRef<HTMLDivElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
-  const artInstanceRef = useRef<Artplayer | null>(null);
+  const hlsConfig: Partial<HlsConfig> = {
+    fragLoadingMaxRetry: 200,
+    fragLoadingRetryDelay: 500,
+    fragLoadingTimeOut: 30000,
+    fragLoadingMaxRetryTimeout: 1000,
+    maxBufferLength: 300,
+    maxMaxBufferLength: 300,
+    maxBufferHole: 0.5,
+  }
+
+  function loadSource(url: string) {
+    if (hlsRef.current) {
+      hlsRef.current.loadSource(url);
+    }
+  }
+  useEffect(() => {
+    loadSource(src);
+  }, [src]);
 
   useEffect(() => {
-    if (!artRef.current) return;
-
     const art = new Artplayer({
       url: src,
-      container: artRef.current,
+      container: artRef.current!,
       setting: true,
       fullscreen: true,
       fullscreenWeb: true,
@@ -59,39 +75,6 @@ export default function Player({
       ],
       settings: [
         {
-          name: 'Speed',
-          position: 'right',
-          html: 'Speed',
-          tooltip: 'Playback Speed',
-          selector: [
-            {
-              html: '0.5x',
-              value: 0.5
-            },
-            {
-              html: '0.75x',
-              value: 0.75
-            },
-            {
-              html: 'Normal',
-              value: 1,
-              default: true
-            },
-            {
-              html: '1.25x',
-              value: 1.25
-            },
-            {
-              html: '1.5x',
-              value: 1.5
-            },
-            {
-              html: '2x',
-              value: 2
-            },
-          ]
-        },
-        {
           width: 200,
           html: "Subtitle",
           tooltip: "Subtitle",
@@ -122,7 +105,7 @@ export default function Player({
         },
       ],
       subtitle: {
-        url: track?.filter((sub) => sub.label === "English")[0]?.file || "",
+        url: track.filter((sub) => sub.label === "English")[0]?.file || "",
         escape: true,
         name: "English",
         onVttLoad: (vtt) => {
@@ -139,16 +122,9 @@ export default function Player({
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
             if (art.hls) art.hls.destroy();
-            const hls = new Hls({
-              fragLoadingMaxRetry: 200,
-              fragLoadingRetryDelay: 500,
-              fragLoadingTimeOut: 30000,
-              fragLoadingMaxRetryTimeout: 1000,
-              maxBufferLength: 300,
-              maxMaxBufferLength: 300,
-              maxBufferHole: 0.5,
-            });
-            hls.loadSource(url);
+            const hls = new Hls(hlsConfig);
+            hlsRef.current = hls;
+            loadSource(url);
             hls.attachMedia(video);
             art.hls = hls;
             art.on("destroy", () => hls.destroy());
@@ -167,24 +143,21 @@ export default function Player({
       },
     });
 
-    artInstanceRef.current = art;
-
     if (getInstance && typeof getInstance === "function") {
       console.log(getInstance(art));
     }
 
     return () => {
-      if (artInstanceRef.current) {
-        artInstanceRef.current.destroy(false);
-        artInstanceRef.current = null;
+      if (art && art.destroy) {
+        art.destroy(false);
       }
     };
-  }, [src, track]);
+  }, []);
 
   return (
     <div
       ref={artRef}
-      className="w-full sm:p-4 h-[300px] sm:h-[350px ] md:h-[450px] lg:h-[550px] xl:h-[600px]"
+      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]"
     ></div>
   );
 }
