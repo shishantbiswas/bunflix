@@ -41,8 +41,7 @@ export default async function TmdbShowRow({
 export async function fetchData(endpoint: string): Promise<TMDBMovie | null> {
   try {
     const response = await fetch(endpoint, {
-      
-      cache:"no-store" ,
+      next: { revalidate: 3600, tags: ["tmdb"]  } ,
     });
     const data = await response.json();
     return data;

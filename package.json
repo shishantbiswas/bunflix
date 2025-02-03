@@ -2,10 +2,10 @@
   "name": "next-bun",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "build:skip-output-check": "NEXT_SKIP_OUTPUT_CHECK=true next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -27,6 +27,7 @@
     "sonner": "^1.4.41"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@tanstack/eslint-plugin-query": "^5.53.0",
     "@types/node": "^20",
     "@types/react": "19.0.0",
@@ -36,11 +37,10 @@
     "postcss": "^8",
     "tailwind-merge": "^2.3.0",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-intersect": "^2.0.1",
     "tailwindcss-motion": "^1.0.0",
     "typescript": "^5"
-  },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
+  }
 }

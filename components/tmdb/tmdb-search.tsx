@@ -46,7 +46,7 @@ export default function TmdbSearch({ searchTerm }: { searchTerm: string }) {
 
     const res = await fetch(
       `/api/search?q=${searchTerm}&type=multi&page=${pageToFetch}`,
-      { cache: "no-store" }
+      { next: { revalidate: 3600, tags: ["tmdb"]  }}
     );
     const data = (await res.json()) as TMDBMultiSearch;    
     return data;
@@ -72,7 +72,7 @@ export default function TmdbSearch({ searchTerm }: { searchTerm: string }) {
                       src={createImageUrl(episode.poster_path, "w500")}
                       alt={episode.name}
                     />
-                    <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+                    <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                       <h1 className="text-lg font-semibold leading-tight">
                         {episode.name || episode.title_english || episode.title}
                       </h1>

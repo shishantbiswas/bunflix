@@ -45,7 +45,7 @@ export default function MobileNavbar() {
     const { isSearchOpen, setIsSearchOpen } = useSearchBarFocus();
 
     return (
-        <nav className="justify-around z-50 sm:hidden bg-black/30 backdrop-blur fixed flex bottom-0 w-full p-4">
+        <nav className="justify-around z-50 sm:hidden bg-black/30 backdrop-blur-sm fixed flex bottom-0 w-full p-4">
             {mobileLinks.map((link) => (
                 <Link
                     href={link.href}

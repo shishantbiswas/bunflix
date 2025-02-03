@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     `${process.env.ANIWATCH_API}/api/v2/hianime/category/${category}?page=${
       page || 1
     }`,
-    { cache: "no-store" }
+    { next: { revalidate: 3600, tags: ["anime"]  }}
   );
   if (!response.ok) {
     return Response.json({ error: "failed to fetch category info" });

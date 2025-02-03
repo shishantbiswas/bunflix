@@ -84,7 +84,7 @@ async function fetchAniwatchEpisode(seasonId: string) {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API}/api/v2/hianime/anime/${seasonId}/episodes`,
-      { next: { revalidate: 3000, tags: ["anime"] } }
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
     const data = await response.json();
 
@@ -98,7 +98,7 @@ async function fetchAniwatchId(id: string): Promise<AniwatchInfo> {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API}/api/v2/hianime/anime/${id}`,
-      { next: { revalidate: 3000, tags: ["anime"] } }
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
 
     const data: AniwatchInfo = await response.json();

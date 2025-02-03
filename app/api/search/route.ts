@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/multi?query=${q}&page=${page || 1
         }&api_key=${key}`,
-        { next: { revalidate: 3000, tags: ["tmdb"] } }
+        { next: { revalidate: 3600, tags: ["tmdb"] } }
       );
 
       const data = await response.json();
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       const response = await fetch(
         `${process.env.ANIWATCH_API}/api/v2/hianime/search?q=${q}&page=${page || 1
         }`,
-        { next: { revalidate: 3000, tags: ["anime"] } }
+        { next: { revalidate: 3600, tags: ["anime"] } }
       );
       const data = await response.json();
 

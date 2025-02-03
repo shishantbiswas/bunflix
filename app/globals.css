@@ -1,29 +1,78 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root,
-html,
-body {
-  color: white;
+@custom-variant dark (&:is(.dark *));
+
+@plugin 'tailwindcss-animate';
+@plugin 'tailwind-scrollbar-hide';
+@plugin 'tailwindcss-motion';
+@plugin 'tailwindcss-intersect';
+
+@theme {
+  --breakpoint-xs: 475px;
+
+  --animate-timer: timer 1s ease-out;
+  --animate-loading: loading 1.5s infinite;
+
+  @keyframes timer {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  @keyframes loading {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
 }
 
-::-webkit-scrollbar {
-  width: 12px;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #888;
-  border-radius: 0 10px 10px 0px;
-}
+@layer utilities {
+  :root,
+  html,
+  body {
+    color: white;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: #373737;
-  border-radius: 0 10px 10px 0px;
-}
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  ::-webkit-scrollbar-track {
+    background: #888;
+    border-radius: 0 10px 10px 0px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #373737;
+    border-radius: 0 10px 10px 0px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 @layer base {

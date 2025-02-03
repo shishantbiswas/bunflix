@@ -70,7 +70,7 @@ async function fetchTmdbInfo(type: string, id: number | string) {
   try {
     const response = await fetch(
       `https://api.themoviedb.org/3/${type}/${id}?api_key=${key}`,
-      {  cache:"no-store"  }
+      {  next: { revalidate: 3600, tags: ["tmdb"]  }  }
     );
 
     const data = await response.json();

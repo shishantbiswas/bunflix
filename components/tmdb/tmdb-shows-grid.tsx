@@ -66,7 +66,7 @@ export default function TmdbShowGrid({
                       src={createImageUrl(episode.poster_path || episode.media_type, "w500")}
                       alt={episode.name}
                     />
-                    <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+                    <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                       <h1 className="text-lg font-semibold leading-tight">
                         {episode.name || episode.title_english || episode.title}
                       </h1>
@@ -93,7 +93,7 @@ export async function fetchData(hasNextPage: boolean, pageToFetch: number, endpo
 
   try {
     const response = await fetch(`/api/tmdb-category/${endpoint}?page=${pageToFetch}`, 
-      { next: { revalidate: 3000, tags: ["tmdb"] } }
+      { next: { revalidate: 3600, tags: ["tmdb"] } }
     );
     const data = await response.json() as TMDBMultiSearch;
     return data;

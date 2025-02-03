@@ -34,7 +34,7 @@ export default function EpisodeSelector({
             className="peer sr-only"
           />
           <div
-            className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-none duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-none peer-focus:ring-transparent  rtl:peer-checked:after:-translate-x-full 
+            className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden peer-focus:ring-transparent  peer-checked:rtl:after:-translate-x-full 
              dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
           ></div>
           <span className=" text-sm font-medium dark:text-gray-300">
@@ -88,7 +88,7 @@ export default function EpisodeSelector({
               >
                 {episode.number}. {episode.title}
                 {audioToogle === "en" && (
-                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded text-nowrap ml-2">
+                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
                     <MicIcon size={15} />
                     {data.data.anime.info.stats.episodes.dub < episode.number
                       ? "Not available"
@@ -96,7 +96,7 @@ export default function EpisodeSelector({
                   </span>
                 )}
                 {audioToogle === "jp" && (
-                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded text-nowrap ml-2">
+                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
                     <CaptionsIcon size={15} />
                     {data.data.anime.info.stats.episodes.sub < episode.number
                       ? "Not available"

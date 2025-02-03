@@ -29,8 +29,7 @@ export default function SearchInput() {
       return;
     } else {
       fetch(`/api/search?q=${debounceSearch}&type=${type}`, {
-
-        cache: "no-store",
+        next: { revalidate: 3600, tags: ["anime","tmdb"]  },
       })
         .then((response) => {
           if (!response.ok) {
@@ -102,7 +101,7 @@ export default function SearchInput() {
         transform: isSearchOpen ? "translateY(0px)" : "translateY(6000px)",
         visibility: isSearchOpen ? "visible" : "hidden",
       }}
-      className="flex w-full flex-col duration-500 fixed z-[80]  h-fit transition-all px-2 md:px-4 items-center justify-center"
+      className="flex w-full flex-col duration-500 fixed z-80  h-fit transition-all px-2 md:px-4 items-center justify-center"
     >
       <div className=" bg-gray-700 w-full z-50 max-w-[800px] p-4 rounded-t-xl">
         <div className="mb-2 flex items-center justify-between ">
@@ -126,7 +125,7 @@ export default function SearchInput() {
               setType("multi");
               setAnime(null);
             }}
-            className=" px-2 py-.5 rounded bg-gray-500 cursor-pointer"
+            className=" px-2 py-.5 rounded-sm bg-gray-500 cursor-pointer"
           >
             Movie/TV
           </button>
@@ -139,7 +138,7 @@ export default function SearchInput() {
               setType("anime");
               setResult(null);
             }}
-            className=" px-2 py-.5 rounded bg-gray-500 cursor-pointer"
+            className=" px-2 py-.5 rounded-sm bg-gray-500 cursor-pointer"
           >
             Anime
           </button>
@@ -167,7 +166,7 @@ export default function SearchInput() {
           <input
             type="text"
             ref={inputRef}
-            className=" w-full placeholder:text-white/50 focus:outline-none bg-transparent  h-full px-2 "
+            className=" w-full placeholder:text-white/50 focus:outline-hidden bg-transparent  h-full px-2 "
             placeholder="Press '/' to open Search anywhere"
             value={term}
             onFocus={() => setIsSearchBarFocused(true)}
@@ -246,7 +245,7 @@ const TmdbInSearchArray = ({
       href={`/info/${show.media_type}/${show.id}`}
       className=" w-full "
     >
-      <button className="p-2 w-full rounded-sm text-start hover:bg-gray-700/50 transition-all flex items-center gap-3">
+      <button className="p-2 w-full rounded-xs text-start hover:bg-gray-700/50 transition-all flex items-center gap-3">
         <div className="relative h-[100px] min-w-[80px]">
           {!isloaded && !error && (
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
@@ -259,7 +258,7 @@ const TmdbInSearchArray = ({
                 opacity: isloaded ? "100%" : "0%",
                 scale: isloaded ? "100%" : "0%",
               }}
-              className="h-[100px]  min-w-[80px] absolute object-cover top-0 rounded-sm"
+              className="h-[100px]  min-w-[80px] absolute object-cover top-0 rounded-xs"
               src={createImageUrl(
                 show.backdrop_path || show.backdrop_path,
                 "w500"
@@ -331,7 +330,7 @@ const AnimeInSearchArray = ({
                 opacity: isloaded ? "100%" : "0%",
                 scale: isloaded ? "100%" : "0%",
               }}
-              className="h-[100px]  w-[80px] absolute object-cover top-0 rounded-sm"
+              className="h-[100px]  w-[80px] absolute object-cover top-0 rounded-xs"
               src={anime.poster}
               alt={anime.name}
             />

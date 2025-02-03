@@ -16,7 +16,7 @@ export function AnimeSearchSidebar({
   const contentType = searchParams.get("type");
 
   return (
-    <div className="p-4 md:sticky top-4 rounded h-fit pb-4 flex-col flex bg-black/30 w-full md:w-[300px]">
+    <div className="p-4 md:sticky top-4 rounded-sm h-fit pb-4 flex-col flex bg-black/30 w-full md:w-[300px]">
       <h1 className="text-3xl font-semibold">Search</h1>
       <label className="my-3" htmlFor="types">
         Type
@@ -28,7 +28,7 @@ export function AnimeSearchSidebar({
           window.location.search = params.toString();
         }}
         id="types"
-        className="bg-black/50 p-2 rounded-sm capitalize"
+        className="bg-black/50 p-2 rounded-xs capitalize"
       >
         {types.map((type, i) => (
           <option value={type} key={type + i} className="capitalize">
@@ -47,7 +47,7 @@ export function AnimeSearchSidebar({
           window.location.search = params.toString();
         }}
         id="lang"
-        className="bg-black/50 p-2 rounded-sm capitalize"
+        className="bg-black/50 p-2 rounded-xs capitalize"
       >
         {["english","japanese"].map((lang) => (
           <option value={lang} key={lang} className="capitalize">
@@ -87,7 +87,7 @@ export const TmdbSearchSidebar = ({
   const contentType = searchParams.get("type");
 
   return (
-    <div className="p-4 md:sticky top-4 rounded h-fit pb-4 flex-col flex bg-black/30 w-full md:w-[300px]">
+    <div className="p-4 md:sticky top-4 rounded-sm h-fit pb-4 flex-col flex bg-black/30 w-full md:w-[300px]">
       <h1 className="text-3xl font-semibold">Search</h1>
       <label className="my-3" htmlFor="types">
         Type
@@ -97,7 +97,7 @@ export const TmdbSearchSidebar = ({
           setType(e.target.value);
         }}
         id="types"
-        className="bg-black/50 p-2 rounded-sm capitalize"
+        className="bg-black/50 p-2 rounded-xs capitalize"
       >
         {types.map((type, i) => (
           <option value={type} key={type + i} className="capitalize">

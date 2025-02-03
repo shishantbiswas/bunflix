@@ -11,7 +11,9 @@ export async function GET(req: NextRequest) {
     const key = process.env.TMDB_KEY
     const completeUri = `${baseUrl}/${reqUrl.split("&")[0]}?api_key=${key}${sp}`
 
-    const res = await fetch(completeUri)
+    const res = await fetch(completeUri,{
+        next: { revalidate: 3600, tags: ["tmdb"]  }
+    })
     if (!res.ok) {
         
         return Response.json({ error: "fetch failed" })

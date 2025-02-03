@@ -23,15 +23,15 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                 alt={episode.name}
               />
 
-              <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+              <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                 <h1 className="text-xl font-semibold">{episode.name}</h1>
                 <div className="flex text-sm gap-1">
                   <p>{episode.type}</p>
-                  <p className="flex items-center gap-1 bg-purple-500/70 rounded-sm  px-1">
+                  <p className="flex items-center gap-1 bg-purple-500/70 rounded-xs  px-1">
                     <MicIcon size={10} />
                     {episode.episodes.dub || "NA"}
                   </p>
-                  <p className="flex items-center gap-1 bg-yellow-500/80 rounded-sm  px-1">
+                  <p className="flex items-center gap-1 bg-yellow-500/80 rounded-xs  px-1">
                     <CaptionsIcon size={10} />
                     {episode.episodes.sub}
                   </p>
@@ -51,7 +51,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                   date === data.top10Animes.today ? "white" : "",
                 color: date === data.top10Animes.today ? "black" : "",
               }}
-              className="px-2 py-1 rounded hover:bg-red-600 transition-all"
+              className="px-2 py-1 rounded-sm hover:bg-red-600 transition-all"
             >
               Daily
             </button>
@@ -60,13 +60,13 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                 backgroundColor: date === data.top10Animes.week ? "white" : "",
                 color: date === data.top10Animes.week ? "black" : "",
               }}
-              className="px-2 py-1 rounded hover:bg-red-600 transition-all"
+              className="px-2 py-1 rounded-sm hover:bg-red-600 transition-all"
               onClick={() => setDate(data.top10Animes.week)}
             >
               Weekly
             </button>
             <button
-              className="px-2 py-1 rounded hover:bg-red-600 transition-all"
+              className="px-2 py-1 rounded-sm hover:bg-red-600 transition-all"
               style={{
                 backgroundColor:
                   date === data.top10Animes.month ? "white" : "",
@@ -93,11 +93,11 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                 <div className="px-2">
                   <p className="text-sm">{episode.name}</p>
                   <div className="flex gap-1 text-sm">
-                    <span className="px-1 bg-purple-500/70 flex gap-2 items-center w-fit rounded">
+                    <span className="px-1 bg-purple-500/70 flex gap-2 items-center w-fit rounded-sm">
                       <MicIcon size={10} />
                       {episode.episodes.dub || "NA"}
                     </span>
-                    <span className="px-2 bg-yellow-500/70 flex gap-2 items-center w-fit rounded">
+                    <span className="px-2 bg-yellow-500/70 flex gap-2 items-center w-fit rounded-sm">
                       <CaptionsIcon size={10} />
                       {episode.episodes.sub}
                     </span>
@@ -124,7 +124,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                   alt={episode.name}
                 />
 
-                <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+                <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                   <h1 className="text-xl font-semibold">{episode.name}</h1>
                   <p>{episode.description}</p>
                 </div>
@@ -149,7 +149,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                   alt={episode.name}
                 />
 
-                <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+                <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                   <h1 className="text-xl font-semibold">{episode.name}</h1>
                 </div>
               </Link>

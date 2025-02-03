@@ -7,7 +7,6 @@ const nextConfig = {
     logging: {
         fetches: {
             fullUrl: false,
-            hmrRefreshes: true,
         },
     },
     reactStrictMode: true,

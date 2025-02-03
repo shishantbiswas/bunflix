@@ -65,7 +65,7 @@ async function fetchAniwatchEpisodeSrc(
       `${process.env.ANIWATCH_API
       }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? server : "vidstreaming"
       }&category=${category}`,
-      { next: { revalidate: 3000, tags: ["anime"] } }
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
     const data = await response.json();
 
@@ -79,7 +79,7 @@ async function fetchAniwatchEpisodeServer(id: string, ep: string) {
   try {
     const response = await fetch(
       `${process.env.ANIWATCH_API}/api/v2/hianime/episode/servers?animeEpisodeId=${id}?ep=${ep}`,
-      { next: { revalidate: 3000, tags: ["anime"] } }
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
     const data = await response.json() as AniwatchServer;
 

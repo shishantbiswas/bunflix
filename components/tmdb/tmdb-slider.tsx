@@ -38,7 +38,7 @@ export default function TmdbSlider({ data }: { data: TMDBMovie }) {
               style={{
                 pointerEvents: i === imageindex ? "all" : "none",
               }}
-              className="absolute size-full bg-gradient-to-br from-transparent to-black/10 rounded-md overflow-hidden cursor-pointer"
+              className="absolute size-full bg-linear-to-br from-transparent to-black/10 rounded-md overflow-hidden cursor-pointer"
             >
               <img loading="lazy"
                 style={{

@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
   if (masterManifest === "master.m3u8") {
     const res = await fetch(completeUrl, {
-      cache: "no-store",
+      cache:"no-store",
     });
 
     if (!res.ok) {

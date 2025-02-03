@@ -63,7 +63,7 @@ export function TmdbVideo({
                       fontWeight: provider === "vidsrc" ? "700" : "",
                       border: provider === "vidsrc" ? "" : "1px solid white",
                     }}
-                    className=" hover:bg-slate-600  px-2 py-1 rounded disabled:opacity-50"
+                    className=" hover:bg-slate-600  px-2 py-1 rounded-sm disabled:opacity-50"
                   >
                     Source 1
                   </button>
@@ -82,7 +82,7 @@ export function TmdbVideo({
                       fontWeight: provider === "twoEmbed" ? "700" : "",
                       border: provider === "twoEmbed" ? "" : "1px solid white",
                     }}
-                    className=" hover:bg-slate-600  px-2 py-1 rounded disabled:opacity-50"
+                    className=" hover:bg-slate-600  px-2 py-1 rounded-sm disabled:opacity-50"
                   >
                     Source 2
                   </button>
@@ -101,7 +101,7 @@ export function TmdbVideo({
                       fontWeight: provider === "super" ? "700" : "",
                       border: provider === "super" ? "" : "1px solid white",
                     }}
-                    className=" hover:bg-slate-600  px-2 py-1 rounded disabled:opacity-50"
+                    className=" hover:bg-slate-600  px-2 py-1 rounded-sm disabled:opacity-50"
                   >
                     Source 3
                   </button>
@@ -121,7 +121,7 @@ export function TmdbVideo({
                       border:
                         provider === "smashystream" ? "" : "1px solid white",
                     }}
-                    className=" hover:bg-slate-600  px-2 py-1 rounded disabled:opacity-50"
+                    className=" hover:bg-slate-600  px-2 py-1 rounded-sm disabled:opacity-50"
                   >
                     Source 4
                   </button>
@@ -153,7 +153,7 @@ export function TmdbVideo({
                     className="flex gap-2 w-full bg-black/10 hover:bg-black/40 rounded-md p-2"
                   >
                     <img loading="lazy"
-                      className=" rounded-sm  h-full aspect-video"
+                      className=" rounded-xs  h-full aspect-video"
                       src={createImageUrl(e.still_path, "w500")}
                       alt={e.name}
                     />

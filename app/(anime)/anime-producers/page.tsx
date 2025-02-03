@@ -52,16 +52,16 @@ export default async function Categories({
               alt={episode.name}
             />
 
-            <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+            <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
               <h1 className="text-xl font-semibold">{episode.name}</h1>
               <p className="text-sm">{episode.jname}</p>
               <div className="flex text-sm gap-2">
                 <p>{episode.type}</p>
-                <p className="flex items-center gap-1 bg-purple-500/70 rounded-sm py-0.5 px-1">
+                <p className="flex items-center gap-1 bg-purple-500/70 rounded-xs py-0.5 px-1">
                   <MicIcon size={12} />
                   {episode.episodes.dub || "NA"}
                 </p>
-                <p className="flex items-center gap-1 bg-yellow-500/80 rounded-sm py-0.5 px-1">
+                <p className="flex items-center gap-1 bg-yellow-500/80 rounded-xs py-0.5 px-1">
                   <CaptionsIcon size={12} />
                   {episode.episodes.sub}
                 </p>
@@ -85,7 +85,7 @@ const fetchAniwatchProducer = async (
 
   const res = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/producer/${name}`,
-    { next: { revalidate: 3000, tags: ["anime"] } }
+    { next: { revalidate: 3600, tags: ["anime"] } }
   );
   const data = (await res.json()) as AniwatchSearch;
   return data;

@@ -37,7 +37,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
               style={{
                 pointerEvents: i === imageindex ? "all" : "none",
               }}
-              className="absolute size-full bg-gradient-to-br from-transparent to-black/20 rounded-md overflow-hidden cursor-pointer"
+              className="absolute size-full bg-linear-to-br from-transparent to-black/20 rounded-md overflow-hidden cursor-pointer"
             >
               <img loading="lazy"
                 style={{

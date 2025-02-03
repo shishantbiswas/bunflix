@@ -48,7 +48,7 @@ function CategoryFallback() {
 async function aniwatchHomeApi() {
   const response = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/home`,
-    { next: { revalidate: 3000, tags: ["anime"] } }
+    { next: { revalidate: 3600, tags: ["anime"] } }
   );
   if (!response.ok) {
     throw new Error(`Fetch failed at Anime Slider`);
@@ -137,15 +137,15 @@ const AnimeCategoryList = async ({
               alt={episode.name}
             />
 
-            <div className=" absolute bottom-0 left-0 p-2 bg-gradient-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+            <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
               <h1 className="text-xl font-semibold">{episode.name}</h1>
               <div className="flex text-sm gap-1">
                 <p>{episode.type}</p>
-                <p className="flex items-center gap-1 bg-purple-500/70 rounded-sm  px-1">
+                <p className="flex items-center gap-1 bg-purple-500/70 rounded-xs  px-1">
                   <MicIcon size={10} />
                   {episode.episodes.dub || "NA"}
                 </p>
-                <p className="flex items-center gap-1 bg-yellow-500/80 rounded-sm  px-1">
+                <p className="flex items-center gap-1 bg-yellow-500/80 rounded-xs  px-1">
                   <CaptionsIcon size={10} />
                   {episode.episodes.sub}
                 </p>
@@ -165,7 +165,7 @@ async function fetchAniwatchCategories(
   const response = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/category/${category}?page=${page || 1
     }`,
-    { next: { revalidate: 3000, tags: ["anime"] } }
+    { next: { revalidate: 3600, tags: ["anime"] } }
   );
   if (!response.ok) {
     throw new Error(`Search failed in Categories`);
