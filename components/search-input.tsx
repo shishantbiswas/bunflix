@@ -251,7 +251,7 @@ const TmdbInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img loading="lazy"
+            <img fetchPriority="low" loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{
@@ -323,7 +323,7 @@ const AnimeInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img loading="lazy"
+            <img fetchPriority="low" loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{

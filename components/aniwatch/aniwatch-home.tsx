@@ -17,7 +17,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
               href={`/anime/${episode.id}`}
               className={`min-w-[150px] lg:w-full intersect:motion-preset-slide-up intersect-once motion-delay-[${i*50}ms] h-[300px] rounded-md overflow-hidden group  relative text-end`}
             >
-              <img loading="lazy"
+              <img fetchPriority="low" loading="lazy"
                 className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                 src={episode.poster}
                 alt={episode.name}
@@ -85,7 +85,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
                 href={`/anime/${episode.id}`}
                 className="flex bg-black/30 p-2 rounded-lg "
               >
-                <img loading="lazy"
+                <img fetchPriority="low" loading="lazy"
                   className="aspect-square object-cover size-[70px] rounded-md"
                   src={episode.poster}
                   alt={episode.name}
@@ -118,7 +118,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
               key={episode.id}
             >
               <Link href={`/anime/${episode.id}`}>
-                <img loading="lazy"
+                <img fetchPriority="low" loading="lazy"
                   className="size-full object-cover group-hover:scale-105 transition-all"
                   src={episode.poster}
                   alt={episode.name}
@@ -143,7 +143,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
               key={episode.id}
             >
               <Link href={`/anime/${episode.id}`}>
-                <img loading="lazy"
+                <img fetchPriority="low" loading="lazy"
                   className="size-full object-cover group-hover:scale-105 transition-all"
                   src={episode.poster}
                   alt={episode.name}

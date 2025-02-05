@@ -40,7 +40,7 @@ export default function TmdbSlider({ data }: { data: TMDBMovie }) {
               }}
               className="absolute size-full bg-linear-to-br from-transparent to-black/10 rounded-md overflow-hidden cursor-pointer"
             >
-              <img loading="lazy"
+              <img fetchPriority="low" loading="lazy"
                 style={{
                   height: i === imageindex ? "" : "50%",
                   opacity: i === imageindex ? "100%" : "0%",
@@ -82,7 +82,7 @@ export default function TmdbSlider({ data }: { data: TMDBMovie }) {
             onClick={() => setImageindex(i)}
             className="flex w-full transition-all  duration-500 cursor-pointer rounded-md overflow-hidden  min-h-28 relative "
           >
-            <img loading="lazy"
+            <img fetchPriority="low" loading="lazy"
               src={createImageUrl(
                 res.backdrop_path || res.poster_path,
                 "original"

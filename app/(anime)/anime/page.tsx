@@ -131,7 +131,8 @@ const AnimeCategoryList = async ({
             href={`/anime/${episode.id}`}
             className={`min-w-[190px] intersect-once intersect:motion-preset-slide-left motion-delay-100 lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end`}
           >
-            <img loading="lazy"
+            <img fetchPriority="low" 
+              loading="lazy"
               className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
               src={episode.poster}
               alt={episode.name}

@@ -25,7 +25,7 @@ export default async function Genre({ params }: { params: Params }) {
             key={show.id}
           >
             <Link href={`/anime/${show.id}`}>
-              <img loading="lazy"
+              <img fetchPriority="low" loading="lazy"
                 className="size-full object-cover group-hover:scale-105 transition-all"
                 src={show.poster}
                 alt={show.name}

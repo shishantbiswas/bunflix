@@ -7,13 +7,13 @@ export async function TmdbTvInfo({ id }: { id: number }) {
 
   return (
     <div className=" xl:p-0 p-2 pb-24 bg-black/70 min-h-screen w-full">
-      <img loading="lazy"
+      <img fetchPriority="low" loading="lazy"
         className="-z-10 fixed top-0 size-full object-cover blur-2xl "
         src={createImageUrl(data.backdrop_path, "original")}
         alt={data.name}
       />
       <div className=" xl:flex p-4">
-        <img loading="lazy"
+        <img fetchPriority="low" loading="lazy"
           className="rounded-md xl:w-fit w-full object-cover h-[500px] xl:h-[400px] "
           src={createImageUrl(data.poster_path, "w500")}
           alt={data.name}
@@ -37,7 +37,7 @@ export async function TmdbTvInfo({ id }: { id: number }) {
             {data.production_companies.map((e) => (
               <div key={e.id} className=" flex gap-2 items-center ">
                 {e.logo_path && (
-                  <img loading="lazy"
+                  <img fetchPriority="low" loading="lazy"
                     className=" w-[30px]"
                     src={createImageUrl(e.logo_path, "w500")}
                     alt={e.name}

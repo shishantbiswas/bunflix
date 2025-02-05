@@ -23,7 +23,7 @@ export function TmdbVideo({
 }) {
   return (
     <div className=" pb-24 bg-black/60">
-      <img loading="lazy"
+      <img fetchPriority="low" loading="lazy"
         className="-z-10 fixed top-0 size-full object-cover blur-2xl "
         src={createImageUrl(data.backdrop_path, "original")}
         alt={data.name}
@@ -152,7 +152,7 @@ export function TmdbVideo({
                     key={e.id}
                     className="flex gap-2 w-full bg-black/10 hover:bg-black/40 rounded-md p-2"
                   >
-                    <img loading="lazy"
+                    <img fetchPriority="low" loading="lazy"
                       className=" rounded-xs  h-full aspect-video"
                       src={createImageUrl(e.still_path, "w500")}
                       alt={e.name}

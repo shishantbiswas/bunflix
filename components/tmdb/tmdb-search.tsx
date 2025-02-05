@@ -66,7 +66,7 @@ export default function TmdbSearch({ searchTerm }: { searchTerm: string }) {
                     href={`/video/${episode.media_type}/${episode.id}?provider=vidsrc`}
                     className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
                   >
-                    <img
+                    <img fetchPriority="low"
                       loading="lazy"
                       className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                       src={createImageUrl(episode.poster_path, "w500")}

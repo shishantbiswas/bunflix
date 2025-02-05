@@ -60,7 +60,7 @@ export default function TmdbShowGrid({
                     href={`/video/${type}/${episode.id}${type.toLocaleLowerCase() == "tv" ? "?season=1&episode=1&provider=vidsrc" : "?provider=vidsrc"}`}
                     className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
                   >
-                    <img
+                    <img fetchPriority="low"
                       loading="lazy"
                       className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                       src={createImageUrl(episode.poster_path || episode.media_type, "w500")}

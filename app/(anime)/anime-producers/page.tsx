@@ -46,7 +46,7 @@ export default async function Categories({
             href={`/anime/${episode.id}`}
             className="w-full h-[350px] rounded-md overflow-hidden group  relative text-end"
           >
-            <img loading="lazy"
+            <img fetchPriority="low" loading="lazy"
               className="size-full object-cover group-hover:scale-105 transition-all"
               src={episode.poster}
               alt={episode.name}

@@ -39,7 +39,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
               }}
               className="absolute size-full bg-linear-to-br from-transparent to-black/20 rounded-md overflow-hidden cursor-pointer"
             >
-              <img loading="lazy"
+              <img fetchPriority="low" loading="lazy"
                 style={{
                   height: i === imageindex ? "" : "50%",
                   opacity: i === imageindex ? "100%" : "0%",
@@ -76,7 +76,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
             onClick={() => setImageindex(i)}
             className="flex w-full transition-all  duration-500 cursor-pointer rounded-md overflow-hidden  min-h-28 relative "
           >
-            <img loading="lazy"
+            <img fetchPriority="low" loading="lazy"
               src={res.poster}
               className="w-full h-full object-cover"
               alt=""

@@ -68,7 +68,7 @@ export default function AniwatchSearch({
                     href={`/anime/${episode.id}`}
                     className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
                   >
-                    <img loading="lazy"
+                    <img fetchPriority="low" loading="lazy"
                       className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                       src={episode.poster}
                       alt={episode.name}
