@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <body className={`${inter.className} max-w-7xl mx-auto`}>
+        <body className={`${inter.className} max-w-8xl mx-auto`}>
           <LoadingIndicator />
           <Navbar />
           <MobileNavbar />
