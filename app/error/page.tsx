@@ -13,7 +13,7 @@ type SearchParams = Promise<{ err: string }>
 export default async function Error({ searchParams }: { searchParams: SearchParams }) {
     const err = (await searchParams).err
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-black/80 p-4">
+        <div className="min-h-screen flex flex-col items-center justify-center   p-4">
             <div className="text-center ">
                 <svg
                     className="mx-auto h-24 w-24 text-gray-400"

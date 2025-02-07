@@ -3,7 +3,7 @@ import { RefreshCcw } from "lucide-react"
 
 export default function ErrorPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black/80 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="text-center ">
         <svg
           className="mx-auto h-24 w-24 text-gray-400"

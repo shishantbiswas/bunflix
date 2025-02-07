@@ -6,11 +6,9 @@ import Hls, { HlsConfig } from "hls.js";
 
 export default function Player({
   src,
-  getInstance,
   track,
 }: {
   src: string;
-  getInstance?: (art: Artplayer) => void;
   track: {
     file: string;
     kind: string;
@@ -18,6 +16,7 @@ export default function Player({
     default: boolean;
   }[];
 }) {
+
   const artRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
@@ -143,9 +142,6 @@ export default function Player({
       },
     });
 
-    if (getInstance && typeof getInstance === "function") {
-      console.log(getInstance(art));
-    }
 
     return () => {
       if (art && art.destroy) {

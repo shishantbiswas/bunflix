@@ -9,7 +9,7 @@ export default function HistoryPage() {
   const history = useLiveQuery(() => searchHistory.searches.toArray());
 
   return (
-    <div className="p-4 pb-24 bg-black/80 min-h-screen flex items-center flex-col">
+    <div className="p-4 pb-24   min-h-screen flex items-center flex-col">
       <h1 className="text-3xl font-bold text-start w-fit">Search History</h1>
       <div className="flex items-center w-full flex-col gap-4 mt-4 max-w-4xl">
         {history?.map((value) => (

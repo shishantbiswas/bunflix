@@ -28,7 +28,7 @@ export default async function Query({
 
 
   return (
-    <div className=" bg-black/80 min-h-screen">
+    <div className="   min-h-screen">
       <div className="pb-24 p-4 md:flex-row flex-col flex gap-4">
         {type == "anime" ? (
           <>

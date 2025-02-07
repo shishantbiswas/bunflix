@@ -102,7 +102,7 @@ export default function Navbar() {
 
 
   return (
-    <section className="h-20 bg-black/80 w-full relative sm:flex justify-center hidden">
+    <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav className={`bg-black/30 backdrop-blur-sm h-20 transition-all ${y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `}>
         <div className="flex items-center">
           <img fetchPriority="low" loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />

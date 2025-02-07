@@ -13,7 +13,7 @@ export default async function Anime() {
   const data: AniwatchHome = await aniwatchHomeApi();
 
   return (
-    <div className="pb-24 bg-black/80 min-h-screen">
+    <div className=" min-h-screen">
       <AniwatchSlider anime={data} />
       <AniwatchHome anime={data} />
       <Suspense fallback={<CategoryFallback />}>

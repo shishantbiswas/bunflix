@@ -16,7 +16,7 @@ export default async function Genre({ params }: { params: Params }) {
   const data: AniwatchGenre = await fetchAnimeStudio(id);
 
   return (
-    <div className="min-h-screen bg-black/80 p-4 pb-24">
+    <div className="min-h-screen   p-4 pb-24">
       <h1 className="text-3xl font-semibold capitalize">{data.data.genreName}</h1>
       <div className="grid mt-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 text-end">
         {data.data.animes.map((show) => (

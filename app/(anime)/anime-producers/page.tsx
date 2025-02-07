@@ -37,7 +37,7 @@ export default async function Categories({
   const producerName = type.replace(/-/, " ").split(" ").join("");
   const data = await fetchAniwatchProducer(type.replace(" ","-").trim(), true, 1);
   return (
-    <div className="min-h-screen bg-black/80 p-4">
+    <div className="min-h-screen   p-4">
       <h1 className="text-3xl my-2 font-semibold">{producerName}</h1>
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         {data?.data.animes.map((episode, animeIndex) => (

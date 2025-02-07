@@ -17,14 +17,17 @@
     from {
       width: 0%;
     }
+
     to {
       width: 100%;
     }
   }
+
   @keyframes loading {
     0% {
       transform: translateX(-100%);
     }
+
     100% {
       transform: translateX(100%);
     }
@@ -40,6 +43,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -50,10 +54,15 @@
 }
 
 @layer utilities {
+
   :root,
   html,
   body {
     color: white;
+  }
+
+  body {
+    @apply bg-black/80;
   }
 
   ::-webkit-scrollbar {
@@ -75,7 +84,7 @@
   }
 }
 
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -137,7 +146,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-}
+} */
 
 @layer base {
   video::-webkit-media-controls {
@@ -166,11 +175,13 @@
 }
 
 @keyframes jumpForward {
+
   0%,
   100% {
     opacity: 0;
     transform: translateX(0);
   }
+
   50% {
     opacity: 1;
     transform: translateX(50px);
@@ -178,11 +189,13 @@
 }
 
 @keyframes jumpBackward {
+
   0%,
   100% {
     opacity: 0;
     transform: translateX(0);
   }
+
   50% {
     opacity: 1;
     transform: translateX(-50px);
@@ -193,6 +206,7 @@
   0% {
     width: 0%;
   }
+
   100% {
     width: 100%;
   }

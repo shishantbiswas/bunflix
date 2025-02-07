@@ -73,7 +73,7 @@ export default function MovieItem({
           <span className="text-sm leading-none text-center">Image Error</span>
         </div>
       )}
-      <div className="absolute h-full flex items-center justify-between flex-col top-0 left-0 w-full focus:hover:bg-red-700 transition-all bg-black/80 backdrop-blur-md opacity-0  focus-within:opacity-100 hover:opacity-100  p-3 group">
+      <div className="absolute h-full flex items-center justify-between flex-col top-0 left-0 w-full focus:hover:bg-red-700 transition-all   backdrop-blur-md opacity-0  focus-within:opacity-100 hover:opacity-100  p-3 group">
         <div>
           <p
             className={` whitespace-normal font-semibold mb-2 leading-[12px] transition-all  group-hover:leading-[22px] text-md md:text-xl `}

@@ -10,7 +10,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
     <>
       <h1 className="text-3xl py-2 font-semibold px-4">Newly Added</h1>
       <div className="lg:flex">
-        <div className="grid align-top self-start gap-4 md:gap-3 p-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  md:grid-cols-4 xl:grid-cols-6 w-full motion-delay-150">
+        <div className="grid align-top self-start gap-4 md:gap-3 p-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  md:grid-cols-4 lg:grid-cols-5 w-full motion-delay-150">
           {data.latestEpisodeAnimes.map((episode,i) => (
             <Link
               key={episode.id}

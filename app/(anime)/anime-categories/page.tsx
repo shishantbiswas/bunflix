@@ -44,7 +44,7 @@ export default async function Categories({
   )
   .join("");
   return (
-    <div className="min-h-screen bg-black/80 p-4">
+    <div className="min-h-screen   p-4">
       <h1 className="text-3xl my-2 font-semibold">{term}</h1>
         <AniwatchCategoryList type={type} />
     </div>
