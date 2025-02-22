@@ -3,6 +3,7 @@
 import {
   Badge,
   ChevronDown,
+  CogIcon,
   CrownIcon,
   PopcornIcon,
   Search,
@@ -14,6 +15,8 @@ import SearchInput from "./search-input";
 import Link from "@/components/link";
 import useWindowScroll from "@/hooks/useWindowScroll";
 import { usePathname } from "next/navigation";
+import { useLiveQuery } from "dexie-react-hooks";
+import { indexDB } from "@/lib/index-db";
 
 type LinkArray = {
   id: number
@@ -31,6 +34,7 @@ export default function Navbar() {
   const linkref = useRef<HTMLDivElement>(null);
   const [openDropdown, setOpenDropdown] = useState(false);
   const y = useWindowScroll(60)
+  const widthPreference = useLiveQuery(() => indexDB.userPreferences.get(1))
 
   const navLinks: LinkArray[] = [
     {
@@ -103,7 +107,9 @@ export default function Navbar() {
 
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
-      <nav className={`bg-black/30 backdrop-blur-sm h-20 transition-all ${y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `}>
+      <nav
+        className={`bg-black/30 backdrop-blur-sm h-20 transition-all  ${widthPreference && widthPreference.centerContent == true ? "max-w-6xl" : "w-full"} ${widthPreference && !widthPreference.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
+        }>
         <div className="flex items-center">
           <img fetchPriority="low" loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />
           <div ref={linkref} className="group flex">
@@ -131,19 +137,22 @@ export default function Navbar() {
             setOpenDropdown={setOpenDropdown} />
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => {
               setIsSearchOpen(!isSearchOpen);
             }}
-            className=" flex items-center gap-2 py-1.5 px-3"
+            className=""
           >
             <Search color="white" className=" size-6" />
           </button>
+          <Link href={'/settings'} className="flex items-center">
+          <CogIcon />
+          </Link>
           <Link
             target="_blank"
             href="https://github.com/shishantbiswas/bunflix"
-            className="flex items-center gap-2 text-nowrap"
+            className="text-nowrap"
           >
             <GithubIcon />
           </Link>
@@ -206,7 +215,7 @@ function LinkFollower({ translate, width }: { width: number, translate: string }
 function GithubIcon() {
   return (
     <svg
-      className=" size-6 fill-white"
+      className=" size-[22px] fill-white"
       role="img"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"

@@ -2,15 +2,12 @@
 import { MicIcon, CaptionsIcon } from "lucide-react";
 import Link from "@/components/link";
 import React, { useEffect, useState } from "react";
+import { useShow } from "@/context/show-provider";
 
 export default function EpisodeSelector({
-  currentEpisodeNum,
-  data,
   episode,
   lang,
 }: {
-  currentEpisodeNum: string;
-  data: AniwatchInfo;
   episode: AniwatchEpisodeData;
   lang: "en" | "jp";
 }) {
@@ -19,6 +16,15 @@ export default function EpisodeSelector({
   );
   const [firstRender, setFirstRender] = useState(true);
   useEffect(() => setFirstRender(false), []);
+
+  const { show: data } = useShow();
+  if(!data){
+    return (
+      <div className="p-4 lg:p-2 lg:pl-0 lg:w-1/4">
+        <div className="rounded h-[400px] w-[calc(100%-8px)] -mr-3 mt-2 bg-gray-400/30  animate-pulse"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 lg:p-2 lg:pl-0 lg:w-1/4">
@@ -34,7 +40,7 @@ export default function EpisodeSelector({
             className="peer sr-only"
           />
           <div
-            className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden peer-focus:ring-transparent  peer-checked:rtl:after:-translate-x-full 
+            className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden  peer-checked:rtl:after:-translate-x-full 
              dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
           ></div>
           <span className=" text-sm font-medium dark:text-gray-300">
@@ -46,7 +52,7 @@ export default function EpisodeSelector({
         <ul
           ref={(el) => {
             if (firstRender) {
-              el?.scrollBy(0, 80 * (Number(currentEpisodeNum) - 1));
+              el?.scrollBy(0, 80 * (Number(data.epNum) - 1));
             }
           }}
           className="max-h-[70vh] w-full lg:w-[500px] bg-slate-500 overflow-y-scroll rounded-lg"
@@ -73,7 +79,7 @@ export default function EpisodeSelector({
                 }
                 style={{
                   backgroundColor:
-                    Number(currentEpisodeNum) == Number(episode.number) &&
+                    Number(data.epNum) == Number(episode.number) &&
                       audioToogle === lang
                       ? "#b91c1c"
                       : audioToogle === "en"

@@ -6,7 +6,7 @@ import Link from "@/components/link";
 import { useSearchBarFocus } from "@/context/search-context";
 import { createImageUrl } from "@/lib/utils";
 import { useLiveQuery } from "dexie-react-hooks";
-import { searchHistory } from "@/lib/search-history";
+import { indexDB } from "@/lib/index-db";
 import { toast } from "sonner";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -61,7 +61,7 @@ export default function SearchInput() {
     if (!term) {
       setIsEmpty(true);
     } else {
-      searchHistory.searches.add({ term: term, type: type });
+      indexDB.searches.add({ term: term, type: type });
       clearAndClose();
       router.push(`/search/${type}/${term}`);
     }
@@ -91,7 +91,7 @@ export default function SearchInput() {
     };
   }, [isSearchOpen]);
 
-  const history = useLiveQuery(() => searchHistory.searches.toArray());
+  const history = useLiveQuery(() => indexDB.searches.toArray());
 
   return (
     <div
@@ -186,7 +186,7 @@ export default function SearchInput() {
             <>
               <button
                 className=" text-red-500 transition-all text-md bg-red-100 py-1 rounded-md px-2 font-medium w-fit flex items-center justify-between cursor-pointer"
-                onClick={() => searchHistory.searches.clear()}
+                onClick={() => indexDB.searches.clear()}
               >
                 <CircleX className=" mr-2 cursor-pointer " size={15} />
                 Clear

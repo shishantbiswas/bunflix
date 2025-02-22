@@ -4,16 +4,10 @@ import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-export function AnimeSearchSidebar({
-  search,
-}: {
-  search: string;
-}) {
+export function AnimeSearchSidebar() {
   const types = ["ONA", "Special", "Movie", "TV", "OVA"];
 
-  // const [type, setType] = useState("");
   const searchParams = useSearchParams();
-  const contentType = searchParams.get("type");
 
   return (
     <div className="p-4 md:sticky top-4 rounded-sm h-fit pb-4 flex-col flex bg-black/30 w-full md:w-[300px]">
@@ -37,7 +31,7 @@ export function AnimeSearchSidebar({
         ))}
       </select>
 
-      <label className="my-3" htmlFor="lang">
+      {/* <label className="my-3" htmlFor="lang">
         Language
       </label>
       <select
@@ -54,7 +48,7 @@ export function AnimeSearchSidebar({
             {lang}
           </option>
         ))}
-      </select>
+      </select> */}
 
 
       {/* <Link

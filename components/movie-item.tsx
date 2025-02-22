@@ -89,8 +89,7 @@ export default function MovieItem({
             </p>
           </div>
           <p
-            className=" whitespace-normal line-clamp-2  duration-500  
-          text-[15px] pt-1 opacity-70"
+            className=" whitespace-normal line-clamp-2  duration-500  text-[15px] pt-1 opacity-70"
           >
             {overview ? overview : synopsis}
           </p>

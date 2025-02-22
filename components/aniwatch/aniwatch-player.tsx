@@ -2,7 +2,6 @@
 import { redirect } from "next/navigation";
 import Player from "./art-player";
 
-
 export default async function AniwatchPlayer({
   episodeId,
   ep,
@@ -13,6 +12,7 @@ export default async function AniwatchPlayer({
   lang: "en" | "jp";
 }) {
   if (!ep) return;
+
   const server = await fetchAniwatchEpisodeServer(episodeId, ep);
   if (lang === "en") {
 

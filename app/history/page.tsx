@@ -1,11 +1,11 @@
-import HistoryPage from "@/components/history-page";
+import History from "@/components/history-page";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Search History - Nextflix",
+  title: "History - Nextflix",
   description: "Nextflix clone built with Next.js and Tailwind CSS",
 };
 
-export default function History() {
-  return <HistoryPage />;
+export default function HistoryPage() {
+  return <History />;
 }

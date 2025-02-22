@@ -1,0 +1,46 @@
+import Dexie, { EntityTable } from "dexie";
+
+interface SearchHistory {
+  id: number;
+  type: string;
+  term: string;
+}
+
+interface UserPreference {
+  id: number;
+  hideWatchedShows: boolean
+  hideWatchedShowsInSearch: boolean
+  watchShows: Anime[]
+  disableFloatingNavbar:boolean
+  centerContent: boolean
+  lang: "en" | "jp" | "all"
+}
+
+interface WatchLater {
+  show: Anime
+}
+
+interface WatchHistory {
+  show: Anime,
+  id: string
+  time: number
+  duration: number
+  ep: string
+  epNum: number|string
+  lang: "en" | "jp"
+}
+
+export const indexDB = new Dexie("BunflixDB") as Dexie & {
+  searches: EntityTable<SearchHistory, "id">;
+  userPreferences: EntityTable<UserPreference, "id">;
+  watchLater: EntityTable<WatchLater>,
+  watchHistory: EntityTable<WatchHistory, "id">
+};
+
+indexDB.version(1).stores({
+  searches: "++id",
+  userPreferences: "id",
+  watchHistory: "++id",
+  watchLater: "++id"
+});
+

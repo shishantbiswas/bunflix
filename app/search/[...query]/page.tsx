@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Params }) {
       } - Nextflix`,
   };
 }
-export default async function Query({
+export default async function SearchPage({
   params,
 }: {
   params: Params;
@@ -32,7 +32,7 @@ export default async function Query({
       <div className="pb-24 p-4 md:flex-row flex-col flex gap-4">
         {type == "anime" ? (
           <>
-            <AnimeSearchSidebar search={searchTerm} />
+            <AnimeSearchSidebar />
             <Suspense fallback={<SearchSkeleton />}>
               <AniwatchSearch searchTerm={searchTerm} />
             </Suspense>

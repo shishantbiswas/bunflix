@@ -1,13 +1,17 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { MicIcon, CaptionsIcon } from "lucide-react";
+import { MicIcon, CaptionsIcon, Save, PlayCircle } from "lucide-react";
 import Link from "@/components/link";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { indexDB } from "@/lib/index-db";
+import { useLiveQuery } from "dexie-react-hooks";
+import { Menu } from "./context-menu";
+import AniwatchAnimeCard from "./aniwatch-anime-card";
 
-export default function AniwatchCategoryList({ type }: { type: string }) {
-  const { data, fetchNextPage,isLoading } = useInfiniteQuery({
+export default function AniwatchCategoryList({ type, disablePagination = false }: { type: string, disablePagination?: boolean }) {
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["anime-category", { type }],
     queryFn: ({ pageParam }) =>
       fetchAniwatchCategories(pageParam.hasNextPage, pageParam.pageToFetch),
@@ -41,11 +45,30 @@ export default function AniwatchCategoryList({ type }: { type: string }) {
 
     const res = await fetch(
       `/api/anime/category?category=${type}&page=${pageToFetch}`,
-      { next: { revalidate: 3600 , tags: ["anime"] }  }
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
     const data = (await res.json()) as AniwatchSearch;
     return data;
   };
+  const [menu, setMenu] = useState<{
+    open: boolean,
+    x: number,
+    y: number,
+    show: Anime
+  }>({
+    open: false,
+    x: 0,
+    y: 0,
+    show: {
+      duration: "",
+      episodes: { dub: 0, sub: 0 },
+      id: "",
+      name: "",
+      poster: "",
+      rating: "",
+      type: "",
+    }
+  })
 
   return (
     <>
@@ -53,40 +76,20 @@ export default function AniwatchCategoryList({ type }: { type: string }) {
         {data?.pages?.map((page, pageIndex) => {
           return (
             <div className="h-fit w-fit contents" key={pageIndex}>
-              {page?.data.animes.map((episode, animeIndex) => (
-                <Link
-                  key={episode.id + pageIndex + animeIndex}
-                  href={`/anime/${episode.id}`}
-                  className="w-full h-[350px] rounded-md overflow-hidden group  relative text-end"
-                >
-                  <img fetchPriority="low" loading="lazy"
-                    className="size-full object-cover group-hover:scale-105 transition-all"
-                    src={episode.poster}
-                    alt={episode.name}
-                  />
-
-                  <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
-                    <h1 className="text-xl font-semibold">{episode.name}</h1>
-                    <p className="text-sm">{episode.jname}</p>
-                    <div className="flex text-sm gap-2">
-                      <p>{episode.type}</p>
-                      <p className="flex items-center gap-1 bg-purple-500/70 rounded-xs py-0.5 px-1">
-                        <MicIcon size={12} />
-                        {episode.episodes.dub || "NA"}
-                      </p>
-                      <p className="flex items-center gap-1 bg-yellow-500/80 rounded-xs py-0.5 px-1">
-                        <CaptionsIcon size={12} />
-                        {episode.episodes.sub}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+              {page?.data.animes.map((episode) => (
+                <AniwatchAnimeCard episode={episode} setMenu={setMenu} key={episode.id} />
               ))}
             </div>
           );
         })}
+        {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
       </div>
-      <div ref={ref}></div>
+     {!disablePagination && <div ref={ref}>
+        {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
+      </div>}
+      <Menu data={menu} setMenu={setMenu} />
     </>
   );
 }
+
+

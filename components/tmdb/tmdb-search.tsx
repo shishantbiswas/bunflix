@@ -16,7 +16,7 @@ export default function TmdbSearch({ searchTerm }: { searchTerm: string }) {
     threshold: 1,
   });
 
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery({
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["tmdb-search", { searchTerm }],
     queryFn: ({ pageParam }) =>
       fetchMulti(pageParam.hasNextPage, pageParam.pageToFetch),
@@ -86,8 +86,12 @@ export default function TmdbSearch({ searchTerm }: { searchTerm: string }) {
             </div>
           );
         })}
+      {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
       </div>
-      <div ref={ref} className="size-12"></div>
+
+      <div ref={ref} >
+      {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function TmdbShowGrid({
     threshold: 0,
   });
 
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery({
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["tmdb-category", { endpoint, }],
     queryFn: ({ pageParam }) =>
       fetchData(pageParam.hasNextPage, pageParam.pageToFetch, pageParam.endpoint),
@@ -80,8 +80,11 @@ export default function TmdbShowGrid({
             </div>
           );
         })}
+        {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
       </div>
-      <div ref={ref} className="size-12" />
+      <div ref={ref} >
+        {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
+      </div>
     </div>
   );
 }
@@ -92,7 +95,7 @@ export async function fetchData(hasNextPage: boolean, pageToFetch: number, endpo
   }
 
   try {
-    const response = await fetch(`/api/tmdb-category/${endpoint}?page=${pageToFetch}`, 
+    const response = await fetch(`/api/tmdb-category/${endpoint}?page=${pageToFetch}`,
       { next: { revalidate: 3600, tags: ["tmdb"] } }
     );
     const data = await response.json() as TMDBMultiSearch;

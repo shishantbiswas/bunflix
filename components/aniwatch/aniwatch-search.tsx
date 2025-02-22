@@ -3,8 +3,11 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { CaptionsIcon, MicIcon } from "lucide-react";
 import Link from "@/components/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { useLiveQuery } from "dexie-react-hooks";
+import { indexDB } from "@/lib/index-db";
+import { Menu } from "./context-menu";
 
 export default function AniwatchSearch({
   searchTerm,
@@ -13,9 +16,9 @@ export default function AniwatchSearch({
 }) {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
-  const lang = searchParams.get("lang");
+  const lang = useLiveQuery(() => indexDB.userPreferences.get(1))
 
-  const { data, fetchNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["anime-search", { searchTerm }],
     queryFn: ({ pageParam }) =>
       fetchAnime(pageParam.hasNextPage, pageParam.pageToFetch),
@@ -40,7 +43,7 @@ export default function AniwatchSearch({
 
     const res = await fetch(
       `/api/search?q=${searchTerm}&type=anime&page=${pageToFetch}`,
-      { next: { revalidate: 3600, tags: ["anime"]  }}
+      { next: { revalidate: 3600, tags: ["anime"] } }
     );
     const data = (await res.json()) as AniwatchSearch;
     return data;
@@ -54,6 +57,28 @@ export default function AniwatchSearch({
     fetchNextPage();
   }, [inView]);
 
+  // const history = useLiveQuery(() => indexDB.userPreferences.toArray())
+
+  const [menu, setMenu] = useState<{
+    open: boolean,
+    x: number,
+    y: number,
+    show: Anime
+  }>({
+    open: false,
+    x: 0,
+    y: 0,
+    show: {
+      duration: "",
+      episodes: { dub: 0, sub: 0 },
+      id: "",
+      name: "",
+      poster: "",
+      rating: "",
+      type: "",
+    }
+  })
+
   return (
     <div className="flex flex-col w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-6 w-full gap-3  ">
@@ -62,6 +87,10 @@ export default function AniwatchSearch({
             <div className="contents  " key={i}>
               {page?.data.animes
                 .filter((ep) => (!type ? ep : ep.type == type))
+                // .filter((ep)=>{
+                //   if(!history) return
+                //   return !history[0].watchShows.includes(ep.id)
+                // })
                 .map((episode, i) => (
                   <Link
                     key={episode.id + i}
@@ -73,10 +102,26 @@ export default function AniwatchSearch({
                       src={episode.poster}
                       alt={episode.name}
                     />
-                    <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
-                      <h1 className="text-lg font-semibold leading-tight">
-                        {!lang || lang == "english" ? episode.name : episode.jname}
-                      </h1>
+                    <div
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setMenu({ open: true, x: e.pageX, y: e.pageY, show: episode });
+                      }}
+                      className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+
+                      {(lang && lang.lang == "all") ? (
+                        <>
+                          <h1 className="text-lg font-semibold leading-tight">
+                            {episode.name}
+                          </h1>
+                          <p className="text-[12px] opacity-60 italic">{episode.jname}</p>
+                        </>
+                      ) : (
+                        <h1 className="text-lg font-semibold leading-tight">
+                          {lang && lang.lang == "en" ? episode.name : episode.jname}
+                        </h1>
+                      )}
+
                       <div className="flex text-sm gap-1">
                         <p>{episode.type}</p>
                         <p className="flex items-center gap-1 bg-purple-500/70 rounded-xs  px-1">
@@ -94,9 +139,14 @@ export default function AniwatchSearch({
             </div>
           );
         })}
+        {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
+
       </div>
 
-      <div ref={ref} className="size-12"></div>
+      <div ref={ref}>
+        {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
+      </div>
+      <Menu data={menu} setMenu={setMenu} />
     </div>
   );
 }

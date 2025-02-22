@@ -5,7 +5,6 @@
 @plugin 'tailwindcss-animate';
 @plugin 'tailwind-scrollbar-hide';
 @plugin 'tailwindcss-motion';
-@plugin 'tailwindcss-intersect';
 
 @theme {
   --breakpoint-xs: 475px;

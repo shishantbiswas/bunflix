@@ -1,4 +1,4 @@
-import { AniwatchInfo } from "@/components/aniwatch/aniwatch-info";
+import { AniwatchShowInfo } from "@/components/aniwatch/aniwatch-info";
 import AniwatchPlayer from "@/components/aniwatch/aniwatch-player";
 import EpisodeSelector from "@/components/aniwatch/episode-selector";
 import { Metadata } from "next";
@@ -52,13 +52,13 @@ export default async function Anime({
   const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
 
   if (!ep) {
-    redirect(`/anime/${episode.data.episodes[0].episodeId}&lang=jp&num=1`);
+    redirect(`/anime/${episode.data.episodes[0].episodeId}&lang=${lang || "jp"}&num=1`);
   }
 
-  const data: AniwatchInfo = await fetchAniwatchId(id);
+  const data = await fetchAniwatchId(id);
 
   return (
-    <div className="bg-black/60 min-h-screen space-y-6 pb-24">
+    <div className=" min-h-screen space-y-6">
       <div className="flex lg:flex-row flex-col">
         <AniwatchPlayer
           episodeId={id}
@@ -68,14 +68,15 @@ export default async function Anime({
         <EpisodeSelector
           lang={lang}
           episode={episode}
-          currentEpisodeNum={
-            num ? num : episode.data.episodes[0].number
-          }
-          data={data}
         />
       </div>
-
-      <AniwatchInfo data={data} />
+      <AniwatchShowInfo
+        lang={lang}
+        ep={ep}
+        currentEpisodeNum={
+          num ? num : episode.data.episodes[0].number
+        }
+        data={data} />
     </div>
   );
 }

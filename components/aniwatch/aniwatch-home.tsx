@@ -2,28 +2,60 @@
 import { CaptionsIcon, MicIcon } from "lucide-react";
 import Link from "@/components/link";
 import { useState } from "react";
+import { indexDB } from "@/lib/index-db";
+import { useLiveQuery } from "dexie-react-hooks";
+import { Menu } from "./context-menu";
 
-export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) {
+export default function AniwatchHome({ anime: { data } }: { anime: AniwatchHome }) {
   const [date, setDate] = useState(data.top10Animes.week);
-
+  const widthPreference = useLiveQuery(() => indexDB.userPreferences.get(1))
+  const [menu, setMenu] = useState<{
+    open: boolean,
+    x: number,
+    y: number,
+    show: Anime
+  }>({
+    open: false,
+    x: 0,
+    y: 0,
+    show: {
+      duration: "",
+      episodes: { dub: 0, sub: 0 },
+      id: "",
+      name: "",
+      poster: "",
+      rating: "",
+      type: "",
+    }
+  })
   return (
     <>
       <h1 className="text-3xl py-2 font-semibold px-4">Newly Added</h1>
       <div className="lg:flex">
-        <div className="grid align-top self-start gap-4 md:gap-3 p-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  md:grid-cols-4 lg:grid-cols-5 w-full motion-delay-150">
-          {data.latestEpisodeAnimes.map((episode,i) => (
+        <div
+          className={`grid align-top self-start gap-4 md:gap-3 p-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  md:grid-cols-4 
+          ${widthPreference && widthPreference.centerContent == true ? "" : "xl:grid-cols-5"}
+          w-full motion-delay-150`
+          }>
+          {data.latestEpisodeAnimes.map((episode, i) => (
             <Link
               key={episode.id}
               href={`/anime/${episode.id}`}
-              className={`min-w-[150px] lg:w-full intersect:motion-preset-slide-up intersect-once motion-delay-[${i*50}ms] h-[300px] rounded-md overflow-hidden group  relative text-end`}
+              className={`min-w-[150px] lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end`}
             >
-              <img fetchPriority="low" loading="lazy"
+              <img 
+                fetchPriority="low" 
+                loading="lazy"
                 className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
                 src={episode.poster}
                 alt={episode.name}
               />
-
-              <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+              <div
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  setMenu({ open: true, x: e.pageX, y: e.pageY, show: { ...episode, duration: "", rating: episode.rating || "" } });
+                }}
+                className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
                 <h1 className="text-xl font-semibold">{episode.name}</h1>
                 <div className="flex text-sm gap-1">
                   <p>{episode.type}</p>
@@ -39,6 +71,7 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
               </div>
             </Link>
           ))}
+          <Menu data={menu} setMenu={setMenu} />
         </div>
 
         <div className="px-4 flex flex-col gap-2 sticky top-4 pb-4 h-fit">
@@ -108,56 +141,6 @@ export default function AniwatchHome({ anime:{data} }: { anime: AniwatchHome }) 
           </div>
         </div>
       </div>
-
-      {/* <div className="">
-        <h1 className="text-3xl py-2 font-semibold px-4">Top Airing</h1>
-        <div className="px-4 flex  gap-3 overflow-x-scroll scrollbar-hide">
-          {topAiringAnimes.map((episode) => (
-            <div
-              className="min-w-[200px] h-[300px] rounded-md overflow-hidden group relative"
-              key={episode.id}
-            >
-              <Link href={`/anime/${episode.id}`}>
-                <img fetchPriority="low" loading="lazy"
-                  className="size-full object-cover group-hover:scale-105 transition-all"
-                  src={episode.poster}
-                  alt={episode.name}
-                />
-
-                <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
-                  <h1 className="text-xl font-semibold">{episode.name}</h1>
-                  <p>{episode.description}</p>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h1 className="text-3xl py-2 font-semibold px-4">Upcoming Anime</h1>
-        <div className="px-4 flex  gap-3 overflow-x-scroll scrollbar-hide">
-          {anime.topUpcomingAnimes.map((episode) => (
-            <div
-              className="min-w-[200px] h-[300px] rounded-md overflow-hidden group  relative"
-              key={episode.id}
-            >
-              <Link href={`/anime/${episode.id}`}>
-                <img fetchPriority="low" loading="lazy"
-                  className="size-full object-cover group-hover:scale-105 transition-all"
-                  src={episode.poster}
-                  alt={episode.name}
-                />
-
-                <div className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
-                  <h1 className="text-xl font-semibold">{episode.name}</h1>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div> */}
-      
     </>
   );
 }

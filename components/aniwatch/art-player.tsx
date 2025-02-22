@@ -1,8 +1,11 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Artplayer from "artplayer";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
 import Hls, { HlsConfig } from "hls.js";
+import { useShow } from "@/context/show-provider";
+import { indexDB } from "@/lib/index-db";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export default function Player({
   src,
@@ -15,10 +18,12 @@ export default function Player({
     label: string;
     default: boolean;
   }[];
+  getInstance?: (art: Artplayer) => void
 }) {
 
   const artRef = useRef<HTMLDivElement>(null);
-  const hlsRef = useRef<Hls | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const hlsConfig: Partial<HlsConfig> = {
     fragLoadingMaxRetry: 200,
@@ -29,15 +34,6 @@ export default function Player({
     maxMaxBufferLength: 300,
     maxBufferHole: 0.5,
   }
-
-  function loadSource(url: string) {
-    if (hlsRef.current) {
-      hlsRef.current.loadSource(url);
-    }
-  }
-  useEffect(() => {
-    loadSource(src);
-  }, [src]);
 
   useEffect(() => {
     const art = new Artplayer({
@@ -59,7 +55,7 @@ export default function Player({
           quality: {
             control: true,
             setting: true,
-            getName: (level: { height: string }) => level.height + 'P',
+            getName: (level: { height: string }) => level.height,
             title: 'Quality',
             auto: 'Auto',
           },
@@ -122,8 +118,7 @@ export default function Player({
           if (Hls.isSupported()) {
             if (art.hls) art.hls.destroy();
             const hls = new Hls(hlsConfig);
-            hlsRef.current = hls;
-            loadSource(url);
+            hls.loadSource(url)
             hls.attachMedia(video);
             art.hls = hls;
             art.on("destroy", () => hls.destroy());
@@ -133,6 +128,12 @@ export default function Player({
                 // console.log("HLS instance destroyed");
               }
             });
+            videoRef.current = video;
+            const handlePlay = () => setIsPlaying(true);
+            const handlePause = () => setIsPlaying(false);
+
+            video.addEventListener("play", handlePlay);
+            video.addEventListener("pause", handlePause);
           } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
             video.src = url;
           } else {
@@ -142,18 +143,65 @@ export default function Player({
       },
     });
 
-
     return () => {
       if (art && art.destroy) {
         art.destroy(false);
       }
     };
-  }, []);
+  }, [src, track]);
+
+  const { show } = useShow();
+
+  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(show?.data.anime.info.id || ""));
+
+  useEffect(() => {
+    if (!isPlaying || !show) return;
+    // let cretedshow = false;
+    const interval = setInterval(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        if (existingShow) {
+          const currentTime = indexDB.watchHistory.get(show.data.anime.info.id)
+          currentTime.then((currentShow) => {
+            if (!currentShow || !videoRef.current) return
+
+            indexDB.watchHistory.update(show.data.anime.info.id, {
+              time: currentShow.time,
+              duration: currentShow.duration,
+            })
+          })
+        } else {
+          indexDB.watchHistory.add({
+            id: show.data.anime.info.id,
+            ep: show.ep,
+            lang: show.lang,
+            epNum: show.epNum,
+            time: videoRef.current.currentTime,
+            duration: videoRef.current.duration,
+            show: {
+              duration: show.data.anime.moreInfo.duration,
+              episodes: {
+                dub: Number(show.data.anime.info.stats.episodes.dub),
+                sub: Number(show.data.anime.info.stats.episodes.sub),
+              },
+              poster: show.data.anime.info.poster,
+              id: show.data.anime.info.id,
+              name: show.data.anime.info.name,
+              rating: show.data.anime.info.stats.rating,
+              type: show.data.anime.info.stats.type
+            }
+          })
+          // cretedshow = true;
+        }
+      }
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, existingShow]);
+
 
   return (
     <div
       ref={artRef}
-      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]"
-    ></div>
+      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]" />
   );
 }
