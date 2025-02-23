@@ -92,7 +92,12 @@ export default function AniwatchCategoryList({
             </div>
           );
         })}
-        {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
+        {/* {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>} */}
+        {!isLoading && (
+          <div>
+              <CategoryFallback />
+          </div>
+        )}
       </div>
       {!disablePagination && <div ref={ref}>
         {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
@@ -103,3 +108,19 @@ export default function AniwatchCategoryList({
 }
 
 
+function CategoryFallback() {
+  return (
+    <div className="flex gap-4 overflow-x-scroll scrollbar-hide">
+      {[...Array.from(Array(8).keys())].map((i) => (
+        <div
+          key={i}
+          style={{
+            animationDelay: `${i * 0.9}s`,
+            animationDuration: "2s",
+          }}
+          className="min-w-[190px] bg-white/10 lg:w-full h-[300px] animate-pulse rounded-md overflow-hidden group "
+        ></div>
+      ))}
+    </div>
+  );
+}

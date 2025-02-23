@@ -147,14 +147,32 @@ export default function AniwatchSearch({
             </div>
           );
         })}
-        {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
+        {isLoading && <CategoryFallback />}
 
       </div>
 
-      <div ref={ref}>
+      {/* <div ref={ref}>
         {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading...</p>}
-      </div>
+      </div> */}
       <Menu data={menu} setMenu={setMenu} />
+    </div>
+  );
+}
+
+
+function CategoryFallback() {
+  return (
+    <div className="contents">
+      {[...Array.from(Array(8).keys())].map((i) => (
+        <div
+          key={i}
+          style={{
+            animationDelay: `${i * 0.9}s`,
+            animationDuration: "2s",
+          }}
+          className="min-w-[160px] bg-white/10 lg:w-full h-[300px] animate-pulse rounded-md overflow-hidden group "
+        ></div>
+      ))}
     </div>
   );
 }

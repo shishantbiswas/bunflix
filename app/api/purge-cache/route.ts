@@ -8,7 +8,7 @@ export async function GET() {
     revalidateTag("tmdb");
 
     return Response.json({
-        revalidated: true,
+        success: true,
         now: Date.now()
     })
 }
