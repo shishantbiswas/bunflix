@@ -92,12 +92,7 @@ export default function AniwatchCategoryList({
             </div>
           );
         })}
-        {/* {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>} */}
-        {!isLoading && (
-          <div>
-              <CategoryFallback />
-          </div>
-        )}
+        {!isLoading && (<CategoryFallback />)}
       </div>
       {!disablePagination && <div ref={ref}>
         {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}

@@ -148,12 +148,10 @@ export default function AniwatchSearch({
           );
         })}
         {isLoading && <CategoryFallback />}
-
       </div>
-
-      {/* <div ref={ref}>
+      <div ref={ref}>
         {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading...</p>}
-      </div> */}
+      </div>
       <Menu data={menu} setMenu={setMenu} />
     </div>
   );
