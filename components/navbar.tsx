@@ -3,8 +3,10 @@
 import {
   Badge,
   ChevronDown,
+  Clock,
   CogIcon,
   CrownIcon,
+  HistoryIcon,
   PopcornIcon,
   Search,
 } from "lucide-react";
@@ -108,7 +110,7 @@ export default function Navbar() {
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav
-        className={`bg-black/30 backdrop-blur-sm h-20 transition-all  ${widthPreference && widthPreference.centerContent == true ? "max-w-6xl" : "w-full"} ${widthPreference && !widthPreference.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
+        className={`bg-black/30 backdrop-blur-sm h-20 transition-all duration-[1500ms] ${widthPreference && widthPreference.centerContent == true ? "xl:w-[76rem]" : ""} ${widthPreference && !widthPreference.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
         }>
         <div className="flex items-center">
           <img fetchPriority="low" loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />
@@ -122,12 +124,12 @@ export default function Navbar() {
                 linkName={link.linkName}
               />
             ))}
-            <LinkFollower
+            {/* <LinkFollower
               width={linkref.current?.children[navIndex]?.getBoundingClientRect()
                 .width || 0}
               translate={`${(linkref.current?.children[navIndex]?.getBoundingClientRect()
                 .left ?? 0) - 16
-                }px`} />
+                }px`} /> */}
 
           </div>
 
@@ -147,7 +149,13 @@ export default function Navbar() {
             <Search color="white" className=" size-6" />
           </button>
           <Link href={'/settings'} className="flex items-center">
-          <CogIcon />
+            <CogIcon />
+          </Link>
+          <Link href={'/history'} className="flex items-center">
+            <HistoryIcon />
+          </Link>
+          <Link href={'/watch-later'} className="flex items-center">
+            <Clock />
           </Link>
           <Link
             target="_blank"

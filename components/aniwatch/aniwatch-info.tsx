@@ -61,7 +61,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
         <section className="md:flex">
 
           <img fetchPriority="low" loading="lazy"
-            className="h-full  object-cover rounded-md md:sticky w-full lg:w-fit top-12"
+            className="h-full  object-cover rounded-md md:sticky w-full lg:w-fit top-28"
             src={show.data.anime.info.poster}
             alt={show.data.anime.info.name}
           />

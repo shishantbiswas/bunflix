@@ -6,6 +6,7 @@ import Hls, { HlsConfig } from "hls.js";
 import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useSearchParams } from "next/navigation";
 
 export default function Player({
   src,
@@ -35,6 +36,8 @@ export default function Player({
     maxBufferHole: 0.5,
   }
 
+  const searchParams = useSearchParams();
+  const time = Number(searchParams.get("t")) || 0
   useEffect(() => {
     const art = new Artplayer({
       url: src,
@@ -121,6 +124,7 @@ export default function Player({
             hls.loadSource(url)
             hls.attachMedia(video);
             art.hls = hls;
+            video.currentTime = time;
             art.on("destroy", () => hls.destroy());
             video.addEventListener("ended", () => {
               if (hls) {
@@ -154,21 +158,28 @@ export default function Player({
 
   const existingShow = useLiveQuery(() => indexDB.watchHistory.get(show?.data.anime.info.id || ""));
 
+  const [createdShow, setCreatedShow] = useState(false);
+
+  useEffect(() => {
+    if (existingShow) {
+      setCreatedShow(true)
+    }
+  }, [existingShow])
+
   useEffect(() => {
     if (!isPlaying || !show) return;
-    // let cretedshow = false;
     const interval = setInterval(() => {
       if (videoRef.current && !videoRef.current.paused) {
-        if (existingShow) {
-          const currentTime = indexDB.watchHistory.get(show.data.anime.info.id)
-          currentTime.then((currentShow) => {
-            if (!currentShow || !videoRef.current) return
+        if (createdShow) {
+          indexDB.watchHistory.get(show.data.anime.info.id)
+            .then((currentShow) => {
+              if (!currentShow || !videoRef.current) return
 
-            indexDB.watchHistory.update(show.data.anime.info.id, {
-              time: currentShow.time,
-              duration: currentShow.duration,
+              indexDB.watchHistory.update(show.data.anime.info.id, {
+                time: Math.trunc(videoRef.current.currentTime) || 0,
+                duration: currentShow.duration,
+              })
             })
-          })
         } else {
           indexDB.watchHistory.add({
             id: show.data.anime.info.id,
@@ -190,13 +201,13 @@ export default function Player({
               type: show.data.anime.info.stats.type
             }
           })
-          // cretedshow = true;
+          setCreatedShow(true);
         }
       }
     }, 7000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, existingShow]);
+  }, [isPlaying, createdShow]);
 
 
   return (

@@ -10,7 +10,15 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Menu } from "./context-menu";
 import AniwatchAnimeCard from "./aniwatch-anime-card";
 
-export default function AniwatchCategoryList({ type, disablePagination = false }: { type: string, disablePagination?: boolean }) {
+export default function AniwatchCategoryList({
+  type,
+  disablePagination = false,
+  homePageLayout = false
+}: {
+  type: string,
+  disablePagination?: boolean
+  homePageLayout?: boolean
+}) {
   const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["anime-category", { type }],
     queryFn: ({ pageParam }) =>
@@ -70,21 +78,23 @@ export default function AniwatchCategoryList({ type, disablePagination = false }
     }
   })
 
+  // const watchLater = useLiveQuery(() => indexDB.watchLater.toArray());
+
   return (
     <>
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+      <div className={`${homePageLayout ? "flex items-center w-100% overflow-x-scroll scrollbar-hide gap-4" : "grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"}`}>
         {data?.pages?.map((page, pageIndex) => {
           return (
             <div className="h-fit w-fit contents" key={pageIndex}>
               {page?.data.animes.map((episode) => (
-                <AniwatchAnimeCard episode={episode} setMenu={setMenu} key={episode.id} />
+                <AniwatchAnimeCard widthClassName={"min-w-[190px] w-full"} episode={episode} setMenu={setMenu} key={episode.id} />
               ))}
             </div>
           );
         })}
         {isLoading && <p className="text3xl font-bold mt-3">Loading ...</p>}
       </div>
-     {!disablePagination && <div ref={ref}>
+      {!disablePagination && <div ref={ref}>
         {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
       </div>}
       <Menu data={menu} setMenu={setMenu} />

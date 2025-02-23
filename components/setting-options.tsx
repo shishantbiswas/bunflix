@@ -8,15 +8,7 @@ export default function SettingsOptions() {
 
   const settings = useLiveQuery(() => indexDB.userPreferences.get(1))
   if (!settings) {
-    indexDB.userPreferences.add({
-      id: 1,
-      disableFloatingNavbar: false,
-      centerContent: false,
-      hideWatchedShows: false,
-      hideWatchedShowsInSearch: false,
-      watchShows: [],
-      lang: "all"
-    })
+    return
   }
 
   const hideWatchedVideoToogle = () => {
@@ -79,7 +71,7 @@ export default function SettingsOptions() {
         <div className="flex justify-between">
           <div >
             <p className="text-lg font-semibold">Center UI</p>
-            <label className="opacity-70 text-sm">Make the UI center focused instead of full width</label>
+            <label className="opacity-70 text-sm">Make the UI center focused instead of full width (only effect desktop UI)</label>
           </div>
           {settings && <input
             type="checkbox"

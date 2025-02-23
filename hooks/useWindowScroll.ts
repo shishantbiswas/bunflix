@@ -5,9 +5,9 @@ const win = typeof window === 'undefined' ? null : window
 const getScrollY = (): number =>
   (win as Window).scrollY !== void 0
     ? (win as Window).scrollY
-    : (win as Window).pageYOffset === void 0
+    : (win as Window).screenX === void 0
     ? 0
-    : (win as Window).pageYOffset
+    : (win as Window).screenY
 
 export const useWindowScroll = (fps = 30): number => {
   const state = useThrottle(

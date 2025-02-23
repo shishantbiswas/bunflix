@@ -18,12 +18,12 @@ export default async function Anime() {
       <AniwatchHome anime={data} />
       <div className="p-4">
         <Suspense fallback={<CategoryFallback />}>
-          <h1 className="text-3xl font-semibold">Most Popular</h1>
-          <AniwatchCategoryList type="most-popular" disablePagination={true} />
+          <h1 className="text-3xl font-semibold mt-4">Most Popular</h1>
+          <AniwatchCategoryList type="most-popular" homePageLayout disablePagination/>
         </Suspense>
         <Suspense fallback={<CategoryFallback />}>
-        <h1 className="text-3xl font-semibold">Most Favorite</h1>
-          <AniwatchCategoryList type="most-favorite" disablePagination={true} />
+        <h1 className="text-3xl font-semibold mt-4">Fan Favorite</h1>
+          <AniwatchCategoryList type="most-favorite" homePageLayout disablePagination/>
         </Suspense>
       </div>
 

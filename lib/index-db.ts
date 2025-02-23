@@ -10,17 +10,22 @@ interface UserPreference {
   id: number;
   hideWatchedShows: boolean
   hideWatchedShowsInSearch: boolean
-  watchShows: Anime[]
   disableFloatingNavbar:boolean
   centerContent: boolean
   lang: "en" | "jp" | "all"
 }
-
-interface WatchLater {
+export interface WatchedShows {
   show: Anime
+  id: string
 }
 
-interface WatchHistory {
+export interface WatchLater {
+  show: Anime
+  id: string
+}
+
+
+export interface WatchHistory {
   show: Anime,
   id: string
   time: number
@@ -33,7 +38,8 @@ interface WatchHistory {
 export const indexDB = new Dexie("BunflixDB") as Dexie & {
   searches: EntityTable<SearchHistory, "id">;
   userPreferences: EntityTable<UserPreference, "id">;
-  watchLater: EntityTable<WatchLater>,
+  watchLater: EntityTable<WatchLater,"id">,
+  watchedShows: EntityTable<WatchedShows,"id">,
   watchHistory: EntityTable<WatchHistory, "id">
 };
 
@@ -41,6 +47,7 @@ indexDB.version(1).stores({
   searches: "++id",
   userPreferences: "id",
   watchHistory: "++id",
+  watchedShows: "++id",
   watchLater: "++id"
 });
 

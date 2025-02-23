@@ -1,7 +1,7 @@
 "use client";
 import { MicIcon, CaptionsIcon } from "lucide-react";
 import Link from "@/components/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useShow } from "@/context/show-provider";
 
 export default function EpisodeSelector({
@@ -14,11 +14,9 @@ export default function EpisodeSelector({
   const [audioToogle, setAudioToogle] = useState<"en" | "jp">(
     lang ? lang : "jp"
   );
-  const [firstRender, setFirstRender] = useState(true);
-  useEffect(() => setFirstRender(false), []);
 
   const { show: data } = useShow();
-  if(!data){
+  if (!data) {
     return (
       <div className="p-4 lg:p-2 lg:pl-0 lg:w-1/4">
         <div className="rounded h-[400px] w-[calc(100%-8px)] -mr-3 mt-2 bg-gray-400/30  animate-pulse"></div>
@@ -49,13 +47,7 @@ export default function EpisodeSelector({
         </label>
       </div>
       <div className="flex items-center mb-6 text-sm">
-        <ul
-          ref={(el) => {
-            if (firstRender) {
-              el?.scrollBy(0, 80 * (Number(data.epNum) - 1));
-            }
-          }}
-          className="max-h-[70vh] w-full lg:w-[500px] bg-slate-500 overflow-y-scroll rounded-lg"
+        <ul className="max-h-[70vh] w-full lg:w-[500px] bg-slate-500 overflow-y-scroll rounded-lg"
         >
           {episode.data.episodes.map((episode, index) => (
             <Link
@@ -65,7 +57,7 @@ export default function EpisodeSelector({
               style={{
                 pointerEvents:
                   audioToogle === "en"
-                    ? data.data.anime.info.stats.episodes.dub < episode.number
+                    ? data?.data.anime.info.stats.episodes.dub < episode.number
                       ? "none"
                       : "all"
                     : "all",
@@ -74,12 +66,12 @@ export default function EpisodeSelector({
               <button
                 disabled={
                   audioToogle === "en"
-                    ? data.data.anime.info.stats.episodes.dub < episode.number
-                    : data.data.anime.info.stats.episodes.sub < episode.number
+                    ? data?.data.anime.info.stats.episodes.dub < episode.number
+                    : data?.data.anime.info.stats.episodes.sub < episode.number
                 }
                 style={{
                   backgroundColor:
-                    Number(data.epNum) == Number(episode.number) &&
+                    Number(data?.epNum) == Number(episode.number) &&
                       audioToogle === lang
                       ? "#b91c1c"
                       : audioToogle === "en"
@@ -96,7 +88,7 @@ export default function EpisodeSelector({
                 {audioToogle === "en" && (
                   <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
                     <MicIcon size={15} />
-                    {data.data.anime.info.stats.episodes.dub < episode.number
+                    {data?.data.anime.info.stats.episodes.dub < episode.number
                       ? "Not available"
                       : `EN`}
                   </span>
@@ -104,7 +96,7 @@ export default function EpisodeSelector({
                 {audioToogle === "jp" && (
                   <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
                     <CaptionsIcon size={15} />
-                    {data.data.anime.info.stats.episodes.sub < episode.number
+                    {data?.data.anime.info.stats.episodes.sub < episode.number
                       ? "Not available"
                       : `JP`}
                   </span>

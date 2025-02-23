@@ -19,11 +19,22 @@ const inter = localFont({
 
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
-  const widthPreference = useLiveQuery(() => indexDB.userPreferences.get(1))
+  const settings = useLiveQuery(() => indexDB.userPreferences.get(1))
+  if (!settings) {
+    indexDB.userPreferences.add({
+      id: 1,
+      disableFloatingNavbar: false,
+      centerContent: false,
+      hideWatchedShows: false,
+      hideWatchedShowsInSearch: false,
+      lang: "all"
+    })
+  }
+
     return (
     <Providers>
       <body className={`${inter.className}`}>
-        <div className={`transition-all duration-[2000ms] mx-auto ${widthPreference && widthPreference.centerContent == true ? "max-w-6xl" : "w-full"}`}>
+        <div className={`transition-all duration-[1500ms] mx-auto ${settings && settings.centerContent == true ? "xl:w-[76rem]" : "w-full"}`}>
         <LoadingIndicator />
         <Navbar />
         <MobileNavbar />
