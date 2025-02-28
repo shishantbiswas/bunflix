@@ -22,7 +22,7 @@ export function TmdbVideo({
   epNo?: number | string;
 }) {
   return (
-    <div className=" pb-24 bg-black/60">
+    <div className=" pb-24 ">
       <img fetchPriority="low" loading="lazy"
         className="-z-10 fixed top-0 size-full object-cover blur-2xl "
         src={createImageUrl(data.backdrop_path, "original")}

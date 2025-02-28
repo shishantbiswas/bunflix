@@ -42,7 +42,7 @@ export default async function Info({
 async function fetchTmdbInfo(type: string, id: number | string) {
 
   const key = process.env.TMDB_KEY;
-
+  
   try {
     const response = await fetch(
       `https://api.themoviedb.org/3/${type}/${id}?api_key=${key}`,

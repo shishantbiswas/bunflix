@@ -6,7 +6,7 @@ export async function TmdbMovieInfo({ id }: { id: number }) {
   const data: TMDBMovieInfo = await fetchTmdbInfo("movie", id);
 
   return (
-    <div className=" xl:p-0 p-2 pb-24 bg-black/70 min-h-screen">
+    <div className=" xl:p-0 p-2 pb-24  min-h-screen">
       <img fetchPriority="low" loading="lazy"
         className="-z-10 fixed top-0 size-full object-cover blur-2xl "
         src={createImageUrl(data.backdrop_path, "original")}

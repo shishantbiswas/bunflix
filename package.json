@@ -21,7 +21,7 @@
     "dexie-react-hooks": "^1.1.7",
     "hls.js": "^1.5.8",
     "lucide-react": "^0.399.0",
-    "next": "15.2.1-canary.2",
+    "next": "15.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-intersection-observer": "^9.10.3",
