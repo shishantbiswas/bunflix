@@ -10,7 +10,7 @@ export async function generateMetadata() {
 }
 
 export default async function Anime() {
-  const data = await aniwatchHomeApi();
+  const data = await AniwatchHomeApi();
 
   return (
     <div className=" min-h-screen">
@@ -19,11 +19,11 @@ export default async function Anime() {
       <div className="p-4">
         <Suspense fallback={<CategoryFallback />}>
           <h1 className="text-3xl font-semibold mt-4">Most Popular</h1>
-          <AniwatchCategoryList type="most-popular" homePageLayout disablePagination/>
+          <AniwatchCategoryList type="most-popular" homePageLayout disablePagination />
         </Suspense>
         <Suspense fallback={<CategoryFallback />}>
-        <h1 className="text-3xl font-semibold mt-4">Fan Favorite</h1>
-          <AniwatchCategoryList type="most-favorite" homePageLayout disablePagination/>
+          <h1 className="text-3xl font-semibold mt-4">Fan Favorite</h1>
+          <AniwatchCategoryList type="most-favorite" homePageLayout disablePagination />
         </Suspense>
       </div>
 
@@ -49,7 +49,8 @@ function CategoryFallback() {
   );
 }
 
-async function aniwatchHomeApi() {
+async function AniwatchHomeApi() {
+
   const response = await fetch(
     `${process.env.ANIWATCH_API}/api/v2/hianime/home`,
     { next: { revalidate: 3600, tags: ["anime"] } }
@@ -116,60 +117,3 @@ const AniwatchCategories = ({ anime }: { anime: AniwatchHome }) => {
     </section>
   );
 };
-
-// const AnimeCategoryList = async ({
-//   category,
-// }: {
-//   category: AniwatchCategoriesName;
-// }) => {
-//   const data = await fetchAniwatchCategories(category);
-//   const [menu, setMenu] = useState<{
-//     open: boolean,
-//     x: number,
-//     y: number,
-//     show: Anime
-//   }>({
-//     open: false,
-//     x: 0,
-//     y: 0,
-//     show: {
-//       duration: "",
-//       episodes: { dub: 0, sub: 0 },
-//       id: "",
-//       name: "",
-//       poster: "",
-//       rating: "",
-//       type: "",
-//     }
-//   })
-//   return (
-//     <>
-//       <h1 className="text-3xl mt-4 py-2 font-semibold px-4 capitalize ">
-//         {category.split("-").join(" ")}
-//       </h1>
-
-//       <div className="px-4 flex  gap-3 overflow-x-scroll scrollbar-hide">
-//         {data.data.animes.map((episode) => (
-//           <AniwatchAnimeCard setMenu={setMenu} episode={episode} key={episode.id} />
-//         ))}
-//       </div>
-//     </>
-//   );
-// };
-
-// async function fetchAniwatchCategories(
-//   category: AniwatchCategoriesName,
-//   page?: number | string
-// ) {
-//   const response = await fetch(
-//     `${process.env.ANIWATCH_API}/api/v2/hianime/category/${category}?page=${page || 1
-//     }`,
-//     { next: { revalidate: 3600, tags: ["anime"] } }
-//   );
-//   if (!response.ok) {
-//     throw new Error(`Search failed in Categories`);
-//   }
-//   const data = (await response.json()) as AniwatchCategories;
-
-//   return data;
-// }
