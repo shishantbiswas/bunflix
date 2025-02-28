@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { animated, useSpring, useTransition } from '@react-spring/web'
 import Link from "@/components/link";
 import { createImageUrl } from "@/lib/utils";
+import Balancer from "react-wrap-balancer";
 
 
 export default function AnimeSlider({ data }: { data: TMDBMovie }) {
@@ -49,9 +50,11 @@ export default function AnimeSlider({ data }: { data: TMDBMovie }) {
               className="absolute bottom-0 py-4 mb-4 right-4 px-6 z-10 opacity-80 text-right bg-gradient-to-br from-transparent to-black/30 backdrop-blur-md  w-[60%] lg:w-[50%] space-y-1 rounded-tl-lg"
             >
               <div>
-                <h1 className="text-lg md:text-2xl font-bold">{item.name || item.title}</h1>
+                <h1 className="text-lg md:text-2xl font-bold">
+                  <Balancer>{item.name || item.title}</Balancer>
+                </h1>
                 <p className="text-sm line-clamp-2 lg:line-clamp-3">
-                  {item.overview || item.synopsis}
+                  <Balancer>{item.overview.slice(0, 67) + "..." || item.synopsis.slice(0, 67) + "..."}</Balancer>
                 </p>
                 <div >
                   <div className="animate-timer rounded bg-red-700/60 h-1 mt-4 w-full duration-[8000ms]" />
