@@ -50,10 +50,12 @@ export default async function Anime({
   const { num, ep, lang } = await searchParams
 
   const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
-  const epNum = Number(num || 0) > episode.data.episodes.length ? 0 : Number(num || 0)
+  const epNum = Number(num || 0) > episode.data.totalEpisodes ? 0 : Number(num || 0)
+
+  const epId = episode.data.episodes[epNum] || episode.data.episodes[epNum - 1] || episode.data.episodes[0]
   
   if (!ep) {
-    redirect(`/anime/${episode.data.episodes[epNum].episodeId}&lang=${lang || "jp"}&num=${epNum+1}`);
+    redirect(`/anime/${epId.episodeId}&lang=${lang || "jp"}&num=${epId.number}`);
   }
 
   const data = await fetchAniwatchId(id);

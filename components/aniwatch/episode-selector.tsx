@@ -47,7 +47,7 @@ export default function EpisodeSelector({
         </label>
       </div>
       <div className="flex items-center mb-6 text-sm">
-        <ul className="max-h-[70vh] w-full lg:w-[500px] bg-slate-500 overflow-y-scroll rounded-lg"
+        <ul className="max-h-[520px] lg:max-h-[470px] w-full lg:w-[500px] bg-slate-500 overflow-y-scroll rounded-lg"
         >
           {episode.data.episodes.map((episode, index) => (
             <Link

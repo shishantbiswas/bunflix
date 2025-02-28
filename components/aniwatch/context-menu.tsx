@@ -116,8 +116,8 @@ export function Menu({ data, setMenu }: {
             Remove from Watched Shows
           </button>
         ))}
-        <div className="mx-2 flex flex-col">
-          <p className="opacity-60 text-sm ">Custom Episode:</p>
+        <div className=" flex flex-col">
+          <p className="opacity-60 text-sm ml-2">Custom Episode:</p>
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -129,7 +129,7 @@ export function Menu({ data, setMenu }: {
               onChange={(e) => { setCustomEpisode(parseInt(e.target.value)) }}
               max={data.show.episodes.sub}
               min={1}
-              className="appearance-none w-16 mt-2 border border-white/40 px-2 rounded-md" />
+              className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] w-16 mt-2 ml-2 border border-white/40 px-2 rounded-md" />
             <div className="mt-2 flex flex-col">
               {data.show.episodes.sub > 0 && data.show.episodes.sub >= customEpisode &&
                 <button type="submit"

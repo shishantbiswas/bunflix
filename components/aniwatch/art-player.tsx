@@ -23,7 +23,7 @@ export default function Player({
 }) {
 
   const artRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const hlsConfig: Partial<HlsConfig> = {
@@ -156,7 +156,7 @@ export default function Player({
 
   const { show } = useShow();
 
-  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(show?.data.anime.info.id || ""));
+  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(`${show?.data.anime.info.id + (show?.ep || "jp")}`));
 
   const [createdShow, setCreatedShow] = useState(false);
 
@@ -182,7 +182,7 @@ export default function Player({
             })
         } else {
           indexDB.watchHistory.add({
-            id: show.data.anime.info.id,
+            id: `${show?.data.anime.info.id + (show?.ep || "jp")}`,
             ep: show.ep,
             lang: show.lang,
             epNum: show.epNum,

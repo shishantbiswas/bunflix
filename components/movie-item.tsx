@@ -46,7 +46,7 @@ export default function MovieItem({
             : "flex",
       }}
       className={`relative inline-block focus:outline text-white rounded-lg overflow-hidden mx-2 transition-all duration-200 ${
-        size ? size : "h-[300px] w-[200px]"
+        size ? size : "h-[200px] w-[130px] md:h-[300px] md:w-[200px]"
       } `}
     >
       {!loaded && (

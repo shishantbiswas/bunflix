@@ -25,25 +25,20 @@ type LinkArray = {
   linkName: string,
   href: string,
   icon?: React.ReactNode;
-  onMouseEnter: () => void,
-  onClick: () => void,
 }
 
 export default function Navbar() {
 
-  const [navIndex, setNavIndex] = useState(2);
   const { isSearchOpen, setIsSearchOpen } = useSearchBarFocus();
   const linkref = useRef<HTMLDivElement>(null);
   const [openDropdown, setOpenDropdown] = useState(false);
   const y = useWindowScroll(60)
-  const widthPreference = useLiveQuery(() => indexDB.userPreferences.get(1))
+  const settings = useLiveQuery(() => indexDB.userPreferences.get(1))
 
   const navLinks: LinkArray[] = [
     {
       linkName: "Home",
       href: "/",
-      onMouseEnter: () => setNavIndex(0),
-      onClick: () => setNavIndex(0),
     },
     {
       icon: (
@@ -59,50 +54,36 @@ export default function Navbar() {
       ),
       linkName: "Anime",
       href: "/anime",
-      onMouseEnter: () => setNavIndex(1),
-      onClick: () => setNavIndex(1),
     },
     {
       icon: <PopcornIcon color="white" className=" size-4" />,
       linkName: "Popular Movies",
       href: "/categories/popular%20Movies/movie",
-      onMouseEnter: () => setNavIndex(2),
-      onClick: () => setNavIndex(2),
     },
     {
       icon: <CrownIcon color="white" className=" size-4" />,
       linkName: "Most Favorite Anime",
       href: "/anime-categories?type=most-favorite",
-      onMouseEnter: () => setNavIndex(3),
-      onClick: () => setNavIndex(3),
     },
     {
       icon: <Badge color="white" className=" size-4" />,
       linkName: "Anime Movie",
       href: "/anime-categories?type=movie",
-      onMouseEnter: () => setNavIndex(4),
-      onClick: () => setNavIndex(4),
     },
     {
       icon: <Badge color="white" className=" size-4" />,
       linkName: "Netflix",
       href: "/categories/netflix/tv",
-      onMouseEnter: () => setNavIndex(5),
-      onClick: () => setNavIndex(5),
     },
     {
       icon: <Badge color="white" className=" size-4" />,
       linkName: "Amazon Prime",
       href: "/categories/amazon/tv",
-      onMouseEnter: () => setNavIndex(5),
-      onClick: () => setNavIndex(5),
     },
     {
       icon: <Badge color="white" className=" size-4" />,
       linkName: "HBO TV",
       href: "/categories/hbo/tv",
-      onMouseEnter: () => setNavIndex(5),
-      onClick: () => setNavIndex(5),
     },
   ].map((link, i) => ({ ...link, id: i + 1 }));
 
@@ -110,7 +91,7 @@ export default function Navbar() {
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav
-        className={`bg-black/30 backdrop-blur-sm h-20 transition-all duration-[1500ms] ${widthPreference && widthPreference.centerContent == true ? "xl:w-[76rem]" : ""} ${widthPreference && !widthPreference.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
+        className={`bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${settings && settings.centerContent == true ? "xl:w-[76rem]" : ""} ${settings && !settings.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
         }>
         <div className="flex items-center">
           <img fetchPriority="low" loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />
@@ -118,8 +99,6 @@ export default function Navbar() {
             {navLinks.slice(0, 3).map((link) => (
               <NavLink
                 key={link.id}
-                onClick={link.onClick}
-                onMouseEnter={link.onMouseEnter}
                 href={link.href}
                 linkName={link.linkName}
               />

@@ -11,9 +11,7 @@ const nextConfig = {
     },
     reactStrictMode: true,
     devIndicators: {
-        appIsrStatus: false,
-        buildActivityPosition: "top-right",
-        buildActivity: true,
+        position: "top-right",
     },
 
 };

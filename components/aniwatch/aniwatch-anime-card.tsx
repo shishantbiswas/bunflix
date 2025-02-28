@@ -31,7 +31,7 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
   const watchedShows = useLiveQuery(() => indexDB.watchedShows.toArray());
 
   const router = useRouter();
-  const ref = useRef<MouseEvent<HTMLDivElement, globalThis.MouseEvent>>(null);
+  const ref = useRef<MouseEvent<HTMLDivElement, globalThis.MouseEvent> | null>(null);
   const { startTransition } = useGlobalTransition();
 
   const hold = useLongPress({
@@ -53,7 +53,7 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
   return (
     <button
       {...hold}
-      className={`appearance-none cursor-pointer ${widthClassName ? widthClassName : "min-w-[150px] w-full lg:w-full"} h-[300px] rounded-md overflow-hidden group  relative text-end ${settings && settings.hideWatchedShows && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"}`}
+      className={`appearance-none cursor-pointer ${widthClassName ? widthClassName : "min-w-[150px] w-full lg:w-full"} h-[300px] rounded-md overflow-hidden group hover:scale-[105%] hover:border-2  border-red-600 transition-transform hover:z-50 relative text-end ${settings && settings.hideWatchedShows && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"}`}
     >
       <img fetchPriority="low" loading="lazy"
         className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
@@ -74,7 +74,7 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
             }
           });
         }}
-        className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md size-full flex items-end flex-col justify-end capitalize">
+        className=" absolute bottom-0 left-0 p-2 bg-linear-to-br from-transparent to-black/80 transition-all group-hover:backdrop-blur-md  size-full flex items-end flex-col justify-end capitalize">
         {(settings && settings.lang == "all") ? (
           <>
             <h1 className="text-lg font-semibold leading-tight">

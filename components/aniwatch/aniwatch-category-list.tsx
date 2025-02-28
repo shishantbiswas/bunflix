@@ -1,12 +1,8 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { MicIcon, CaptionsIcon, Save, PlayCircle } from "lucide-react";
-import Link from "@/components/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { indexDB } from "@/lib/index-db";
-import { useLiveQuery } from "dexie-react-hooks";
 import { Menu } from "./context-menu";
 import AniwatchAnimeCard from "./aniwatch-anime-card";
 
@@ -78,11 +74,9 @@ export default function AniwatchCategoryList({
     }
   })
 
-  // const watchLater = useLiveQuery(() => indexDB.watchLater.toArray());
-
   return (
     <>
-      <div className={`${homePageLayout ? "flex items-center w-100% overflow-x-scroll scrollbar-hide gap-4" : "grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"}`}>
+      <div className={`${homePageLayout ? "flex transition-all hover:pl-1 py-4 items-center w-100% overflow-x-scroll scrollbar-hide gap-4" : "grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"}`}>
         {data?.pages?.map((page, pageIndex) => {
           return (
             <div className="h-fit w-fit contents" key={pageIndex}>
@@ -92,10 +86,10 @@ export default function AniwatchCategoryList({
             </div>
           );
         })}
-        {!isLoading && (<CategoryFallback />)}
+        {isLoading && (<CategoryFallback />)}
       </div>
       {!disablePagination && <div ref={ref}>
-        {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading Next Page...</p>}
+        {isFetchingNextPage && <CategoryFallback />}
       </div>}
       <Menu data={menu} setMenu={setMenu} />
     </>

@@ -7,25 +7,17 @@ export default function NavLink({
   icon,
   linkName,
   href,
-  onMouseEnter,
-  onClick,
   showIcon,
 }: {
   icon?: React.ReactNode;
   linkName: string;
   href: string;
-  onMouseEnter: () => void;
-  onClick: () => void;
   showIcon?: boolean;
 }) {
-const currentRoute = usePathname()===href
+  const currentRoute = usePathname() === href
   return (
     <Link
       href={href}
-      onMouseEnter={() => {
-        onMouseEnter();
-      }}
-      onClick={onClick}
       style={{
         backgroundColor: currentRoute ? "#dc2626" : "",
         borderRadius: "10px",

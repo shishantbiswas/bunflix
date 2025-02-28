@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const masterManifest =
     completeUrl.split("/")[completeUrl.split("/").length - 2];
 
-  if (masterManifest === "master.m3u8") {
+  // if (masterManifest === "master.m3u8") {
     const res = await fetch(completeUrl, {
       cache:"no-store",
     });
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         "Cache-Control": "no-store",
       },
     });
-  } else {
-    redirect(completeUrl);
-  }
+  // } else {
+  //   redirect(completeUrl);
+  // }
 }

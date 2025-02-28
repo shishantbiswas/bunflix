@@ -34,7 +34,7 @@ export default async function Anime() {
 
 function CategoryFallback() {
   return (
-    <div className="px-4 flex mt-4 gap-3 overflow-x-scroll scrollbar-hide">
+    <div className="flex mt-4 gap-3 overflow-x-scroll scrollbar-hide">
       {[...Array.from(Array(8).keys())].map((i) => (
         <div
           key={i}

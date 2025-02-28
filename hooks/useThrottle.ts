@@ -12,7 +12,7 @@ export function useThrottleCallback<CallbackArguments extends any[]>(
   const storedCallback = useLatest(callback)
   const ms = 1000 / fps
   const prev = React.useRef(0)
-  const trailingTimeout = React.useRef<ReturnType<typeof setTimeout>>(null)
+  const trailingTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const clearTrailing = () =>
     trailingTimeout.current && clearTimeout(trailingTimeout.current)
   const deps = [fps, leading, storedCallback]

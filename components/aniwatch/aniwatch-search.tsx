@@ -18,7 +18,13 @@ export default function AniwatchSearch({
   const type = searchParams.get("type");
   const settings = useLiveQuery(() => indexDB.userPreferences.get(1))
 
-  const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
+  const {
+    data,
+    fetchNextPage,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage
+  } = useInfiniteQuery({
     queryKey: ["anime-search", { searchTerm }],
     queryFn: ({ pageParam }) =>
       fetchAnime(pageParam.hasNextPage, pageParam.pageToFetch),
@@ -83,7 +89,7 @@ export default function AniwatchSearch({
 
   return (
     <div className="flex flex-col w-full">
-      <div className={`grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 ${settings && settings.centerContent == true ? "xl:grid-cols-5" : "xl:grid-cols-6"} w-full gap-3  `}>
+      <div className={`grid grid-cols-2 sm:grid-cols-3  lg:grid-cols-4  ${settings && settings.centerContent == true ? "xl:grid-cols-5" : "xl:grid-cols-6"} w-full gap-3  `}>
         {data?.pages.map((page, i) => {
           return (
             <div className="contents" key={i}>
@@ -93,7 +99,7 @@ export default function AniwatchSearch({
                   <Link
                     key={episode.id + i}
                     href={`/anime/${episode.id}`}
-                    className={`min-w-[150px] ${settings && settings.hideWatchedShowsInSearch && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"} w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end`}
+                    className={`min-w-[150px] ${settings && settings.hideWatchedShowsInSearch && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"} w-full lg:w-full h-[300px] hover:border-2  border-red-600 transition-transform hover:z-50 hover:scale-105 rounded-md overflow-hidden group  relative text-end`}
                   >
                     <img fetchPriority="low" loading="lazy"
                       className="w-full h-full object-cover absolute top-0 group-hover:scale-105 transition-all"
@@ -148,10 +154,12 @@ export default function AniwatchSearch({
           );
         })}
         {isLoading && <CategoryFallback />}
+        {isFetchingNextPage && <CategoryFallback />}
       </div>
-      <div ref={ref}>
-        {isFetchingNextPage && <p className="text3xl font-bold mt-3">Loading...</p>}
-      </div>
+      {hasNextPage ?
+        <div ref={ref}>
+        </div> :
+        <p className="text3xl font-bold mt-3">You&apos;ve reached the end of this road</p>}
       <Menu data={menu} setMenu={setMenu} />
     </div>
   );
