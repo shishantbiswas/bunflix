@@ -15,8 +15,6 @@
     "artplayer": "^5.2.2",
     "artplayer-plugin-hls-control": "^1.0.1",
     "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
     "dexie": "^4.0.8",
     "dexie-react-hooks": "^1.1.7",
     "hls.js": "^1.5.8",
@@ -36,7 +34,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "postcss": "^8",
-    "tailwind-merge": "^2.3.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.7",
@@ -45,7 +42,6 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "canvas",
       "sharp"
     ]
   }

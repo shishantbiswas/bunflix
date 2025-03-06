@@ -18,7 +18,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
 
   useEffect(() => {
     setShow({ ...data, ep, lang, epNum: currentEpisodeNum });
-  }, [])
+  }, [data, currentEpisodeNum, lang, ep])
 
   const userPreferences = useLiveQuery(() => indexDB.userPreferences.get(1))
 
