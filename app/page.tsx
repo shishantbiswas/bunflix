@@ -4,9 +4,6 @@ import TmdbShowRow from "@/components/tmdb/tmdb-shows-row";
 import { Suspense } from "react";
 import TmdbHomeSkeleton from "@/components/fallback-ui/tmdb-home-row";
 
-export async function generateMetadata() {
-  return { title: "Home - Nextflix" };
-}
 
 export default async function Home() {
   const data: TMDBMovie = await fetchHeroData();

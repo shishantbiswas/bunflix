@@ -33,7 +33,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
 
     return (
     <Providers>
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} antialiased`}>
         <div className={`transition-all duration-[1500ms] mx-auto ${settings && settings.centerContent == true ? "xl:w-[76rem]" : "w-full"}`}>
         <LoadingIndicator />
         <Navbar />

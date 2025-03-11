@@ -5,7 +5,7 @@ import Link from "@/components/link";
 import { createImageUrl } from "@/lib/utils";
 
 
-export default function AnimeSlider({ data }: { data: TMDBMovie }) {
+export default function TmdbSlider({ data }: { data: TMDBMovie }) {
 
   const [imageindex, setImageindex] = useState(0);
 
@@ -32,12 +32,12 @@ export default function AnimeSlider({ data }: { data: TMDBMovie }) {
         <div
           className={`absolute top-0  p-4 right-0 w-full h-full `}
         >
-          <animated.img
+          <animated.div
             key={key.key}
             className="rounded-lg w-full h-full object-cover "
-            src={createImageUrl(item.poster_path || item.backdrop_path, "original")}
             style={{
-              ...style
+              ...style,
+              backgroundImage:`url(${createImageUrl(item.poster_path || item.backdrop_path, "original")})`
             }} />
           <Link
             href={`/video/movie/${item.id}?provider=vidsrc`}
