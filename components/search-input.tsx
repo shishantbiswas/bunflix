@@ -29,7 +29,7 @@ export default function SearchInput() {
       return;
     } else {
       fetch(`/api/search?q=${debounceSearch}&type=${type}`, {
-        next: { revalidate: 3600, tags: ["anime","tmdb"]  },
+        next: { revalidate: 3600, tags: ["anime", "tmdb"] },
       })
         .then((response) => {
           if (!response.ok) {
@@ -71,13 +71,14 @@ export default function SearchInput() {
 
   // allows the search to be opened from anywhere when '/' is pressed
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.code) {
         case "Slash":
           event.preventDefault();
           setIsSearchOpen(!isSearchOpen);
           if (!isSearchOpen) {
-            setTimeout(() => {
+            timeout = setTimeout(() => {
               inputRef.current?.focus();
             }, 100);
           }
@@ -88,6 +89,7 @@ export default function SearchInput() {
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      clearTimeout(timeout);
     };
   }, [isSearchOpen]);
 
@@ -251,7 +253,9 @@ const TmdbInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img fetchPriority="low" loading="lazy"
+            <img
+              fetchPriority="low"
+              loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{
@@ -323,7 +327,9 @@ const AnimeInSearchArray = ({
             <div className="h-[100px]  min-w-[80px] absolute top-0 rounded-md bg-gray-400 animate-pulse"></div>
           )}
           {!error ? (
-            <img fetchPriority="low" loading="lazy"
+            <img
+              fetchPriority="low"
+              loading="lazy"
               onLoad={() => setIsloaded(true)}
               onError={() => setError(true)}
               style={{

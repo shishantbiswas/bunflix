@@ -61,7 +61,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
         <section className="md:flex">
 
           <img fetchPriority="low" loading="lazy"
-            className="h-full  object-cover rounded-md md:sticky w-full lg:w-fit top-28"
+            className="h-full  object-cover rounded-md md:sticky w-full md:w-fit top-28"
             src={show.data.anime.info.poster}
             alt={show.data.anime.info.name}
           />
@@ -170,7 +170,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
           </div>
           <Menu data={menu} setMenu={setMenu} />
         </div>
-        <div className="lg:w-1/3 xl:p-4">
+        <div className="lg:w-1/3 md:p-4">
           {show.data.seasons.length > 0 && (
             <>
               <h1 className="text-3xl font-semibold my-4">Seasons</h1>

@@ -19,9 +19,8 @@ export default function Player({
     label: string;
     default: boolean;
   }[];
-  getInstance?: (art: Artplayer) => void
+  getInstance?: (art: Artplayer) => void;
 }) {
-
   const artRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -34,11 +33,12 @@ export default function Player({
     maxBufferLength: 300,
     maxMaxBufferLength: 300,
     maxBufferHole: 0.5,
-  }
+  };
 
   const searchParams = useSearchParams();
-  const time = Number(searchParams.get("t")) || 0
+  const time = Number(searchParams.get("t")) || 0;
   useEffect(() => {
+    let hls: Hls | null = null;
     const art = new Artplayer({
       url: src,
       container: artRef.current!,
@@ -59,16 +59,16 @@ export default function Player({
             control: true,
             setting: true,
             getName: (level: { height: string }) => level.height,
-            title: 'Quality',
-            auto: 'Auto',
+            title: "Quality",
+            auto: "Auto",
           },
           audio: {
             control: true,
             setting: true,
             getName: (track: { name: string }) => track.name,
-            title: 'Audio',
-            auto: 'Auto',
-          }
+            title: "Audio",
+            auto: "Auto",
+          },
         }),
       ],
       settings: [
@@ -120,12 +120,12 @@ export default function Player({
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
             if (art.hls) art.hls.destroy();
-            const hls = new Hls(hlsConfig);
-            hls.loadSource(url)
+            hls = new Hls(hlsConfig);
+            hls.loadSource(url);
             hls.attachMedia(video);
             art.hls = hls;
             video.currentTime = time;
-            art.on("destroy", () => hls.destroy());
+            art.on("destroy", () => hls?.destroy());
             video.addEventListener("ended", () => {
               if (hls) {
                 // hls.destroy();
@@ -151,38 +151,39 @@ export default function Player({
       if (art && art.destroy) {
         art.destroy(false);
       }
+      if (hls) hls.destroy();
     };
-  }, [src, track]);
+  }, []);
 
   const { show } = useShow();
+  const showId = `${show?.data.anime.info.id + (show?.ep || "jp")}`;
 
-  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(`${show?.data.anime.info.id + (show?.ep || "jp")}`));
+  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
 
   const [createdShow, setCreatedShow] = useState(false);
 
   useEffect(() => {
     if (existingShow) {
-      setCreatedShow(true)
+      setCreatedShow(true);
     }
-  }, [existingShow])
+  }, [existingShow]);
 
   useEffect(() => {
     if (!isPlaying || !show) return;
     const interval = setInterval(() => {
       if (videoRef.current && !videoRef.current.paused) {
         if (createdShow) {
-          indexDB.watchHistory.get(show.data.anime.info.id)
-            .then((currentShow) => {
-              if (!currentShow || !videoRef.current) return
+          indexDB.watchHistory.get(showId).then((currentShow) => {
+            if (!currentShow || !videoRef.current) return;
 
-              indexDB.watchHistory.update(show.data.anime.info.id, {
-                time: Math.trunc(videoRef.current.currentTime) || 0,
-                duration: currentShow.duration,
-              })
-            })
+            indexDB.watchHistory.update(showId, {
+              time: Math.trunc(videoRef.current.currentTime) || 0,
+              duration: currentShow.duration,
+            });
+          });
         } else {
           indexDB.watchHistory.add({
-            id: `${show?.data.anime.info.id + (show?.ep || "jp")}`,
+            id: showId,
             ep: show.ep,
             lang: show.lang,
             epNum: show.epNum,
@@ -198,21 +199,21 @@ export default function Player({
               id: show.data.anime.info.id,
               name: show.data.anime.info.name,
               rating: show.data.anime.info.stats.rating,
-              type: show.data.anime.info.stats.type
-            }
-          })
+              type: show.data.anime.info.stats.type,
+            },
+          });
           setCreatedShow(true);
         }
       }
-    }, 7000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isPlaying, createdShow]);
 
-
   return (
     <div
       ref={artRef}
-      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]" />
+      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]"
+    />
   );
 }

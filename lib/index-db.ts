@@ -6,7 +6,7 @@ interface SearchHistory {
   term: string;
 }
 
-interface UserPreference {
+export interface UserPreference {
   id: number;
   hideWatchedShows: boolean
   hideWatchedShowsInSearch: boolean
