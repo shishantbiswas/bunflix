@@ -19,12 +19,12 @@ export default function TmdbSlider({ data }: { data: TMDBMovie }) {
 
 
   const item = data.results[imageindex]
-  const transitions = useTransition(item, ({
-    from: { opacity: 0, transform: "scale(0.9)" },
-    enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(0.9)" },
-    config: { duration: 200 }
-  }))
+  const transitions = useTransition(item, {
+    from: { opacity: 0, transform: "scale(0.9)", height: "0%" },
+    enter: { opacity: 1, transform: "scale(1)", height: "100%" },
+    leave: { opacity: 0, transform: "scale(0.9)", height: "0%" },
+    config: { duration: 500 },
+  });
 
   return (
     <div className="relative w-full h-[300px] sm:h-[350px] lg:h-[450px]">

@@ -16,10 +16,10 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
 
   const item = anime.data.spotlightAnimes[imageindex];
   const transitions = useTransition(item, {
-    from: { opacity: 0, transform: "scale(0.9)" },
-    enter: { opacity: 1, transform: "scale(1)" },
-    leave: { opacity: 0, transform: "scale(0.9)" },
-    config: { duration: 200 },
+    from: { opacity: 0, transform: "scale(0.9)", height: "0%" },
+    enter: { opacity: 1, transform: "scale(1)", height: "100%" },
+    leave: { opacity: 0, transform: "scale(0.9)", height: "0%" },
+    config: { duration: 500 },
   });
 
   return (
@@ -31,6 +31,8 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
             className="rounded-lg w-full h-full object-cover "
             style={{
               ...style,
+              // clipPath:
+              //   "path('M0 20C0 8.95429 8.95431 0 20 0H763C774.046 0 783 8.9543 783 20V255C783 266.046 774.046 275 763 275H493C481.954 275 473 283.954 473 295V421C473 432.046 464.046 441 453 441H20C8.9543 441 0 432.046 0 421V20Z')",
               backgroundImage: `url(${item.poster})`,
             }}
           />
@@ -39,7 +41,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
               style={{
                 ...style,
               }}
-              className="absolute bottom-0 py-4 mb-4 right-4 px-6 z-10 opacity-80 text-right bg-gradient-to-br from-transparent to-black/30 backdrop-blur-md  w-[60%] lg:w-[50%] space-y-1 rounded-tl-lg"
+              className="absolute bottom-0 py-4 mb-4 right-4 px-6 z-10 opacity-80 text-right bg-gradient-to-br from-transparent to-black/30 backdrop-blur-md max-h-fit w-[60%] lg:w-[50%] space-y-1 rounded-tl-lg"
             >
               <div>
                 <h1 className="text-lg md:text-2xl font-bold">{item.name}</h1>
