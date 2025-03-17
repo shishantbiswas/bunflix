@@ -42,7 +42,7 @@ export default function Player({
         load(
           {
             ...context,
-            url: `/api/proxy/${context.url.replaceAll("//", "/")}`, // this prevents re-routing
+            url: `/.netlify/functions/proxy/${context.url.replaceAll("//", "/")}`, // this prevents re-routing
           },
           ...rest
         );

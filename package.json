@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^5.10.0",
     "@react-spring/web": "^9.7.5",
     "@tanstack/react-query": "^5.53.3",
     "artplayer": "^5.2.2",
