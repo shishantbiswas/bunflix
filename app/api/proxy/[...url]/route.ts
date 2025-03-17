@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  console.log(completeUrl);
+  console.log(res);
   
   if (!res.ok) {
     return Response.json(
