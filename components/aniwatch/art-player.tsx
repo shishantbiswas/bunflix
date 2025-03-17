@@ -42,7 +42,11 @@ export default function Player({
         load(
           {
             ...context,
-            url: `/proxy/${context.url.replaceAll("//", "/")}`, // this prevents re-routing
+            url: `${
+              process.env.NEXT_PUBLIC_PROXY_PREFIX
+                ? process.env.NEXT_PUBLIC_PROXY_PREFIX + context.url.replaceAll("//", "/")
+                : context.url
+            }`, // this prevents re-routing
           },
           ...rest
         );
