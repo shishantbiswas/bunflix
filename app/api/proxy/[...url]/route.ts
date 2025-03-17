@@ -9,20 +9,22 @@ export async function GET(req: NextRequest) {
     .map((part) => (part === "https:" ? part + "//" : part + "/"))
     .join("");
 
-  const res = await fetch(decodeURIComponent(completeUrl), {
+  const res = await fetch(completeUrl, {
     cache: "no-store",
     headers: {
       Referer: "https://megacloud.club/",
     },
   });
 
-  console.log(res);
+  console.log(completeUrl);
   
   if (!res.ok) {
     return Response.json(
       { res },
       {
-        status: 500,
+        status: res.status,
+        statusText: res.statusText,
+        headers: res.headers,
       }
     );
   }
