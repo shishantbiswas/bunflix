@@ -16,9 +16,11 @@ export async function GET(req: NextRequest) {
     },
   });
 
+  console.log(res);
+  
   if (!res.ok) {
     return Response.json(
-      { error: await res.text() },
+      { res },
       {
         status: 500,
       }
