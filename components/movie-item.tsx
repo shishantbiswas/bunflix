@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "@/components/link";
 import { useState } from "react";
-import { useInView, animated } from "@react-spring/web";
+import { easings, useInView, animated } from "@react-spring/web";
 
 export default function MovieItem({
   type,
@@ -41,21 +41,21 @@ export default function MovieItem({
     () => ({
       from: {
         opacity: 0,
-        // y: 20,
-        scale:.75
+        scale: 0.75,
       },
       to: {
         opacity: 1,
-        // y: 0,
-        scale:1
-
+        scale: 1,
+      },
+      config: {
+        easing: easings.easeOutCubic,
       },
     }),
-    { 
-      once:true,
-      rootMargin: '-10% 0%',
+    {
+      once: true,
+      rootMargin: "-10% 0%",
     }
-  )
+  );
 
   return (
     <animated.div
@@ -65,16 +65,19 @@ export default function MovieItem({
           media_type === "person" || media_type === "collection"
             ? "none"
             : "flex",
-        ...springs
+        ...springs,
       }}
-      className={`relative inline-block focus:outline text-white rounded-lg overflow-hidden mx-2 transition-all duration-200 ${size ? size : "h-[210px] w-[145px] md:h-[300px] md:w-[200px]"
-        } `}
+      className={`relative inline-block focus:outline text-white rounded-lg overflow-hidden mx-2 transition-all duration-200 ${
+        size ? size : "h-[210px] w-[145px] md:h-[300px] md:w-[200px]"
+      } `}
     >
       {!loaded && (
         <div className="absolute top-0 size-full animate-pulse bg-gray-400"></div>
       )}
       {!error ? (
-        <img fetchPriority="low" loading="lazy"
+        <img
+          fetchPriority="low"
+          loading="lazy"
           onLoad={() => setLoaded(true)}
           onError={() => setError(true)}
           className={`absolute top-0 size-full object-cover object-center`}
@@ -82,9 +85,9 @@ export default function MovieItem({
             image
               ? image
               : createImageUrl(
-                profile_path || poster_path || backdrop_path,
-                "w500"
-              )
+                  profile_path || poster_path || backdrop_path,
+                  "w500"
+                )
           }
           alt={title}
         />
@@ -109,18 +112,17 @@ export default function MovieItem({
               {media_type}
             </p>
           </div>
-          <p
-            className=" whitespace-normal line-clamp-2  duration-500  text-[15px] pt-1 opacity-70"
-          >
+          <p className=" whitespace-normal line-clamp-2  duration-500  text-[15px] pt-1 opacity-70">
             {overview ? overview : synopsis}
           </p>
         </div>
         <div className="flex gap-2 w-full">
           <Link
-            href={`/video/${type || media_type}/${id}/${type === "tv" || media_type === "tv"
+            href={`/video/${type || media_type}/${id}/${
+              type === "tv" || media_type === "tv"
                 ? "?season=1&episode=1&provider=vidsrc"
                 : "?provider=vidsrc"
-              }`}
+            }`}
           >
             <div className=" rounded-full w-full p-4 transition-all text-xl flex items-center justify-start gap-2 hover:bg-red-700 ">
               <Play size={20} />

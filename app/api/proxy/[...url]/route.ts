@@ -1,35 +1,38 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const reqUrl: string[] = req.nextUrl.pathname.split("/").slice(3);
+  const reqUrl: string[] = req.nextUrl.pathname.split("/").slice(3); // removes http : //
+
   const completeUrl = reqUrl
     .map((part) => (part === "https:" ? part + "//" : part + "/"))
     .join("");
 
-  const masterManifest =
-    completeUrl.split("/")[completeUrl.split("/").length - 2];
+  const res = await fetch(decodeURIComponent(completeUrl), {
+    cache: "no-store",
+    headers: {
+      Referer: "https://megacloud.club/",
+    },
+  });
 
-  // if (masterManifest === "master.m3u8") {
-    const res = await fetch(completeUrl, {
-      cache:"no-store",
-    });
+  if (!res.ok) {
+    return Response.json(
+      { error: true },
+      {
+        status: 500,
+      }
+    );
+  }
 
-    if (!res.ok) {
-      redirect(completeUrl);
-    }
+  const data = await res.arrayBuffer();
 
-    const data = await res.arrayBuffer();
-
-    return new Response(data, {
-      status: 200,
-      headers: {
-        "Cache-Control": "no-store",
-      },
-    });
-  // } else {
-  //   redirect(completeUrl);
-  // }
+  return new Response(data, {
+    status: 200,
+    headers: {
+      "Content-Type":
+        res.headers.get("Content-Type") || "application/octet-stream",
+      "Cache-Control": "no-store",
+    },
+  });
 }

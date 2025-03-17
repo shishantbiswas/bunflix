@@ -2,7 +2,15 @@
 import { useEffect, useRef, useState } from "react";
 import Artplayer from "artplayer";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
-import Hls, { HlsConfig } from "hls.js";
+import Hls, {
+  FragmentLoaderContext,
+  HlsConfig,
+  Loader,
+  LoaderCallbacks,
+  LoaderConfiguration,
+  LoaderContext,
+  PlaylistLoaderContext,
+} from "hls.js";
 import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -25,6 +33,23 @@ export default function Player({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  class loader extends Hls.DefaultConfig.loader {
+    constructor(config: HlsConfig) {
+      super(config);
+      const load = this.load.bind(this);
+
+      this.load = function (context, ...rest) {
+        load(
+          {
+            ...context,
+            url: `/api/proxy/${context.url}`,
+          },
+          ...rest
+        );
+      };
+    }
+  }
+
   const hlsConfig: Partial<HlsConfig> = {
     fragLoadingMaxRetry: 200,
     fragLoadingRetryDelay: 500,
@@ -33,6 +58,7 @@ export default function Player({
     maxBufferLength: 300,
     maxMaxBufferLength: 300,
     maxBufferHole: 0.5,
+    loader: loader,
   };
 
   const searchParams = useSearchParams();

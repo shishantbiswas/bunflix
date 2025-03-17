@@ -23,7 +23,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
   });
 
   return (
-    <div className="relative w-full h-[270px] sm:h-[350px] lg:h-[450px]">
+    <div className="relative w-full h-[300px] sm:h-[350px] lg:h-[450px]">
       {transitions((style, item, key) => (
         <div className={`absolute top-0  p-4 right-0 w-full h-full `}>
           <animated.div
@@ -45,7 +45,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
             >
               <div>
                 <h1 className="text-lg md:text-2xl font-bold">{item.name}</h1>
-                <p className="text-sm ">
+                <p className="text-sm line-clamp-2 lg:line-clamp-3">
                   {item.description.length > 170
                     ? item.description.slice(0, 167) + "..."
                     : item.description}

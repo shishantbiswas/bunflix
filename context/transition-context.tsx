@@ -2,13 +2,11 @@
 
 import { createContext, ReactNode, useContext, useTransition } from "react";
 
-// Define the type for the transition state
 type State = {
   isPending: boolean;
   startTransition: (callback: () => void) => void;
 } | null;
 
-// Create a context for transitions
 const TransitionContext = createContext<State>(null);
 
 export function TransitionProvider({ children }: { children: ReactNode }) {
