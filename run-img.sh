@@ -1,0 +1,1 @@
+docker run --env-file ./.env -d --name flix --cpus="2" -m 512m -p 3000:3000 bunf
