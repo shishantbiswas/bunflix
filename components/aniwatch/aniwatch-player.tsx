@@ -15,55 +15,57 @@ export default async function AniwatchPlayer({
 
   const server = await fetchAniwatchEpisodeServer(episodeId, ep);
   if (lang === "en") {
-
     if (server.data.dub.length === 0) {
-      redirect(`/error?err=${encodeURIComponent("No Dub Available")}`)
+      redirect(`/error?err=${encodeURIComponent("No Dub Available")}`);
     }
 
     const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
       server.data.dub[0].serverName,
-      "dub"
+      "dub",
+      server.data.dub[1].serverName
     );
 
-    return (
-      <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />
-    );
+    return <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />;
   } else {
-
     if (server.data.sub.length === 0 && server.data.raw.length === 0) {
-      redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`)
+      redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`);
     }
 
     const sub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
-      !server.data.sub[0] ? server.data.raw[0].serverName : server.data.sub[0].serverName,
-      !server.data.sub[0] ? "raw" : "sub"
+      !server.data.sub[0]
+        ? server.data.raw[0].serverName
+        : server.data.sub[0].serverName,
+      !server.data.sub[0] ? "raw" : "sub",
+      !server.data.sub[1]
+        ? server.data.raw[1].serverName
+        : server.data.sub[1].serverName
     );
 
     if (sub.data.sources.length === 0) {
-      redirect(`/error?err=${encodeURIComponent("No Sub Available")}`)
+      redirect(`/error?err=${encodeURIComponent("No Sub Available")}`);
     }
 
-    return (
-      <Player src={sub?.data.sources[0]?.url} track={sub.data.tracks} />
-    );
+    return <Player src={sub?.data.sources[0]?.url} track={sub.data.tracks} />;
   }
 }
-
 
 async function fetchAniwatchEpisodeSrc(
   id: string,
   ep: string,
   server: string,
-  category: string
+  category: string,
+  altServer?: string
 ) {
   try {
     const response = await fetch(
-      `${process.env.ANIWATCH_API
-      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? server : "vidstreaming"
+      `${
+        process.env.ANIWATCH_API
+      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${
+        server ? (server === "hd-3" ? altServer : server) : "vidstreaming"
       }&category=${category}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );
@@ -81,7 +83,7 @@ async function fetchAniwatchEpisodeServer(id: string, ep: string) {
       `${process.env.ANIWATCH_API}/api/v2/hianime/episode/servers?animeEpisodeId=${id}?ep=${ep}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );
-    const data = await response.json() as AniwatchServer;
+    const data = (await response.json()) as AniwatchServer;
 
     return data;
   } catch (error) {

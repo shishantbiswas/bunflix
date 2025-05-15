@@ -37,7 +37,7 @@ export default function EpisodeSelector({
             </span>
             <input
               type="checkbox"
-              defaultChecked={lang === "en" || !lang ? false : true}
+              defaultChecked={lang === "en"}
               onChange={() =>
                 setAudioToogle(audioToogle === "en" ? "jp" : "en")
               }
@@ -85,7 +85,7 @@ export default function EpisodeSelector({
           >
             <button
               disabled={
-                Number(data?.epNum) == Number(episode.number)
+               (lang === audioToogle && Number(data?.epNum) == Number(episode.number))
                   ? true
                   : audioToogle === "en"
                   ? data?.data.anime.info.stats.episodes.dub < episode.number
