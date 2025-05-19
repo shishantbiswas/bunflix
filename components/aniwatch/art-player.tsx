@@ -44,9 +44,12 @@ export default function Player({
             ...context,
             url: `${
               process.env.NEXT_PUBLIC_PROXY_PREFIX
-                ? process.env.NEXT_PUBLIC_PROXY_PREFIX + context.url.replaceAll("//", "/")
-                : context.url
-            }`, // this prevents re-routing
+                ? context.url.includes(process.env.NEXT_PUBLIC_PROXY_PREFIX)
+                  ? context.url // if prefix already exists
+                  : process.env.NEXT_PUBLIC_PROXY_PREFIX +
+                    context.url.replaceAll("//", "/")
+                : context.url // default case
+            }`,
           },
           ...rest
         );
@@ -59,10 +62,10 @@ export default function Player({
     fragLoadingRetryDelay: 500,
     fragLoadingTimeOut: 30000,
     fragLoadingMaxRetryTimeout: 1000,
-    maxBufferLength: 300,
-    maxMaxBufferLength: 300,
+    maxBufferLength: (60 * 30),
+    maxMaxBufferLength: (60 * 30),
     maxBufferHole: 0.5,
-    loader: loader,
+    loader,
   };
 
   const searchParams = useSearchParams();
@@ -183,7 +186,7 @@ export default function Player({
       }
       if (hls) hls.destroy();
     };
-  }, []);
+  }, [src, track]);
 
   const { show } = useShow();
   const showId = `${show?.data.anime.info.id + (show?.ep || "jp")}`;

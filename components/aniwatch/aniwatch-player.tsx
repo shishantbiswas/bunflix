@@ -13,36 +13,40 @@ export default async function AniwatchPlayer({
 }) {
   if (!ep) return;
 
-  const server = await fetchAniwatchEpisodeServer(episodeId, ep);
+  const {
+    data: { dub: serverDub, sub: serverSub, raw: serverRaw },
+  } = await fetchAniwatchEpisodeServer(episodeId, ep);
   if (lang === "en") {
-    if (server.data.dub.length === 0) {
+    if (serverDub.length === 0) {
       redirect(`/error?err=${encodeURIComponent("No Dub Available")}`);
     }
 
     const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
-      server.data.dub[0].serverName,
+      serverDub[0].serverName,
       "dub",
-      server.data.dub[1].serverName
+      serverDub[1].serverName
     );
 
     return <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />;
   } else {
-    if (server.data.sub.length === 0 && server.data.raw.length === 0) {
+    if (serverSub.length === 0 && serverRaw.length === 0) {
       redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`);
     }
 
     const sub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
       episodeId,
       ep,
-      !server.data.sub[0]
-        ? server.data.raw[0].serverName
-        : server.data.sub[0].serverName,
-      !server.data.sub[0] ? "raw" : "sub",
-      !server.data.sub[1]
-        ? server.data.raw[1].serverName
-        : server.data.sub[1].serverName
+      !serverSub[0] ? serverRaw[0].serverName : serverSub[0].serverName,
+      !serverSub[0] ? "raw" : "sub",
+      !serverSub[1]
+        ? serverRaw[1].serverName
+          ? serverRaw[1].serverName
+          : serverRaw[0].serverName
+        : serverSub[1].serverName
+        ? serverSub[1].serverName
+        : serverSub[0].serverName
     );
 
     if (sub.data.sources.length === 0) {

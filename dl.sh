@@ -1,6 +1,6 @@
 #!/run/current-system/sw/bin/bash
 shopt -s expand_aliases
 
-alias yt='yt-dlp --add-headers Referer:https://megacloud.club/'
+alias yt='yt-dlp -N 6 -R 24 --add-headers Referer:https://megacloud.club/'
 
-yt 
+# yt -o "~/Videos/1.%(ext)s" 

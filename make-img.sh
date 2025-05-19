@@ -1,1 +1,1 @@
-docker build --build-arg ANIWATCH_API=https://aniwatch-api-khaki-psi.vercel.app NEXT_PUBLIC_PROXY_PREFIX=/api/proxy/ TMDB_KEY=c3461f21e07062aa64bd4cbc049b2d98 -t bunf .
+docker build --build-arg ANIWATCH_API=https://aniwatch-api-khaki-psi.vercel.app --build-arg NEXT_PUBLIC_PROXY_PREFIX=/api/proxy/ --build-arg TMDB_KEY=c3461f21e07062aa64bd4cbc049b2d98 -t flix --network host .
