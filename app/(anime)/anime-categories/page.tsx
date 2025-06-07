@@ -1,6 +1,5 @@
 import AniwatchCategoryList from "@/components/aniwatch/aniwatch-category-list";
 
-// https://stackoverflow.com/questions/79119608/pageprops-type-resolution-with-basic-example
 type SearchParams = Promise<{ type: AniwatchCategoriesName }>
 
 export async function generateMetadata({
@@ -8,9 +7,9 @@ export async function generateMetadata({
 }: {
   searchParams: SearchParams
 }) {
-    const {type} = await searchParams
+  const { type } = await searchParams
 
-  const term = type
+  const term = decodeURIComponent(type)
     .replace(/-/, " ")
     .split(" ")
     .map(
@@ -31,7 +30,7 @@ export default async function Categories({
 }: {
   searchParams: SearchParams
 }) {
-    const {type} = await searchParams
+  const { type } = await searchParams
 
   const term = type
   .replace(/-/, " ")
@@ -46,7 +45,7 @@ export default async function Categories({
   return (
     <div className="min-h-screen  p-4">
       <h1 className="text-3xl my-2 font-semibold">{term}</h1>
-        <AniwatchCategoryList type={type} />
+      <AniwatchCategoryList disablePagination={false} type={type} />
     </div>
   );
 }

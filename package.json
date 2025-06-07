@@ -10,17 +10,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@netlify/plugin-nextjs": "^5.10.0",
-    "@react-spring/web": "^9.7.5",
+    "@react-spring/web": "^10.0.1",
     "@tanstack/react-query": "^5.53.3",
     "artplayer": "^5.2.2",
     "artplayer-plugin-hls-control": "^1.0.1",
-    "babel-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
+    "babel-plugin-react-compiler": "19.1.0-rc.2",
     "dexie": "^4.0.8",
     "dexie-react-hooks": "^1.1.7",
     "hls.js": "1.5.20",
-    "lucide-react": "^0.399.0",
-    "next": "15.3.1",
+    "lucide-react": "0.513.0",
+    "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-intersection-observer": "^9.10.3",
@@ -30,8 +29,8 @@
     "@tailwindcss/postcss": "^4.0.0",
     "@tanstack/eslint-plugin-query": "^5.53.0",
     "@types/node": "^20",
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "postcss": "^8",
@@ -40,11 +39,5 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-motion": "^1.0.0",
     "typescript": "^5"
-  },
-  "overrides": {
-    "@react-spring/web": {
-      "react": "^19.1.0",
-      "react-dom": "^19.1.0"
-    }
   }
 }

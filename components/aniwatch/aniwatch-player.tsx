@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import Player from "./art-player";
+import Download from "@/app/(anime)/anime/[id]/download";
 
 export default async function AniwatchPlayer({
   episodeId,
@@ -29,7 +30,11 @@ export default async function AniwatchPlayer({
       serverDub[1].serverName
     );
 
-    return <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />;
+    return (
+      <div className="flex flex-col w-full">
+        <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />
+        <Download src={dub?.data.sources[0]?.url} track={dub.data.tracks} lang="en" />
+      </div>);
   } else {
     if (serverSub.length === 0 && serverRaw.length === 0) {
       redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`);
@@ -45,15 +50,20 @@ export default async function AniwatchPlayer({
           ? serverRaw[1].serverName
           : serverRaw[0].serverName
         : serverSub[1].serverName
-        ? serverSub[1].serverName
-        : serverSub[0].serverName
+          ? serverSub[1].serverName
+          : serverSub[0].serverName
     );
 
     if (sub.data.sources.length === 0) {
       redirect(`/error?err=${encodeURIComponent("No Sub Available")}`);
     }
 
-    return <Player src={sub?.data.sources[0]?.url} track={sub.data.tracks} />;
+    return (
+      <div className="flex flex-col w-full">
+        <Player src={sub?.data.sources[0]?.url} track={sub.data.tracks} />
+        <Download src={sub?.data.sources[0]?.url} track={sub.data.tracks} lang="jp" />
+      </div>
+    );
   }
 }
 
@@ -66,10 +76,8 @@ async function fetchAniwatchEpisodeSrc(
 ) {
   try {
     const response = await fetch(
-      `${
-        process.env.ANIWATCH_API
-      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${
-        server ? (server === "hd-3" ? altServer : server) : "vidstreaming"
+      `${process.env.ANIWATCH_API
+      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? (server === "hd-3" ? altServer : server) : "vidstreaming"
       }&category=${category}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );

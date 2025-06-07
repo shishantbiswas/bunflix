@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { SearchBarFocusProvider } from "@/context/search-context";
 import TanstackProvider from "@/context/tanstack-provider";

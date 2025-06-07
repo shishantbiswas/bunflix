@@ -1,6 +1,6 @@
-import AniwatchCategoryList from "@/components/aniwatch/aniwatch-category-list";
 import { MicIcon, CaptionsIcon } from "lucide-react";
 import Link from "@/components/link";
+import AniwatchProducerList from "./client.page";
 
 type Params = Promise<{ type: string }>;
 
@@ -11,7 +11,7 @@ export async function generateMetadata({
 }) {
   const { type } = await searchParams;
 
-  const term = type
+  const term = decodeURIComponent(type)
     .replace(/-/, " ")
     .split(" ")
     .map(
@@ -33,13 +33,14 @@ export default async function Categories({
   searchParams: Params;
 }) {
   const { type } = await searchParams;
-  
-  const producerName = type.replace(/-/, " ").split(" ").join("");
-  const data = await fetchAniwatchProducer(type.replace(" ","-").trim(), true, 1);
+  console.log(decodeURIComponent(type));
+
+  const term = decodeURIComponent(type)
+    .replace(/-/, " ").split(" ").join("");
   return (
     <div className="min-h-screen   p-4">
-      <h1 className="text-3xl my-2 font-semibold">{producerName}</h1>
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+      <h1 className="text-3xl my-2 font-semibold">{term}</h1>
+      {/* <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         {data?.data.animes.map((episode, animeIndex) => (
           <Link
             key={episode.id + animeIndex}
@@ -69,24 +70,8 @@ export default async function Categories({
             </div>
           </Link>
         ))}
-      </div>
+      </div> */}
+      <AniwatchProducerList type={type} />
     </div>
   );
 }
-
-const fetchAniwatchProducer = async (
-  name: string,
-  hasNextPage: boolean,
-  pageToFetch: number
-) => {
-  if (!hasNextPage) {
-    return;
-  }
-
-  const res = await fetch(
-    `${process.env.ANIWATCH_API}/api/v2/hianime/producer/${name}`,
-    { next: { revalidate: 3600, tags: ["anime"] } }
-  );
-  const data = (await res.json()) as AniwatchSearch;
-  return data;
-};

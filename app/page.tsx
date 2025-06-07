@@ -21,7 +21,7 @@ export default async function Home() {
   };
 
   return (
-    <div className="">
+    <div>
       <TmdbSlider data={data} />
       <Suspense fallback={<TmdbHomeSkeleton />}>
         <TmdbShowRow

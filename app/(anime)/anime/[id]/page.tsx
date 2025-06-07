@@ -3,9 +3,12 @@ import AniwatchPlayer from "@/components/aniwatch/aniwatch-player";
 import EpisodeSelector from "@/components/aniwatch/episode-selector";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import Download from "./download";
 
 type Params = Promise<{ id: string }>
 type SearchParams = Promise<{ ep: string; num: string; lang: "en" | "jp" }>
+
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({
   params,
@@ -52,8 +55,8 @@ export default async function Anime({
   const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
   const epNum = Number(num || 0) > episode.data.totalEpisodes ? 0 : Number(num || 0)
 
-  const epId = episode.data.episodes[epNum] || episode.data.episodes[epNum - 1] || episode.data.episodes[0]
-  
+  const epId = episode.data.episodes[epNum - 1] || episode.data.episodes[epNum] || episode.data.episodes[0]
+
   if (!ep) {
     redirect(`/anime/${epId.episodeId}&lang=${lang || "jp"}&num=${epId.number}`);
   }

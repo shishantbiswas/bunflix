@@ -3,13 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Artplayer from "artplayer";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
 import Hls, {
-  FragmentLoaderContext,
-  HlsConfig,
-  Loader,
-  LoaderCallbacks,
-  LoaderConfiguration,
-  LoaderContext,
-  PlaylistLoaderContext,
+  HlsConfig
 } from "hls.js";
 import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
@@ -42,14 +36,13 @@ export default function Player({
         load(
           {
             ...context,
-            url: `${
-              process.env.NEXT_PUBLIC_PROXY_PREFIX
-                ? context.url.includes(process.env.NEXT_PUBLIC_PROXY_PREFIX)
-                  ? context.url // if prefix already exists
-                  : process.env.NEXT_PUBLIC_PROXY_PREFIX +
-                    context.url.replaceAll("//", "/")
-                : context.url // default case
-            }`,
+            url: `${process.env.NEXT_PUBLIC_PROXY_PREFIX
+              ? context.url.includes(process.env.NEXT_PUBLIC_PROXY_PREFIX)
+                ? context.url // if prefix already exists
+                : process.env.NEXT_PUBLIC_PROXY_PREFIX +
+                context.url.replaceAll("//", "/")
+              : context.url // default case
+              }`,
           },
           ...rest
         );
@@ -181,15 +174,13 @@ export default function Player({
     });
 
     return () => {
-      if (art && art.destroy) {
-        art.destroy(false);
-      }
-      if (hls) hls.destroy();
+      art.destroy(false);
+      hls?.destroy();
     };
   }, [src, track]);
 
   const { show } = useShow();
-  const showId = `${show?.data.anime.info.id + (show?.ep || "jp")}`;
+  const showId = `${show?.data.anime.info.id}`;
 
   const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
 
@@ -210,8 +201,12 @@ export default function Player({
             if (!currentShow || !videoRef.current) return;
 
             indexDB.watchHistory.update(showId, {
-              time: Math.trunc(videoRef.current.currentTime) || 0,
+              time: Math.trunc(videoRef.current.currentTime),
               duration: currentShow.duration,
+              epNum: show.epNum,
+              lang: show.lang,
+              updatedAt: new Date(),
+              ep: show.ep,
             });
           });
         } else {
@@ -219,8 +214,9 @@ export default function Player({
             id: showId,
             ep: show.ep,
             lang: show.lang,
+            updatedAt: new Date(),
             epNum: show.epNum,
-            time: videoRef.current.currentTime,
+            time: Math.trunc(videoRef.current.currentTime),
             duration: videoRef.current.duration,
             show: {
               duration: show.data.anime.moreInfo.duration,

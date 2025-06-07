@@ -42,7 +42,7 @@ export default function AniwatchHome({ anime: { data } }: { anime: AniwatchHome 
           {data.latestEpisodeAnimes.map((episode, i) => (
             <AniwatchAnimeCard setMenu={setMenu} episode={{ ...episode, rating: "" }} key={episode.id} />
           ))}
-          <Menu  data={menu} setMenu={setMenu} />
+          <Menu data={menu} setMenu={setMenu} />
         </div>
 
         <div className="px-4 flex flex-col gap-2 sticky top-24 pb-4 h-fit">
@@ -83,7 +83,7 @@ export default function AniwatchHome({ anime: { data } }: { anime: AniwatchHome 
           </div>
 
           <div className="flex flex-col gap-2 w-full lg:w-[350px] lg:max-w-[350px]">
-            {date.slice(0, 4).map((episode) => (
+            {date.slice(0, 5).map((episode) => (
               <Link
                 key={episode.id}
                 href={`/anime/${episode.id}`}

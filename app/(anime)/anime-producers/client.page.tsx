@@ -1,19 +1,15 @@
 "use client";
 
+import AniwatchAnimeCard from "@/components/aniwatch/aniwatch-anime-card";
+import { Menu } from "@/components/aniwatch/context-menu";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { Menu } from "./context-menu";
-import AniwatchAnimeCard from "./aniwatch-anime-card";
 
-export default function AniwatchCategoryList({
+export default function AniwatchProducerList({
   type,
-  disablePagination = false,
-  homePageLayout = false
 }: {
-  type: (AniwatchCategoriesName),
-  disablePagination?: boolean
-  homePageLayout?: boolean
+  type: string,
 }) {
   const { data, fetchNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["anime-category", { type }],
@@ -48,10 +44,10 @@ export default function AniwatchCategoryList({
     }
 
     const res = await fetch(
-      `/api/anime/category?category=${decodeURIComponent(type).replaceAll(" ","-")}&page=${pageToFetch}`,
+      `/api/anime/producer?producer=${decodeURIComponent(type).replaceAll(" ","-")}&page=${pageToFetch}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );
-    const data = (await res.json()) as AniwatchSearch;
+    const data = (await res.json()) as AniwatchProducer;
     return data;
   };
   const [menu, setMenu] = useState<{
@@ -76,7 +72,8 @@ export default function AniwatchCategoryList({
 
   return (
     <>
-      <div className={`${homePageLayout ? "flex transition-all hover:pl-1 py-4 items-center w-100% overflow-x-scroll scrollbar-hide gap-4" : "grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6"}`}>
+    <title>{`${data?.pages[0]?.data.producerName}`}</title>
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
         {data?.pages?.map((page, pageIndex) => {
           return (
             <div className="h-fit w-fit contents" key={pageIndex}>
@@ -88,12 +85,12 @@ export default function AniwatchCategoryList({
         })}
         {isLoading && (<CategoryFallback />)}
       </div>
-      {!disablePagination && <div  className="contents">
-        <div ref={ref} />
+      <div ref={ref}>
+        <div />
         <div className="mt-4 grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
           {isFetchingNextPage && <CategoryFallback />}
         </div>
-      </div>}
+      </div>
       <Menu data={menu} setMenu={setMenu} />
     </>
   );

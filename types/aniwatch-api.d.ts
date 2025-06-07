@@ -9,7 +9,7 @@ interface AniwatchHome {
     topAiringAnimes: TopAiringAnimes[];
     genres: string[];
   };
-};
+}
 
 interface TopAiringAnimes {
   id: string;
@@ -19,13 +19,13 @@ interface TopAiringAnimes {
   description: string;
   poster: string;
   otherInfo: string[];
-};
+}
 
 interface Top10Animes {
   today: Top10AnimesResult[];
   week: Top10AnimesResult[];
   month: Top10AnimesResult[];
-};
+}
 
 interface Top10AnimesResult {
   id: string;
@@ -33,7 +33,7 @@ interface Top10AnimesResult {
   description: string;
   poster: string;
   episodes: { sub: number; dub: number };
-};
+}
 
 interface TopUpcomingAnimes {
   id: string;
@@ -43,7 +43,7 @@ interface TopUpcomingAnimes {
   type: string;
   rating: string | null;
   episodes: { sub: number; dub: number };
-};
+}
 
 interface LatestEpisodeAnimes {
   id: string;
@@ -53,14 +53,14 @@ interface LatestEpisodeAnimes {
   type: string;
   rating: string | null;
   episodes: { sub: number; dub: number };
-};
+}
 
 interface TrendingAnimes {
   rank: number;
   id: string;
   name: string;
   poster: string;
-};
+}
 
 interface SpotlightAnimes {
   rank: number;
@@ -71,7 +71,7 @@ interface SpotlightAnimes {
   jname: string;
   episodes: { sub: number; dub: number };
   otherInfo: [string, string, string, string];
-};
+}
 
 interface AniwatchInfo {
   data: {
@@ -147,7 +147,7 @@ interface AniwatchInfo {
       };
     }[];
   };
-};
+}
 
 interface AniwatchEpisodeData {
   success: boolean;
@@ -160,7 +160,7 @@ interface AniwatchEpisodeData {
       isFiller: boolean;
     }[];
   };
-};
+}
 
 interface AniwatchSearch {
   data: {
@@ -179,7 +179,26 @@ interface AniwatchSearch {
     searchQuery: string;
     searchFilters: {};
   };
-};
+}
+
+interface AniwatchProducer {
+  data: {
+    animes: Anime[];
+    mostPopularAnimes: {
+      id: string;
+      name: string;
+      poster: string;
+      jname: string;
+      episodes: { sub: number; dub: number };
+      type: string;
+    }[];
+    currentPage: number;
+    producerName: string;
+    hasNextPage: boolean;
+    totalPages: number;
+  };
+  success: boolean;
+}
 
 interface Anime {
   id: string;
@@ -190,7 +209,7 @@ interface Anime {
   jname?: string;
   rating: string;
   episodes: { sub: number; dub: number };
-};
+}
 
 interface AniwatchEpisodeSrc {
   data: {
@@ -201,7 +220,7 @@ interface AniwatchEpisodeSrc {
     anilistID: [];
     malID: [];
   };
-};
+}
 
 interface AniwatchGenre {
   data: {
@@ -213,7 +232,7 @@ interface AniwatchGenre {
     hasNextPage: boolean;
     currentPage: number;
   };
-};
+}
 
 interface AniwatchStudio {
   producerName: string;
@@ -223,7 +242,7 @@ interface AniwatchStudio {
   totalPages: number;
   hasNextPage: boolean;
   currentPage: number;
-};
+}
 
 interface AniwatchCategories {
   success: boolean;
@@ -236,7 +255,7 @@ interface AniwatchCategories {
     hasNextPage: boolean;
     currentPage: number;
   };
-};
+}
 
 type AniwatchCategoriesName =
   | "most-favorite"
@@ -258,16 +277,18 @@ interface AniwatchServer {
   success: boolean;
   data: {
     dub: {
-      serverName: string, serverId: number
-    }[],
+      serverName: string;
+      serverId: number;
+    }[];
     sub: {
-      serverName: string, serverId: number
-    }[]
+      serverName: string;
+      serverId: number;
+    }[];
     raw: {
-      serverName: string, serverId: number
-    }[]
-    episodeId: string,
-    episodeNo: number
-
-  }
+      serverName: string;
+      serverId: number;
+    }[];
+    episodeId: string;
+    episodeNo: number;
+  };
 }

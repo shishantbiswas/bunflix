@@ -4,7 +4,6 @@ import { indexDB, WatchLater } from "@/lib/index-db";
 import { CheckIcon, Clock, Link2Icon, PlayCircle, XCircle, XIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import Link from "../link";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useLiveQuery } from "dexie-react-hooks";
 
@@ -25,7 +24,6 @@ export function Menu({ data, setMenu }: {
 
   const [copied, setCopied] = useState(false);
   const [customEpisode, setCustomEpisode] = useState(1);
-  const router = useRouter();
 
   const watchedShows = useLiveQuery(() => indexDB.watchedShows.toArray());
   const watchHistory = useLiveQuery(() => indexDB.watchLater.toArray());
@@ -41,15 +39,15 @@ export function Menu({ data, setMenu }: {
         pointerEvents: data.open ? "all" : "none",
         height: data.open ? "" : "0px",
         top: data.y - 30,
-        left: data.x > 650 ? `${data.x - 150}px` : data.x
+        left: data.x > 650 ? `${data.x - 170}px` : data.x
       }}
       className={` absolute transition-all duration-200 z-50`}>
       <div
         className="p-3 backdrop-blur-lg bg-black/40 rounded-lg flex text-start flex-col gap-2 text-base text-nowrap">
         <h1 className="text-xl font-semibold text-wrap max-w-[240px] leading-tight m-2">{data.show.name || data.show.jname}</h1>
-        <Link className="flex  hover:bg-white/10 px-2 py-1  rounded items-center gap-2 " href={`/anime/${data.show.id}`}>
+        {(data.show.episodes.sub > 0 || data.show.episodes.dub > 0) && <Link className="flex  hover:bg-white/10 px-2 py-1  rounded items-center gap-2 " href={`/anime/${data.show.id}`}>
           <PlayCircle size={14} /> Play
-        </Link>
+        </Link>}
         {data.show.episodes.dub > 0 && <Link className="flex hover:bg-white/10 px-2 py-1  rounded items-center gap-2 "
           href={`/anime/${data.show.id}?lang=en`}>
           <PlayCircle size={14} /> Play (Engligh ver.)
@@ -118,47 +116,27 @@ export function Menu({ data, setMenu }: {
         ))}
         <div className=" flex flex-col">
           <p className="opacity-60 text-sm ml-2">Custom Episode:</p>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-            }}
-          >
-            <input
-              type="number"
-              placeholder="1"
-              onChange={(e) => { setCustomEpisode(parseInt(e.target.value)) }}
-              max={data.show.episodes.sub}
-              min={1}
-              className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] w-16 mt-2 ml-2 border border-white/40 px-2 rounded-md" />
-            <div className="mt-2 flex flex-col">
-              {data.show.episodes.sub > 0 && data.show.episodes.sub >= customEpisode &&
-                <button type="submit"
-                  className="flex hover:bg-white/10 px-2 py-1 rounded items-center gap-2"
-                  onClick={() => {
-                    if (customEpisode > data.show.episodes.sub) {
-                      toast.error("Select a valid Episode Number")
-                      return
-                    } else {
-                      router.push(`/anime/${data.show.id}?num=${customEpisode}`)
-                    }
-                  }}>
-                  Play {customEpisode} Episode
-                </button>}
-              {data.show.episodes.dub > 0 && data.show.episodes.dub >= customEpisode &&
-                <button type="submit"
-                  className="flex hover:bg-white/10 px-2 py-1 rounded items-center gap-2"
-                  onClick={() => {
-                    if (customEpisode > data.show.episodes.dub) {
-                      toast.error("Select a valid Episode Number")
-                      return
-                    } else {
-                      router.push(`/anime/${data.show.id}?num=${customEpisode}&lang=en`)
-                    }
-                  }}>
-                  Play {customEpisode} Episode Dubbed
-                </button>}
-            </div>
-          </form>
+          <input
+            type="number"
+            placeholder="1"
+            onChange={(e) => { setCustomEpisode(parseInt(e.target.value)) }}
+            max={data.show.episodes.sub}
+            min={1}
+            className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance:textfield] w-22 mt-2 ml-2 border border-white/40 px-2 rounded-md" />
+          <div className="mt-2 flex flex-col">
+            {data.show.episodes.sub > 0 && data.show.episodes.sub >= customEpisode &&
+              <Link
+                className="flex hover:bg-white/10 px-2 py-1 rounded items-center gap-2"
+                href={`/anime/${data.show.id}?num=${customEpisode}`}>
+                Play {customEpisode} Episode
+              </Link>}
+            {data.show.episodes.dub > 0 && data.show.episodes.dub >= customEpisode &&
+              <Link
+                className="flex hover:bg-white/10 px-2 py-1 rounded items-center gap-2"
+                href={`/anime/${data.show.id}?num=${customEpisode}&lang=en`}>
+                Play {customEpisode} Episode Dubbed
+              </Link>}
+          </div>
         </div>
         <button
           className="flex text-red-500 hover:bg-white/10 px-2 py-1 rounded items-center gap-2"

@@ -13,7 +13,12 @@ import { useDebounce } from "@/hooks/useDebounce";
 export default function SearchInput() {
   const [term, setTerm] = useState("");
   const [IsEmpty, setIsEmpty] = useState(false);
-  const [type, setType] = useState<"multi" | "anime">("multi");
+  const [type, setType] = useState<"multi" | "anime">(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage?.getItem("search-type") as any ?? "multi"
+    } else return "multi"
+  }
+  );
   const [result, setResult] = useState<TMDBMultiSearch | null>();
   const [anime, setAnime] = useState<AniwatchSearch | null>();
 
@@ -120,11 +125,12 @@ export default function SearchInput() {
         <div className=" flex items-center gap-2 ">
           <button
             style={{
-              backgroundColor: type === "multi" ? "lightgreen" : "",
-              color: type === "multi" ? "green" : "",
+              backgroundColor: (type || localStorage?.getItem("search-type") as any) === "multi" ? "lightgreen" : "",
+              color: (type || localStorage?.getItem("search-type") as any) === "multi" ? "green" : "",
             }}
             onClick={() => {
               setType("multi");
+              localStorage.setItem("search-type", "multi")
               setAnime(null);
             }}
             className=" px-2 py-.5 rounded-sm bg-gray-500 cursor-pointer"
@@ -133,11 +139,12 @@ export default function SearchInput() {
           </button>
           <button
             style={{
-              backgroundColor: type === "anime" ? "lightgreen" : "",
-              color: type === "anime" ? "green" : "",
+              backgroundColor: (type || localStorage?.getItem("search-type") as any) === "anime" ? "lightgreen" : "",
+              color: (type || localStorage?.getItem("search-type") as any) === "anime" ? "green" : "",
             }}
             onClick={() => {
               setType("anime");
+              localStorage.setItem("search-type", "anime")
               setResult(null);
             }}
             className=" px-2 py-.5 rounded-sm bg-gray-500 cursor-pointer"

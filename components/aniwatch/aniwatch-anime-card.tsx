@@ -5,9 +5,8 @@ import Link from "../link"
 import { indexDB, WatchedShows, WatchLater } from "@/lib/index-db"
 import { useLiveQuery } from "dexie-react-hooks"
 import useLongPress from "@/hooks/useLongPress"
-import { useRouter } from "next/navigation"
 import { MouseEvent, useRef } from "react"
-import { useGlobalTransition } from "@/context/transition-context"
+import { animated, easings, useInView } from "@react-spring/web"
 
 export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: {
   episode: {
@@ -30,9 +29,7 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
   const watchHistory = useLiveQuery(() => indexDB.watchLater.toArray());
   const watchedShows = useLiveQuery(() => indexDB.watchedShows.toArray());
 
-  const router = useRouter();
   const ref = useRef<MouseEvent<HTMLDivElement, globalThis.MouseEvent> | null>(null);
-  const { startTransition } = useGlobalTransition();
 
   const hold = useLongPress({
     onLongPress: () => {
@@ -45,13 +42,41 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
         }
       })
     }, onClick: () => {
-      startTransition(() => router.push(`/anime/${episode.id}`)
-      )
+      if (!ref.current) return
+      setMenu({
+        open: true, x: ref.current.pageX, y: ref.current.pageY, show: {
+          ...episode,
+          rating: "",
+          duration: ""
+        }
+      })
     }
   }, { delay: 800 });
 
+  const [animeteRef, springs] = useInView(
+    () => ({
+      from: {
+        opacity: 0,
+        scale: 0.75,
+      },
+      to: {
+        opacity: 1,
+        scale: 1,
+      },
+      config: {
+        easing: easings.easeOutCubic,
+      },
+    }),
+    {
+      once: true,
+      rootMargin: "-10% 0%",
+    }
+  );
+
   return (
-    <button
+    <animated.button
+      ref={animeteRef}
+      style={springs}
       {...hold}
       className={`appearance-none cursor-pointer ${widthClassName ? widthClassName : "min-w-[150px] w-full lg:w-full"} h-[300px] rounded-md overflow-hidden group hover:scale-[105%] hover:border-2  border-red-600 transition-transform hover:z-50 relative text-end ${settings && settings.hideWatchedShows && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"}`}
     >
@@ -104,11 +129,11 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
             </p>
             <p className="flex items-center gap-1 bg-yellow-500/80 rounded-xs  px-1">
               <CaptionsIcon size={10} />
-              {episode.episodes.sub}
+              {episode.episodes.sub || "NA"}
             </p>
           </div>
         </div>
       </div>
-    </button>
+    </animated.button>
   )
 }
