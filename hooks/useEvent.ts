@@ -54,7 +54,7 @@ function useEvent(target: any, type: any, listener: any, cleanup: any): void {
       targetEl.removeEventListener(type, listener)
       cleanup && cleanup()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [target, type])
 }
 

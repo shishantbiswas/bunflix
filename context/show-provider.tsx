@@ -12,7 +12,7 @@ const ShowContext = createContext<{
     setShow: (anime: History) => void;
 }>({
     show: null,
-    setShow: () => { },
+    setShow: () => {}
 });
 
 export const ShowProvider = ({

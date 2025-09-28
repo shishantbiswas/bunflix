@@ -149,11 +149,11 @@ export default function Player({
       customType: {
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
-            if (art.hls) art.hls.destroy();
+            if ((art.hls as Hls)?.destroy) (art.hls as Hls).destroy();
             hls = new Hls(hlsConfig);
             hls.loadSource(url);
             hls.attachMedia(video);
-            art.hls = hls;
+            (art as any).hls = hls;
             video.currentTime = time;
             art.on("destroy", () => hls?.destroy());
             video.addEventListener("ended", () => {

@@ -17,7 +17,7 @@ export default function MovieItem({
 }: {
   type: string;
   movie: MovieResults;
-  size?: String;
+  size?: string;
 }) {
   const {
     id,

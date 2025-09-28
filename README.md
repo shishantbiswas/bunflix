@@ -37,11 +37,6 @@ TMDB_KEY=your_key_from_tmdb
 ANIWATCH_API=host_your_own_instance
 ```
 
-### One-Click Docker Deploy 
-
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?name=bunflix&repository=shishantbiswas%2Fbunflix&branch=main&builder=dockerfile&instance_type=free&env%5BANIWATCH_API%5D=host_your_own_instance&env%5BTMDB_KEY%5D=your_key_from_tmdb&ports=3000%3Bhttp%3B%2F&hc_protocol%5B3000%5D=tcp&hc_grace_period%5B3000%5D=5&hc_interval%5B3000%5D=30&hc_restart_limit%5B3000%5D=3&hc_timeout%5B3000%5D=5&hc_path%5B3000%5D=%2F&hc_method%5B3000%5D=get)
-
-
 ### Deploy
 
 With the setup now complete it can be deployed almost anywhere like [Vercel](https://vercel.com), [Netlify](https://netlify.com), [Railway](https://railway.app) or any Cloud Provider out there

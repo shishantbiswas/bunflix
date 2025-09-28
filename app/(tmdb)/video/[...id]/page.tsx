@@ -85,7 +85,7 @@ export default async function Page({
         url = superTvApi;
         break;
       default:
-        url = vidsrcTvapi;
+        url = twoEmbedtvApi;
     }
   } else {
     switch (provider) {
@@ -102,7 +102,7 @@ export default async function Page({
         url = smashystreamMovieApi;
         break;
       default:
-        url = vidsrcMovieApi;
+        url = twoEmbedMovieApi;
     }
   }
 

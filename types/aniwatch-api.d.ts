@@ -177,7 +177,7 @@ interface AniwatchSearch {
     hasNextPage: boolean;
     totalPages: number;
     searchQuery: string;
-    searchFilters: {};
+    searchFilters: object;
   };
 };
 
