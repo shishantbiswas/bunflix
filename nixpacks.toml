@@ -1,18 +1,18 @@
+
+
 [phases.install]
 cmds = ["bun run install"]
-dependsOn = ['setup']
-
+dependsOn = ["setup"]
 
 [phases.build]
 cmds = ["bun run build"]
-dependsOn = ['install']
-
+dependsOn = ["install"]
 
 [start]
 cmd = "bun start"
 
 [nix]
-pkgs = ["nodejs_24,"curl","bun"]
+pkgs = ["nodejs_24", "curl", "bun"]
 
 [variables]
-NODE_ENV = 'production'
+NODE_ENV = "production"
