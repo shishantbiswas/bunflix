@@ -1,4 +1,7 @@
-
+[phases.setup]
+nixPkgs = ["nodejs_24"] 
+nixLibs = [] 
+aptPkgs = []   
 
 [phases.install]
 cmds = ["bun run install"]
