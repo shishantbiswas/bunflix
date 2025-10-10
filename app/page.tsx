@@ -29,16 +29,22 @@ export default async function Home() {
           endpoint={endpoint.trendingMovies}
           type="movie"
         />
+      </Suspense>
+      <Suspense fallback={<TmdbHomeSkeleton />}>
         <TmdbShowRow
           title="Upcoming Movies"
           endpoint={endpoint.upcomingMovies}
           type="movie"
         />
+      </Suspense>
+      <Suspense fallback={<TmdbHomeSkeleton />}>
         <TmdbShowRow
           title="Trending Movies At The Moment"
           endpoint={endpoint.topRatedTvShows}
           type="tv"
         />
+      </Suspense>
+      <Suspense fallback={<TmdbHomeSkeleton />}>
         <TmdbShowRow
           title="Now Playing in Theaters"
           endpoint={endpoint.nowPlayingMovies}
