@@ -21,6 +21,8 @@ export default function RootLayout({
         defer
         id="umami"
         src="https://umami.service.coolify.bsws.in/script.js"
+        data-do-not-track="true"
+        data-domains="bunflix.bsws.in"
         data-website-id="37066bad-b029-48d9-bef5-d3e9abb151cc">
       </Script>
     </html>
