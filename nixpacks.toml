@@ -17,5 +17,3 @@ cmd = "bun start"
 # [nix]
 # pkgs = ["nodejs_24", "curl", "bun"]
 
-[variables]
-NODE_ENV = "production"
