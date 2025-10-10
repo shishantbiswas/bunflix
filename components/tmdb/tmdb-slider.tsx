@@ -38,7 +38,7 @@ export default function TmdbSlider({ data }: { data: TMDBMovie }) {
               )})`,
             }}
           />
-          <Link href={`/video/movie/${item.id}?provider=vidsrc`}>
+          <Link href={`/video/movie/${item.id}`}>
             <animated.div
               style={{
                 ...style,

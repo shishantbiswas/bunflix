@@ -120,8 +120,8 @@ export default function MovieItem({
           <Link
             href={`/video/${type || media_type}/${id}/${
               type === "tv" || media_type === "tv"
-                ? "?season=1&episode=1&provider=vidsrc"
-                : "?provider=vidsrc"
+                ? "?season=1&episode=1"
+                : ""
             }`}
           >
             <div className=" rounded-full w-full p-4 transition-all text-xl flex items-center justify-start gap-2 hover:bg-red-700 ">

@@ -1,0 +1,23 @@
+[phases.setup]
+nixPkgs = ["nodejs,"curl","bun"]
+nixLibs = []
+aptPkgs = []
+
+[phases.install]
+cmds = ["bun run install"]
+dependsOn = ['setup']
+
+
+[phases.build]
+cmds = ["bun run build"]
+dependsOn = ['install']
+
+
+[start]
+cmd = "bun start"
+
+[nix]
+pkgs = []
+
+[variables]
+NODE_ENV = 'production'
