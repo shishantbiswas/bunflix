@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_24", "curl", "bun"] 
+nixPkgs = ["nodejs_22", "curl", "bun"] 
 nixLibs = [] 
 aptPkgs = []   
 
@@ -13,10 +13,6 @@ dependsOn = ["install"]
 
 [start]
 cmd = "bun start"
-
-[build]
-nixpkgsArchive = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz"
-
 
 # [nix]
 # pkgs = ["nodejs_24", "curl", "bun"]
