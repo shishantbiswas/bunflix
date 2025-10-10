@@ -4,7 +4,7 @@ nixLibs = []
 aptPkgs = []   
 
 [phases.install]
-cmds = ["npm run install"]
+cmds = ["npm install"]
 dependsOn = ["setup"]
 
 [phases.build]
