@@ -1,0 +1,271 @@
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2Embed.cc - Player</title>
+<link rel="shortcut icon" href="/images/favicon.png" type="image/x-icon">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+
+<script type="text/javascript">
+if(window==window.top) {
+  window.location.replace("https://www.2embed.skin/movie/533533");
+}
+function go(loc) {
+  document.getElementById('iframesrc').src = loc;
+}
+</script>
+<style type="text/css">
+body, html
+{
+  margin: 0; padding: 0; height: 100%; overflow: hidden;
+}
+
+#content
+{
+  position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
+}
+
+.loading {
+  background-color:#000;
+  background-image:url(/bgposters/tt6604188.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover; 
+  filter: blur(2px) brightness(60%);
+  position:absolute;
+  top:0px;
+  bottom:0px;
+  right:0px;
+  left:0px;
+}
+iframe {
+  background:#000 url(/images/loading.gif);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 500px;
+}
+.dropbtn {
+  background: none;
+  color: #eee;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+.dropbtn:hover { opacity: 1; }
+.dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 999;
+  margin: 10px;
+  transition: 1s;
+  text-align: center; 
+}
+.dropdown a { color: #fff; text-decoration: none; font-family: tahoma; }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  overflow: auto;
+  z-index: 1;
+  width: max-content;
+  margin-top: -40px;
+}
+
+.dropdown-content a {
+  background: #222;
+  color: #fff;
+  padding: 16px;
+  text-decoration: none;
+  display: inline-block;
+  opacity: 0.9;
+  margin-bottom: 2px;
+  font-size: 14px;
+}
+
+.dropdown a:hover { opacity:1 }
+.show { display: block; margin-left: 58px; width:800px; text-align:left; }
+
+/* --- Sandbox error overlay --- */
+#sbxErr{
+  position:absolute; inset:0; display:none;
+  align-items:center; justify-content:center; text-align:center;
+  background:rgba(10,10,12,.88); color:#fff; z-index:99999; padding:20px;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+#sbxErr h4{ margin:0 0 10px; font-size:clamp(18px,6vw,28px); }
+#sbxErr p{ margin:0; opacity:.92; font-size:clamp(14px,4.5vw,18px); }
+</style>
+</head>
+<body>
+<div class="dropdown" style="display:none;">
+  <div class="breath">
+    <a href="https://fmovies-net.com/" target="_blank"><span style="font-size:8px;">Servers</span></a>
+    <button onclick="myFunction()" class="dropbtn" title="Streaming Servers" style="display:block;"><i class="dropbtn fa fa-bars" style="font-size:30px;"></i></button>
+  </div>
+  <div id="myDropdown" class="dropdown-content">
+      <a href="javascript:void();" onclick="go('https://streamsrcs.2embed.cc/swish?id=9odqbf5wnw5x')"><i class="fa fa-play"></i> &nbsp; 2embed</a>
+   
+    <a href="javascript:void();" onclick="go('https://streamsrcs.2embed.cc/vpls?tmdb=533533')"><i class="fa fa-play"></i> &nbsp;Vpls</a>
+    <a href="javascript:void();" onclick="go('https://streamsrcs.2embed.cc/vsrcc?imdb=tt6604188')"><i class="fa fa-play"></i> &nbsp;Vsrcc</a> 
+    <a href="javascript:void();" onclick="go('https://player4u.xyz/embed?key=TRON: Ares 2025')"><i class="fa fa-play"></i> &nbsp;Player4u</a>
+    <a href="javascript:void();" onclick="go('https://streamsrcs.2embed.cc/vsrc?imdb=tt6604188')"><i class="fa fa-play"></i> &nbsp;Vsrc</a> 
+  </div>
+</div>
+
+<div id="content">
+  <div style="position:absolute;top:90px;left:10px;" title="Embed Video">
+    <button onclick="cpFunction()" style="background:none;border:none;cursor:pointer;"><img src="/images/share-button.svg" style="width:30px;"></button>   
+    <div style="display:none;">
+      <input id="cptxt" type="text" value="<iframe src=&quot;https://www.2embed.cc/embed/tt6604188&quot; width=&quot;100%&quot; height=&quot;100%&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; allowfullscreen></iframe>">
+    </div>      
+  </div>
+
+  <div id="bgImage" class="loading" style="display:block;"></div>
+  <!-- removed window.open(...) from onclick; keeps only bgImage() -->
+  <div onclick="bgImage();" class="playbtnx" style="position:absolute;top:35%;width:100%;text-align:center;cursor:pointer;">
+    <img src="/images/play4.png" alt="play icon" style="width:4.5em;">
+    <h3 style="color:#fff;font-family:verdana;font-weight:normal;text-shadow:0px 0px 10px #000;">
+      TRON: Ares (2025)
+    </h3>   
+  </div>
+<style>
+  body.gated { overflow: hidden; }
+  #gate {
+    position: fixed;
+    inset: 0;
+ /* background: rgba(0,0,0,.4); */
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+  }
+  #gate a#continue {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    outline: none;
+  }
+
+  /* Visible prompt */
+  #gate a#continue span {
+    font: 600 16px/1.2 system-ui, sans-serif;
+    background: #fff;
+    padding: 0.9rem 1.1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    color: #111;
+  }
+</style>
+
+
+<script>
+  (function () {
+    const gate = document.getElementById('gate');
+    const link = document.getElementById('continue');
+
+    // No preventDefault — let the real <a> open a new tab (not popup-blocked)
+    link.addEventListener('click', () => {
+      // Immediately unlock the current tab
+      gate.remove();
+      document.body.classList.remove('gated');
+    });
+
+    // (Optional) also dismiss if user presses Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('gated')) {
+        gate.remove();
+        document.body.classList.remove('gated');
+      }
+    }, { capture: true });
+  }());
+</script>
+
+  <iframe id="iframesrc" src="about:blank" data-src="https://streamsrcs.2embed.cc/swish?id=9odqbf5wnw5x&amp;ref=mdrct" width="100%" height="100%" scrolling="no" frameborder="0" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe> 
+
+  
+
+  <img src="https://whos.amung.us/widget/pcstream/" style="display:none;">
+</div>
+<script>
+function cpFunction() {
+  var copyText = document.getElementById("cptxt");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
+  alert("Copied the text: " + copyText.value);
+}
+/////////////////////////////////////////
+$(".playbtnx").click(function(){
+  var iframe = $("#iframesrc");
+  iframe.attr("src", iframe.data("src"));
+  $(".dropdown").show();
+});
+//////////////////////////
+function bgImage() {
+  var x = document.getElementById("bgImage");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    document.getElementById("bgImage").remove();
+    $(".playbtnx").hide();
+  }
+}
+/////////////////////////////////
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
+<script>
+(function(){
+  var sbxErr = document.getElementById('sbxErr');
+  var playEl = document.querySelector('.playbtnx');
+
+  if (!playEl) return;
+
+  function hasDirectSandbox(){
+    try {
+      if (window.top === window.self) return false;
+      var fe = window.frameElement;
+      return !!(fe && fe.hasAttribute && fe.hasAttribute('sandbox'));
+    } catch(e){ return false; }
+  }
+  function popupProbe(){
+    var ok=false, w=null;
+    try { w = window.open('about:blank','_blank'); ok = !!w; } catch(e){ ok=false; }
+    if (w){ try{ w.close(); }catch(_){ } }
+    return ok;
+  }
+  function blockAndShow(){
+    if (sbxErr) sbxErr.style.display = 'flex';
+  }
+
+  playEl.addEventListener('click', function(e){
+    if (hasDirectSandbox() || !popupProbe()){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      e.stopPropagation();
+      blockAndShow();
+      return false;
+    }
+  }, true);
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98d986f50d827373',t:'MTc2MDMwMjgzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+
+</body></html>
