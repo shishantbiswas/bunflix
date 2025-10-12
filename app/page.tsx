@@ -3,10 +3,15 @@ import TmdbSlider from "@/components/tmdb/tmdb-slider";
 import TmdbShowRow from "@/components/tmdb/tmdb-shows-row";
 import { Suspense } from "react";
 import TmdbHomeSkeleton from "@/components/fallback-ui/tmdb-home-row";
+import { notFound } from "next/navigation";
 
 
 export default async function Home() {
-  const data: TMDBMovie = await fetchHeroData();
+  const { error, data } = await fetchHeroData();
+  if (error || !data) {
+    return notFound()
+  }
+
 
   const key = process.env.TMDB_KEY;
   const baseUrl = "https://api.themoviedb.org/3";
@@ -55,7 +60,9 @@ export default async function Home() {
   );
 }
 
-async function fetchHeroData() {
+async function fetchHeroData(): Promise<{
+  error: boolean, data?: TMDBMovie
+}> {
   const key = process.env.TMDB_KEY;
 
   const response = await fetch(
@@ -63,8 +70,8 @@ async function fetchHeroData() {
     { next: { revalidate: 3600, tags: ["tmdb"] } }
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch Slider data");
+    return { error: true }
   }
   const data = await response.json();
-  return data;
+  return { data, error: false };
 }
