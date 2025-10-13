@@ -37,7 +37,7 @@ export default function EpisodeSelector({
             </span>
             <input
               type="checkbox"
-              defaultChecked={lang === "en" || !lang ? false : true}
+              defaultChecked={lang === "en"}
               onChange={() =>
                 setAudioToogle(audioToogle === "en" ? "jp" : "en")
               }
@@ -56,7 +56,10 @@ export default function EpisodeSelector({
             <input
               type="checkbox"
               defaultChecked={false}
-              onChange={() => setGrid(!grid)}
+              onChange={() => {
+                setGrid(!grid)
+              }
+              }
               className="peer sr-only"
             />
             <div
@@ -70,8 +73,8 @@ export default function EpisodeSelector({
       <ul className={`max-h-[480px]  mb-6 text-sm lg:max-h-[470px] w-full lg:max-w-[500px] lg:min-w-[280px] bg-slate-600 overflow-y-scroll rounded-lg  ${grid ? "grid grid-cols-4 gap-2 p-2":"flex flex-col items-center"}`}>
         {episode.data.episodes.map((episode, index) => (
           <Link
-            prefetch={false}
             key={episode.episodeId}
+            scroll
             href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
             style={{
               pointerEvents:

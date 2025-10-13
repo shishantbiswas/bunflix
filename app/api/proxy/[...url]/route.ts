@@ -11,12 +11,17 @@ export async function GET(req: NextRequest) {
 
   const res = await fetch(decodeURIComponent(completeUrl), {
     cache: "no-store",
-    headers: {
-      Referer: "https://megacloud.club/",
-    },
+    priority: "high",
+    redirect: "follow",
+    keepalive: true,
+    referrer:"https://megacloud.club/"
+    // headers: {
+    //   Referer: "",
+    // },
   });
 
-  const reader: ReadableStreamDefaultReader | null = res.body?.getReader() || null;
+  const reader: ReadableStreamDefaultReader | null =
+    res.body?.getReader() || null;
 
   function iteratorToStream(
     iterator: ReadableStreamDefaultReader

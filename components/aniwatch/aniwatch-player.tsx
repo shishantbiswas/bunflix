@@ -27,8 +27,12 @@ export default async function AniwatchPlayer({
       "dub"
     );
 
+    if(!dub || !dub.data.sources){
+      throw new Error("Dub not found")
+    }
+
     return (
-      <Player src={dub?.data.sources[0]?.url} track={dub.data.tracks} />
+      <Player src={dub.data.sources[0]?.url} track={dub.data.tracks} />
     );
   } else {
 
