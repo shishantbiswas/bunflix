@@ -14,49 +14,65 @@ export default async function AniwatchPlayer({
   if (!ep) return;
 
   const server = await fetchAniwatchEpisodeServer(episodeId, ep);
-  if (lang === "en") {
-
-    if (server.data.dub.length === 0) {
-      redirect(`/error?err=${encodeURIComponent("No Dub Available")}`)
-    }
-
-    const dub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
-      episodeId,
-      ep,
-      server.data.dub[0].serverName,
-      "dub"
-    );
-
-    if(!dub || !dub.data.sources){
-      throw new Error("Dub not found")
-    }
-
-    return (
-      <Player src={dub.data.sources[0]?.url} track={dub.data.tracks} />
-    );
-  } else {
-
-    if (server.data.sub.length === 0 && server.data.raw.length === 0) {
-      redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`)
-    }
-
-    const sub: AniwatchEpisodeSrc = await fetchAniwatchEpisodeSrc(
-      episodeId,
-      ep,
-      !server.data.sub[0] ? server.data.raw[0].serverName : server.data.sub[0].serverName,
-      !server.data.sub[0] ? "raw" : "sub"
-    );
-
-    if (sub.data.sources.length === 0) {
-      redirect(`/error?err=${encodeURIComponent("No Sub Available")}`)
-    }
-
-    return (
-      <Player src={sub?.data.sources[0]?.url} track={sub.data.tracks} />
-    );
+  if (server.data.dub.length === 0 && lang === "en") {
+    redirect(`/error?err=${encodeURIComponent("No Dub Available")}`);
   }
+
+  if (
+    server.data.sub.length === 0 &&
+    server.data.raw.length === 0 &&
+    lang === "jp"
+  ) {
+    redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`);
+  }
+
+  const srcData = await getAniwatchEpisodeSrcWithBackoff(
+    episodeId,
+    ep,
+    lang === "en"
+      ? server.data.dub[0].serverName
+      : !server.data.sub[0]
+      ? server.data.raw[0].serverName
+      : server.data.sub[0].serverName,
+    lang === "en" ? "dub" : !server.data.sub[0] ? "raw" : "sub"
+  );
+
+  if ((!srcData || !srcData.data.sources) && lang === "en") {
+    throw new Error("Dub not found");
+  }
+
+  if (srcData.data.sources.length === 0 && lang === "jp") {
+    redirect(`/error?err=${encodeURIComponent("No Sub Available")}`);
+  }
+
+  return (
+    <Player src={srcData.data.sources[0]?.url} track={srcData.data.tracks} />
+  );
 }
 
+async function getAniwatchEpisodeSrcWithBackoff(
+  id: string,
+  ep: string,
+  server: string,
+  category: string,
+  retries: number = 3,
+  retryDelayMs: number = 100
+): Promise<AniwatchEpisodeSrc> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fetchAniwatchEpisodeSrc(id, ep, server, category);
+    } catch (error) {
+      if (attempt === retries) {
+        throw new Error("Failed to fetch Episode Src after multiple retries");
+      }
+
+      const delay = retryDelayMs * Math.pow(2, attempt - 1);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
+  throw new Error("Unexpected error while fetching Episode Src");
+}
 
 async function fetchAniwatchEpisodeSrc(
   id: string,
@@ -66,8 +82,10 @@ async function fetchAniwatchEpisodeSrc(
 ) {
   try {
     const response = await fetch(
-      `${process.env.ANIWATCH_API
-      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${server ? server : "vidstreaming"
+      `${
+        process.env.ANIWATCH_API
+      }/api/v2/hianime/episode/sources?animeEpisodeId=${id}?ep=${ep}&server=${
+        server ? server : "vidstreaming"
       }&category=${category}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );
@@ -85,7 +103,7 @@ async function fetchAniwatchEpisodeServer(id: string, ep: string) {
       `${process.env.ANIWATCH_API}/api/v2/hianime/episode/servers?animeEpisodeId=${id}?ep=${ep}`,
       { next: { revalidate: 3600, tags: ["anime"] } }
     );
-    const data = await response.json() as AniwatchServer;
+    const data = (await response.json()) as AniwatchServer;
 
     return data;
   } catch (error) {

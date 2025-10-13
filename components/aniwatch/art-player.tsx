@@ -44,10 +44,12 @@ export default function Player({
             ...context,
             url: `${
               process.env.NEXT_PUBLIC_PROXY_PREFIX
-                ? (context.url.startsWith(process.env.NEXT_PUBLIC_PROXY_PREFIX.replaceAll("//","/")) 
-                  ?  context.url.replaceAll("//","/")
-                  :  process.env.NEXT_PUBLIC_PROXY_PREFIX + context.url.replaceAll("//","/")
-                )
+                ? context.url.startsWith(
+                    process.env.NEXT_PUBLIC_PROXY_PREFIX.replaceAll("//", "/")
+                  )
+                  ? context.url.replaceAll("//", "/")
+                  : process.env.NEXT_PUBLIC_PROXY_PREFIX +
+                    context.url.replaceAll("//", "/")
                 : context.url
             }`, // this prevents re-routing
           },
@@ -72,6 +74,9 @@ export default function Player({
   const time = Number(searchParams.get("t")) || 0;
   useEffect(() => {
     let hls: Hls | null = null;
+    const controller = new AbortController();
+    let active = true;
+
     const art = new Artplayer({
       url: src,
       container: artRef.current!,
@@ -181,10 +186,14 @@ export default function Player({
     });
 
     return () => {
+      active = false;
+      controller.abort();
+
       if (art && art.destroy) {
         art.destroy(false);
       }
-      if (hls) hls.destroy();
+      if (hls) {
+        hls.destroy();}
     };
   }, [src]);
 
