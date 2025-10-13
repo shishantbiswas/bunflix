@@ -183,7 +183,7 @@ export default function Player({
       }
       if (hls) hls.destroy();
     };
-  }, []);
+  }, [src]);
 
   const { show } = useShow();
   const showId = `${show?.data.anime.info.id + (show?.ep || "jp")}`;
