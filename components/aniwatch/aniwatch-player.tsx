@@ -37,14 +37,17 @@ export default async function AniwatchPlayer({
     lang === "en" ? "dub" : !server.data.sub[0] ? "raw" : "sub"
   );
 
+  if (srcData.data.sources.length === 0) {
+    throw new Error("No Source Available");
+  }
+
   if ((!srcData || !srcData.data.sources) && lang === "en") {
-    throw new Error("Dub not found");
+    throw new Error("No Dub Available");
   }
 
   if (srcData.data.sources.length === 0 && lang === "jp") {
-    redirect(`/error?err=${encodeURIComponent("No Sub Available")}`);
+    throw new Error("No Sub Available");
   }
-
   return (
     <Player src={srcData.data.sources[0]?.url} track={srcData.data.tracks} />
   );
