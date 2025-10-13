@@ -15,7 +15,7 @@ export default function EpisodeSelector({
     lang ? lang : "jp"
   );
 
-  const [grid, setGrid] = useState(false);
+  const [grid, setGrid] = useState(true);
 
   const { show: data } = useShow();
 

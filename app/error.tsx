@@ -1,7 +1,21 @@
 "use client"
-import { RefreshCcw } from "lucide-react"
+ 
+import { RefreshCcw } from 'lucide-react'
+import { useEffect } from 'react'
+ 
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error)
+  }, [error])
+ 
 
-export default function ErrorPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="text-center ">
@@ -21,7 +35,7 @@ export default function ErrorPage() {
         </svg>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Oops! Something went wrong</h1>
         <p className="mt-4 text-base text-white/60">
-          We apologize for the inconvenience. Please try again later or refresh the page.
+          {error.message}
         </p>
         <div className="mt-8">
           <button
