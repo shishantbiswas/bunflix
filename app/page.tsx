@@ -1,4 +1,5 @@
 "use server";
+import { connection } from 'next/server'
 import TmdbSlider from "@/components/tmdb/tmdb-slider";
 import TmdbShowRow from "@/components/tmdb/tmdb-shows-row";
 import { Suspense } from "react";
@@ -7,6 +8,7 @@ import { notFound } from "next/navigation";
 
 
 export default async function Home() {
+  await connection()
   const { error, data } = await fetchHeroData();
   if (error || !data) {
     return notFound()
