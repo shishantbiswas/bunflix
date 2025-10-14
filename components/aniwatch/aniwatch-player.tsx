@@ -1,6 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import Player from "./art-player";
+import { cache } from "@/lib/cache";
 
 export default async function AniwatchPlayer({
   episodeId,
@@ -37,7 +38,7 @@ export default async function AniwatchPlayer({
     lang === "en" ? "dub" : !server.data.sub[0] ? "raw" : "sub"
   );
 
-  if (srcData.data.sources.length === 0) {
+  if (!srcData.data || srcData.data.sources.length === 0) {
     throw new Error("No Source Available");
   }
 
@@ -61,9 +62,18 @@ async function getAniwatchEpisodeSrcWithBackoff(
   retries: number = 3,
   retryDelayMs: number = 100
 ): Promise<AniwatchEpisodeSrc> {
+  const cacheKey = `${id}-${ep}-${server}-${category}`;
+  if (await cache.exists(cacheKey)) {
+    console.log("[CACHE] HIT FOR ", cacheKey);
+    
+    const cacheHit = await cache.get(cacheKey);
+    if (cacheHit) return JSON.parse(cacheHit);
+  }
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      return await fetchAniwatchEpisodeSrc(id, ep, server, category);
+      const data = await fetchAniwatchEpisodeSrc(id, ep, server, category);
+      cache.set(cacheKey, JSON.stringify(data), "EX", 60);
+      return data;
     } catch (error) {
       if (attempt === retries) {
         throw new Error("Failed to fetch Episode Src after multiple retries");
@@ -82,7 +92,7 @@ async function fetchAniwatchEpisodeSrc(
   ep: string,
   server: string,
   category: string
-) {
+): Promise<AniwatchEpisodeSrc> {
   try {
     const response = await fetch(
       `${

@@ -4,15 +4,15 @@ nixLibs = []
 aptPkgs = []   
 
 [phases.install]
-cmds = ["bun install"]
+cmds = ["bun --bun install"]
 dependsOn = ["setup"]
 
 [phases.build]
-cmds = ["bun run build"]
+cmds = ["bun --bun run build"]
 dependsOn = ["install"]
 
 [start]
-cmd = "bun start"
+cmd = "bun --bun start"
 
 # [nix]
 # pkgs = ["nodejs_24", "curl", "bun"]

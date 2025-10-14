@@ -74,8 +74,9 @@ export default function EpisodeSelector({
         {episode.data.episodes.map((episode, index) => (
           <Link
             key={episode.episodeId}
+            id={episode.episodeId}
             scroll
-            href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
+            href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}#${episode.episodeId}`}
             style={{
               pointerEvents:
                 audioToogle === "en"
@@ -89,17 +90,17 @@ export default function EpisodeSelector({
             <button
               disabled={
                 Number(data?.epNum) == Number(episode.number)
+                ? data?.data.anime.info.stats.episodes.dub < episode.number
+                : data?.data.anime.info.stats.episodes.sub < episode.number
                   ? true
-                  : audioToogle === "en"
-                  ? data?.data.anime.info.stats.episodes.dub < episode.number
-                  : data?.data.anime.info.stats.episodes.sub < episode.number
+                  : lang === audioToogle
               }
               style={{
                 backgroundColor:
                   Number(data?.epNum) == Number(episode.number) &&
                   audioToogle === lang
                     ? "#b91c1c"
-                    : audioToogle === "en"
+                    : audioToogle === lang
                     ? index % 2 === 0
                       ? "#1f2937"
                       : "#374151"
