@@ -57,9 +57,8 @@ export default function EpisodeSelector({
               type="checkbox"
               defaultChecked={false}
               onChange={() => {
-                setGrid(!grid)
-              }
-              }
+                setGrid(!grid);
+              }}
               className="peer sr-only"
             />
             <div
@@ -70,7 +69,11 @@ export default function EpisodeSelector({
         </div>
       </div>
       {/* <div className=""> */}
-      <ul className={`max-h-[480px]  mb-6 text-sm lg:max-h-[470px] w-full lg:max-w-[500px] lg:min-w-[280px] bg-slate-600 overflow-y-scroll rounded-lg  ${grid ? "grid grid-cols-4 gap-2 p-2":"flex flex-col items-center"}`}>
+      <ul
+        className={`max-h-[480px]  mb-6 text-sm lg:max-h-[470px] w-full lg:max-w-[500px] lg:min-w-[280px] bg-slate-600 overflow-y-scroll rounded-lg  ${
+          grid ? "grid grid-cols-4 gap-2 p-2" : "flex flex-col items-center"
+        }`}
+      >
         {episode.data.episodes.map((episode, index) => (
           <Link
             key={episode.episodeId}
@@ -89,11 +92,10 @@ export default function EpisodeSelector({
           >
             <button
               disabled={
-                Number(data?.epNum) == Number(episode.number)
-                ? data?.data.anime.info.stats.episodes.dub < episode.number
-                : data?.data.anime.info.stats.episodes.sub < episode.number
+                Number(data?.epNum) == Number(episode.number) &&
+                audioToogle === lang
                   ? true
-                  : lang === audioToogle
+                  : false
               }
               style={{
                 backgroundColor:
@@ -108,28 +110,32 @@ export default function EpisodeSelector({
                     ? "#1e293b"
                     : "#334155",
               }}
-              className={`px-4 text-start text-[14px] w-full leading-4 flex not-disabled:cursor-pointer items-center ${grid ? "justify-center p-4":" justify-between h-20"}`}
+              className={`px-4 text-start text-[14px] w-full leading-4 flex not-disabled:cursor-pointer items-center ${
+                grid ? "justify-center p-4" : " justify-between h-20"
+              }`}
             >
               {episode.number}
               {!grid && <>. {episode.title}</>}
-              {!grid && <span>
-                {audioToogle === "en" && (
-                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
-                    <MicIcon size={15} />
-                    {data?.data.anime.info.stats.episodes.dub < episode.number
-                      ? "Not available"
-                      : `EN`}
-                  </span>
-                )}
-                {audioToogle === "jp" && (
-                  <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
-                    <CaptionsIcon size={15} />
-                    {data?.data.anime.info.stats.episodes.sub < episode.number
-                      ? "Not available"
-                      : `JP`}
-                  </span>
-                )}
-              </span>}
+              {!grid && (
+                <span>
+                  {audioToogle === "en" && (
+                    <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
+                      <MicIcon size={15} />
+                      {data?.data.anime.info.stats.episodes.dub < episode.number
+                        ? "Not available"
+                        : `EN`}
+                    </span>
+                  )}
+                  {audioToogle === "jp" && (
+                    <span className="p-2 bg-white/20  hidden sm:flex gap-2 items-center w-fit rounded-sm text-nowrap ml-2">
+                      <CaptionsIcon size={15} />
+                      {data?.data.anime.info.stats.episodes.sub < episode.number
+                        ? "Not available"
+                        : `JP`}
+                    </span>
+                  )}
+                </span>
+              )}
             </button>
           </Link>
         ))}
