@@ -197,7 +197,7 @@ export default function Player({
   }, [src]);
 
   const { show } = useShow();
-  const showId = `${show?.data.anime.info.id + (show?.ep || "jp")}`;
+  const showId = `${show?.data.anime.info.id}`;
 
   const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
 
@@ -218,8 +218,12 @@ export default function Player({
             if (!currentShow || !videoRef.current) return;
 
             indexDB.watchHistory.update(showId, {
-              time: Math.trunc(videoRef.current.currentTime) || 0,
+              time: Math.trunc(videoRef.current.currentTime),
               duration: currentShow.duration,
+              epNum: show.epNum,
+              lang: show.lang,
+              updatedAt: new Date(),
+              ep: show.ep,
             });
           });
         } else {
@@ -227,8 +231,9 @@ export default function Player({
             id: showId,
             ep: show.ep,
             lang: show.lang,
+            updatedAt: new Date(),
             epNum: show.epNum,
-            time: videoRef.current.currentTime,
+            time: Math.trunc(videoRef.current.currentTime),
             duration: videoRef.current.duration,
             show: {
               duration: show.data.anime.moreInfo.duration,
