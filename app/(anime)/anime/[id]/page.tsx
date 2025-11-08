@@ -4,23 +4,16 @@ import EpisodeSelector from "@/components/aniwatch/episode-selector";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-type Params = Promise<{ id: string }>
-type SearchParams = Promise<{ ep: string; num: string; lang: "en" | "jp" }>
-
 export async function generateMetadata({
   params,
   searchParams,
-}: {
-  params: Params
-  searchParams: SearchParams
-}): Promise<Metadata> {
-  const { id } = await params
-  const { num } = await searchParams
+}: PageProps<"/anime/[id]">): Promise<Metadata> {
+  const { id } = await params;
+  const { num } = await searchParams;
 
   const data: AniwatchInfo = await fetchAniwatchId(id);
 
-  const title = `${num ? `${num}` : "1"}  - ${data.data.anime?.info.name
-    }`;
+  const title = `${num ? `${num}` : "1"}  - ${data.data.anime?.info.name}`;
   return {
     title,
     description: data.data.anime?.info.description,
@@ -42,20 +35,27 @@ export async function generateMetadata({
 export default async function Anime({
   params,
   searchParams,
-}: {
-  params: Params
-  searchParams: SearchParams
-}) {
-  const { id } = await params
-  const { num, ep, lang } = await searchParams
+}: PageProps<"/anime/[id]">) {
+  const { id } = await params;
+  const { num, ep, lang } = (await searchParams) as unknown as {
+    lang: "en" | "jp";
+    ep: string;
+    num: string;
+  };
 
   const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
-  const epNum = Number(num || 0) > episode.data.totalEpisodes ? 0 : Number(num || 0)
+  const epNum =
+    Number(num || 0) > episode.data.totalEpisodes ? 0 : Number(num || 0) - 1;
 
-  const epId = episode.data.episodes[epNum] || episode.data.episodes[epNum - 1] || episode.data.episodes[0]
-  
+  const epId =
+    episode.data.episodes[epNum] ||
+    episode.data.episodes[epNum - 1] ||
+    episode.data.episodes[0];
+
   if (!ep) {
-    redirect(`/anime/${epId.episodeId}&lang=${lang || "jp"}&num=${epId.number}`);
+    redirect(
+      `/anime/${epId.episodeId}&lang=${lang || "jp"}&num=${epId.number}`
+    );
   }
 
   const data = await fetchAniwatchId(id);
@@ -63,23 +63,15 @@ export default async function Anime({
   return (
     <div className=" min-h-screen space-y-6">
       <div className="flex lg:flex-row flex-col">
-        <AniwatchPlayer
-          episodeId={id}
-          lang={lang}
-          ep={ep}
-        />
-        <EpisodeSelector
-          lang={lang}
-          episode={episode}
-        />
+        <AniwatchPlayer episodeId={id} lang={lang} ep={ep} />
+        <EpisodeSelector lang={lang} episode={episode} />
       </div>
       <AniwatchShowInfo
         lang={lang}
         ep={ep}
-        currentEpisodeNum={
-          num ? num : episode.data.episodes[0].number
-        }
-        data={data} />
+        currentEpisodeNum={num ? num : episode.data.episodes[0].number}
+        data={data}
+      />
     </div>
   );
 }
