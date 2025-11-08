@@ -1,7 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import Player from "./art-player";
-import { cache } from "@/lib/cache";
+// import { cache } from "@/lib/cache";
 
 export default async function AniwatchPlayer({
   episodeId,
@@ -63,16 +63,16 @@ async function getAniwatchEpisodeSrcWithBackoff(
   retryDelayMs: number = 100
 ): Promise<AniwatchEpisodeSrc> {
   const cacheKey = `${id}-${ep}-${server}-${category}`;
-  if (await cache.exists(cacheKey)) {
-    console.log("[CACHE] HIT FOR ", cacheKey);
+  // if (await cache.exists(cacheKey)) {
+  //   console.log("[CACHE] HIT FOR ", cacheKey);
     
-    const cacheHit = await cache.get(cacheKey);
-    if (cacheHit) return JSON.parse(cacheHit);
-  }
+  //   const cacheHit = await cache.get(cacheKey);
+  //   if (cacheHit) return JSON.parse(cacheHit);
+  // }
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const data = await fetchAniwatchEpisodeSrc(id, ep, server, category);
-      cache.set(cacheKey, JSON.stringify(data), "EX", 60);
+      // cache.set(cacheKey, JSON.stringify(data), "EX", 60);
       return data;
     } catch (error) {
       if (attempt === retries) {

@@ -39,22 +39,20 @@ export default function Player({
       const load = this.load.bind(this);
 
       this.load = function (context, ...rest) {
-        load(
-          {
-            ...context,
-            url: `${
-              process.env.NEXT_PUBLIC_PROXY_PREFIX
-                ? context.url.startsWith(
-                    process.env.NEXT_PUBLIC_PROXY_PREFIX.replaceAll("//", "/")
-                  )
-                  ? context.url.replaceAll("//", "/")
-                  : process.env.NEXT_PUBLIC_PROXY_PREFIX +
-                    context.url.replaceAll("//", "/")
-                : context.url
-            }`, // this prevents re-routing
-          },
-          ...rest
-        );
+        const finalUrl = getProxiedUrl(context.url);
+        load({ ...context, url: finalUrl }, ...rest);
+
+        function getProxiedUrl(originalUrl: string) {
+          const prefix = process.env.NEXT_PUBLIC_PROXY_PREFIX;
+          if (!prefix) return originalUrl;
+
+          const cleanUrl = originalUrl.replaceAll("//", "/");
+          const cleanPrefix = prefix.replaceAll("//", "/");
+
+          return cleanUrl.startsWith(cleanPrefix)
+            ? originalUrl
+            : `${prefix}${cleanUrl}`;
+        }
       };
     }
   }
@@ -193,7 +191,8 @@ export default function Player({
         art.destroy(false);
       }
       if (hls) {
-        hls.destroy();}
+        hls.destroy();
+      }
     };
   }, [src]);
 

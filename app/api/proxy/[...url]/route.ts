@@ -2,23 +2,38 @@
 
 import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const reqUrl: string[] = req.nextUrl.pathname.split("/").slice(3); // removes http : //
+export async function GET(req: NextRequest,ctx: RouteContext<"/api/proxy/[...url]">) {
+
+  const reqUrl = (await ctx.params).url
+  // const reqUrl: string[] = req.nextUrl.pathname.split("/").slice(3); // removes http : //
 
   const completeUrl = reqUrl
     .map((part) => (part === "https:" ? part + "//" : part + "/"))
     .join("");
 
-  const res = await fetch(decodeURIComponent(completeUrl), {
+  const lol = new URL(decodeURIComponent(completeUrl));
+
+  if(lol.host === "thunderstrike77.online"){
+    lol.host = "haildrop77.pro"
+  }
+
+  const res = await fetch((completeUrl), {
     cache: "no-store",
     priority: "high",
     redirect: "follow",
     keepalive: true,
-    referrer:"https://megacloud.club/"
-    // headers: {
-    //   Referer: "",
-    // },
+    // referrer:"https://megacloud.club/"
+    headers: {
+      Referer: "https://megacloud.club/",
+    },
   });
+
+  if (!res.ok) {
+    return Response.json({
+      error: res.status,
+      message: res.statusText,
+    });
+  }
 
   const reader: ReadableStreamDefaultReader | null =
     res.body?.getReader() || null;
