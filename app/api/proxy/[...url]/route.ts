@@ -11,13 +11,13 @@ export async function GET(req: NextRequest,ctx: RouteContext<"/api/proxy/[...url
     .map((part) => (part === "https:" ? part + "//" : part + "/"))
     .join("");
 
-  const lol = new URL(decodeURIComponent(completeUrl));
+  const sanitizedUrl = new URL(decodeURIComponent(completeUrl));
 
-  if(lol.host === "thunderstrike77.online"){
-    lol.host = "haildrop77.pro"
+  if(sanitizedUrl.host === "thunderstrike77.online"){
+    sanitizedUrl.host = "haildrop77.pro"
   }
 
-  const res = await fetch((completeUrl), {
+  const res = await fetch((sanitizedUrl), {
     cache: "no-store",
     priority: "high",
     redirect: "follow",
