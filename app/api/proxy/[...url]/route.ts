@@ -22,8 +22,8 @@ export async function GET(req: NextRequest,ctx: RouteContext<"/api/proxy/[...url
     priority: "high",
     redirect: "follow",
     keepalive: true,
-    // referrer:"https://megacloud.club/"
     headers: {
+      ...req.headers,
       Referer: "https://megacloud.club/",
     },
   });
