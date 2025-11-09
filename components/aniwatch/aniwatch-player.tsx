@@ -11,7 +11,7 @@ export default async function AniwatchPlayer({
 }: {
   episodeId: string;
   ep: string;
-  nextEpUrl:string,
+  nextEpUrl?:string,
   lang: "en" | "jp";
 }) {
   if (!ep) return;

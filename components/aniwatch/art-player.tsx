@@ -22,7 +22,7 @@ export default function Player({
   nextEpUrl
 }: {
   src: string;
-  nextEpUrl:string,
+  nextEpUrl?:string,
   track: {
     file: string;
     kind: string;
