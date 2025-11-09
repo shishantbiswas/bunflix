@@ -7,9 +7,11 @@ export default async function AniwatchPlayer({
   episodeId,
   ep,
   lang,
+  nextEpUrl
 }: {
   episodeId: string;
   ep: string;
+  nextEpUrl:string,
   lang: "en" | "jp";
 }) {
   if (!ep) return;
@@ -50,7 +52,7 @@ export default async function AniwatchPlayer({
     throw new Error("No Sub Available");
   }
   return (
-    <Player src={srcData.data.sources[0]?.url} track={srcData.data.tracks} />
+    <Player nextEpUrl={nextEpUrl} src={srcData.data.sources[0]?.url} track={srcData.data.tracks} />
   );
 }
 

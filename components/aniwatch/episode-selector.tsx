@@ -44,7 +44,7 @@ export default function EpisodeSelector({
               className="peer sr-only"
             />
             <div
-              className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden  peer-checked:rtl:after:-translate-x-full 
+              className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2.5px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden  peer-checked:rtl:after:-translate-x-full 
              dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
             ></div>
           </label>
@@ -55,14 +55,14 @@ export default function EpisodeSelector({
             </span>
             <input
               type="checkbox"
-              defaultChecked={false}
+              defaultChecked={grid ?? false}
               onChange={() => {
                 setGrid(!grid);
               }}
               className="peer sr-only"
             />
             <div
-              className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden  peer-checked:rtl:after:-translate-x-full 
+              className="peer-focus:ring-red-700 peer relative h-[25px] w-11 rounded-full border-none bg-gray-200 outline-hidden duration-200 after:absolute after:start-[2px] after:top-[2.5px]  after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-red-600 peer-checked:after:translate-x-[95%] peer-focus:outline-hidden  peer-checked:rtl:after:-translate-x-full 
              dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-red-800"
             ></div>
           </label>
@@ -79,7 +79,7 @@ export default function EpisodeSelector({
             key={episode.episodeId}
             id={episode.episodeId}
             scroll
-            href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}#${episode.episodeId}`}
+            href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
             style={{
               pointerEvents:
                 audioToogle === "en"

@@ -14,13 +14,15 @@ import Hls, {
 import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Player({
   src,
   track,
+  nextEpUrl
 }: {
   src: string;
+  nextEpUrl:string,
   track: {
     file: string;
     kind: string;
@@ -29,6 +31,7 @@ export default function Player({
   }[];
   getInstance?: (art: Artplayer) => void;
 }) {
+  
   const artRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -69,11 +72,22 @@ export default function Player({
   };
 
   const searchParams = useSearchParams();
+  const router = useRouter();
   const time = Number(searchParams.get("t")) || 0;
+  const lang = searchParams.get("lang") ?? "jp";
+  const num = Number(searchParams.get("num")) ?? 0;
+  const nextUrl = `/anime/${nextEpUrl}&${lang ? "lang="+lang : ""}&${num ? "num="+ (num + 1) : ""}`
+  console.log(lang,nextUrl);
+  
+  const { show } = useShow();
+
+  Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25];
+  Artplayer.LOG_VERSION = false;
+  Artplayer.USE_RAF = true;
+
   useEffect(() => {
     let hls: Hls | null = null;
     const controller = new AbortController();
-    let active = true;
 
     const art = new Artplayer({
       url: src,
@@ -108,6 +122,24 @@ export default function Player({
         }),
       ],
       settings: [
+        {
+           width: 200,
+          html: "Auto Play Next",
+          tooltip: "Show",
+          selector:[
+            {
+              html: "Auto Play",
+              tooltip: "Show",
+              switch: !Boolean(localStorage.getItem("autoplay")),
+              onSwitch: function (item) {
+                item.tooltip = item.switch ? "Off" : "On";
+                localStorage.setItem("autoplay",String(Boolean(!item.switch)));
+                art.subtitle.show = !item.switch;
+                return !item.switch;
+              },
+            },
+          ]
+        },
         {
           width: 200,
           html: "Subtitle",
@@ -163,7 +195,9 @@ export default function Player({
             video.currentTime = time;
             art.on("destroy", () => hls?.destroy());
             video.addEventListener("ended", () => {
-              if (hls) {
+              if (hls && nextEpUrl) {
+                const shouldAutoplay = Boolean(localStorage.getItem("autoplay"))
+                if (shouldAutoplay) router.push(nextUrl);
                 // hls.destroy();
                 // console.log("HLS instance destroyed");
               }
@@ -184,7 +218,6 @@ export default function Player({
     });
 
     return () => {
-      active = false;
       controller.abort();
 
       if (art && art.destroy) {
@@ -196,7 +229,6 @@ export default function Player({
     };
   }, [src]);
 
-  const { show } = useShow();
   const showId = `${show?.data.anime.info.id}`;
 
   const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));

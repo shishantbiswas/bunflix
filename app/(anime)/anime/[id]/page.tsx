@@ -63,7 +63,12 @@ export default async function Anime({
   return (
     <div className=" min-h-screen space-y-6">
       <div className="flex lg:flex-row flex-col">
-        <AniwatchPlayer episodeId={id} lang={lang} ep={ep} />
+        <AniwatchPlayer
+          nextEpUrl={episode.data.episodes[epNum + 1].episodeId}
+          episodeId={id}
+          lang={lang}
+          ep={ep}
+        />
         <EpisodeSelector lang={lang} episode={episode} />
       </div>
       <AniwatchShowInfo
