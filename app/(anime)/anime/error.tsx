@@ -15,6 +15,14 @@ export default function Error({
     Sentry.captureException(error);
   }, [error]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="text-center ">
