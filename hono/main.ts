@@ -30,7 +30,7 @@ app.get("/api/proxy/*", async (c) => {
   const headers = c.req.header();
   const res = await fetch(sanitizedUrl, {
     method: "GET",
-    cache: "no-store",
+    // cache: "no-store",
     redirect: "follow",
     keepalive: true,
     headers: {
