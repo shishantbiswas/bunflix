@@ -7,10 +7,18 @@ app.use(
   cors({
     origin: ["https://bunflix.bsws.in", "http://localhost:3000"],
   }),
-  logger()
+  // logger()
 );
 
-app.get("/", (c) => c.text("Hello Bun!"));
+app.get(
+  "/",
+  async (c) =>
+    await c.text("ok", {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    })
+);
 
 app.get("/api/proxy/*", async (c) => {
   // Reconstruct the path segments after /api/proxy/
@@ -28,15 +36,21 @@ app.get("/api/proxy/*", async (c) => {
     sanitizedUrl.host = "haildrop77.pro";
   }
 
-  const headers = c.req.header();
+  // const origin = c.req.header("Origin");
+  // const userAgent = c.req.header("User-Agent");
+  // const accept = c.req.header("Accept");
+
+  
   const res = await fetch(sanitizedUrl, {
     method: "GET",
-    // cache: "no-store",
+    keepalive:true,
+    verbose: true,
     redirect: "follow",
-    keepalive: true,
     headers: {
-      ...headers,
-      Referer: "https://megacloud.club/",
+      origin : "localhost",
+      accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng",
+      "user-agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      Referer: "https://megacloud.blog/",
     },
   });
 
