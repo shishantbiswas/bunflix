@@ -1,5 +1,7 @@
 FROM oven/bun:1 AS base
 
+RUN apt update
+RUN apt install curl wget -y
 WORKDIR /app
 
 # Install dependencies with bun
