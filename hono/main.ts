@@ -9,6 +9,7 @@ app.use(
   }),
   logger()
 );
+
 app.get("/", (c) => c.text("Hello Bun!"));
 
 app.get("/api/proxy/*", async (c) => {
