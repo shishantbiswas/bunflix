@@ -7,7 +7,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "hono:dev" : "bun run --hot hono.ts",
+    "hono:start" : "bun --bun run  hono.ts"
   },
   "dependencies": {
     "@react-spring/web": "10.0.3",
@@ -19,6 +21,7 @@
     "dexie": "^4.2.1",
     "dexie-react-hooks": "^4.2.0",
     "hls.js": "1.6.14",
+    "hono": "^4.10.4",
     "lucide-react": "^0.553.0",
     "next": "16.0.1",
     "react": "19.2.0",
