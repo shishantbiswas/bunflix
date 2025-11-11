@@ -2,7 +2,7 @@ import { AniwatchShowInfo } from "@/components/aniwatch/aniwatch-info";
 import AniwatchPlayer from "@/components/aniwatch/aniwatch-player";
 import EpisodeSelector from "@/components/aniwatch/episode-selector";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -37,12 +37,22 @@ export default async function Anime({
   searchParams,
 }: PageProps<"/anime/[id]">) {
   const { id } = await params;
-  redirect(`/watch/${id}`)
   const { num, ep, lang } = (await searchParams) as unknown as {
     lang: "en" | "jp";
     ep: string;
     num: string;
   };
+  const newurl = new URL("/watch." + id, "https://bunflix.bsws.in");
+  if (ep) {
+    newurl.searchParams.set("ep", ep);
+  }
+  if (lang) {
+    newurl.searchParams.set("lang", lang);
+  }
+  if (num) {
+    newurl.searchParams.set("num", num);
+  }
+  redirect(newurl.toString(), RedirectType.replace);
 
   const episode: AniwatchEpisodeData = await fetchAniwatchEpisode(id);
   const epNum =
