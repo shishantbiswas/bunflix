@@ -212,7 +212,7 @@ export default function History() {
   );
 }
 
-function HistoryMenu({
+export function HistoryMenu({
   menu,
   setMenu,
 }: {
