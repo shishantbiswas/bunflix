@@ -2,16 +2,16 @@
 import { redirect } from "next/navigation";
 import Player from "./art-player";
 // import { cache } from "@/lib/cache";
-
+import * as Sentry from "@sentry/nextjs";
 export default async function AniwatchPlayer({
   episodeId,
   ep,
   lang,
-  nextEpUrl
+  nextEpUrl,
 }: {
   episodeId: string;
   ep: string;
-  nextEpUrl?:string,
+  nextEpUrl?: string;
   lang: "en" | "jp";
 }) {
   if (!ep) return;
@@ -41,19 +41,23 @@ export default async function AniwatchPlayer({
   );
 
   if (!srcData.data || srcData.data.sources.length === 0) {
-    throw new Error("No Source Available");
+    const err = new Error("No Source Available");
+    Sentry.captureException(err);
+    throw err;
   }
 
   if ((!srcData || !srcData.data.sources) && lang === "en") {
-    throw new Error("No Dub Available");
+    const err = new Error("No Dub Available");
+    Sentry.captureException(err);
+    throw err;
   }
 
   if (srcData.data.sources.length === 0 && lang === "jp") {
-    throw new Error("No Sub Available");
+    const err = new Error("No Sub Available");
+    Sentry.captureException(err);
+    throw err;
   }
-  return (
-    <Player nextEpUrl={nextEpUrl} data={srcData}/>
-  );
+  return <Player nextEpUrl={nextEpUrl} data={srcData} />;
 }
 
 async function getAniwatchEpisodeSrcWithBackoff(
@@ -61,13 +65,13 @@ async function getAniwatchEpisodeSrcWithBackoff(
   ep: string,
   server: string,
   category: string,
-  retries: number = 5,
-  retryDelayMs: number = 200
+  retries: number = 8,
+  retryDelayMs: number = 300
 ): Promise<AniwatchEpisodeSrc> {
   // const cacheKey = `${id}-${ep}-${server}-${category}`;
   // if (await cache.exists(cacheKey)) {
   //   console.log("[CACHE] HIT FOR ", cacheKey);
-    
+
   //   const cacheHit = await cache.get(cacheKey);
   //   if (cacheHit) return JSON.parse(cacheHit);
   // }

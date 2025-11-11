@@ -43,9 +43,9 @@ export default function Error({
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
           Oops! Something went wrong
         </h1>
-        {/* <p className="mt-4 text-base text-white/60">
+        <p className="mt-4 text-base text-white/60">
           {error.message}
-        </p> */}
+        </p>
         <div className="mt-8">
           <button
             onClick={() => window.location.reload()}

@@ -73,17 +73,19 @@ export default function Player({
     maxBufferLength: 300,
     maxMaxBufferLength: 300,
     maxBufferHole: 0.5,
+    enableSoftwareAES:true,
     loader: loader,
   };
 
   const { show } = useShow();
 
   const showId = `${show?.data.anime.info.id}`;
+  
   const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const time = Number(searchParams.get("t")) ?? existingShow?.duration ?? 0;
+  const time = Number(searchParams.get("t"));
   const lang = searchParams.get("lang") ?? "jp";
   const num = Number(searchParams.get("num")) ?? 0;
   const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${
@@ -267,7 +269,12 @@ export default function Player({
             hls.current?.loadSource(url); // this load for the initial video
             hls.current?.attachMedia(video);
             (art as any).hls = hls.current;
-            video.currentTime = time;
+            
+            if (time) {
+              video.currentTime = time;
+            } else if (existingShow?.time) {
+              video.currentTime = existingShow?.time;
+            }
             const speed = Number(art.storage.get("speed")) ?? 1;
             if (speed) {
               video.playbackRate = speed;
@@ -376,7 +383,6 @@ export default function Player({
       setCreatedShow(true);
     }
   }, [existingShow]);
-  console.log(isPlaying);
 
   useEffect(() => {
     if (!isPlaying || !show) return;
