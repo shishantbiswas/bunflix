@@ -39,7 +39,6 @@ export default function Player({
   const artRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [inFullscreen, setInFullscreen] = useState(false);
 
   class loader extends Hls.DefaultConfig.loader {
     constructor(config: HlsConfig) {
@@ -73,15 +72,14 @@ export default function Player({
     maxBufferLength: 300,
     maxMaxBufferLength: 300,
     maxBufferHole: 0.5,
-    enableSoftwareAES:true,
+    enableSoftwareAES: true,
     loader: loader,
   };
 
   const { show } = useShow();
 
   const showId = `${show?.data.anime.info.id}`;
-  
-  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
+  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId),[showId]);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -98,6 +96,7 @@ export default function Player({
   const hls = useRef<Hls | null>(null);
 
   useEffect(() => {
+    const controller  = new AbortController();
     const art = new Artplayer({
       url: src,
       container: artRef.current!,
@@ -265,14 +264,25 @@ export default function Player({
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
             // if ((art.hls as Hls)?.destroy) (art.hls as Hls).destroy();
-            hls.current = new Hls(hlsConfig);
+            hls.current = new Hls({
+              ...hlsConfig,
+            });
             hls.current?.loadSource(url); // this load for the initial video
             hls.current?.attachMedia(video);
             (art as any).hls = hls.current;
-            
+            video.addEventListener("ended", () => {
+              if (hls && nextEpUrl) {
+                toast.info("Playing next episode m'lord");
+                const shouldAutoplay = Boolean(
+                  localStorage.getItem("autoplay")
+                );
+                if (shouldAutoplay) router.push(nextUrl);
+              }
+            },{signal:controller.signal});
             if (time) {
               video.currentTime = time;
-            } else if (existingShow?.time) {
+            }
+            if (existingShow?.time) {
               video.currentTime = existingShow?.time;
             }
             const speed = Number(art.storage.get("speed")) ?? 1;
@@ -291,6 +301,7 @@ export default function Player({
     });
 
     return () => {
+      controller.abort()
       if (art && art.destroy) {
         art.destroy(false);
       }
@@ -306,13 +317,7 @@ export default function Player({
     const controller = new AbortController();
 
     const shortcuts = artRef.current;
-    videoRef.current?.addEventListener("ended", () => {
-      if (hls && nextEpUrl) {
-        toast.info("Playing next episode m'lord");
-        const shouldAutoplay = Boolean(localStorage.getItem("autoplay"));
-        if (shouldAutoplay) router.push(nextUrl);
-      }
-    });
+
     videoRef.current?.focus({
       preventScroll: true,
     });
@@ -344,20 +349,18 @@ export default function Player({
             videoRef.current!.playbackRate = 1;
             break;
           case "f":
-            if (inFullscreen) {
-              document.exitFullscreen().then(() => {
-                setInFullscreen(false);
-              });
+            if (document.fullscreenElement) {
+              document.exitFullscreen()
+              // setInFullscreen(false);
             } else {
-              shortcuts.requestFullscreen().then(() => {
-                setInFullscreen(true);
-              });
+              shortcuts.requestFullscreen()
+              // setInFullscreen(true);
             }
             break;
           case "Escape":
-            if (inFullscreen) {
+            if (document.fullscreenElement) {
               document.exitFullscreen();
-              setInFullscreen(false);
+              // setInFullscreen(false);
             }
             break;
         }
@@ -370,10 +373,14 @@ export default function Player({
     return () => {
       controller.abort();
     };
-  }, [videoRef.current, isPlaying, inFullscreen]);
+  }, [videoRef.current, isPlaying]);
 
   useEffect(() => {
     hls.current?.loadSource(src); // this runs for every subsequent video
+    const speed = Number(videoRef.current?.playbackRate);
+    if (speed && videoRef.current) {
+      videoRef.current.playbackRate = speed;
+    }
   }, [src]);
 
   const [createdShow, setCreatedShow] = useState(false);
@@ -434,7 +441,7 @@ export default function Player({
   return (
     <div
       ref={artRef}
-      tabIndex={0}
+      tabIndex={1}
       className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px] focus:outline-0 focus-within:outline-0"
     />
   );

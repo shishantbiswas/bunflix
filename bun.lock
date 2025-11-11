@@ -13,8 +13,8 @@
         "artplayer-plugin-hls-control": "^1.0.1",
         "artplayer-plugin-vtt-thumbnail": "^1.0.3",
         "babel-plugin-react-compiler": "1.0.0",
-        "dexie": "^4.0.8",
-        "dexie-react-hooks": "^1.1.7",
+        "dexie": "4.0.8",
+        "dexie-react-hooks": "1.1.7",
         "hls.js": "1.6.14",
         "lucide-react": "^0.553.0",
         "next": "16.0.1",
@@ -678,7 +678,7 @@
 
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
 
-    "dexie": ["dexie@4.2.0", "", {}, "sha512-OSeyyWOUetDy9oFWeddJgi83OnRA3hSFh3RrbltmPgqHszE9f24eUCVLI4mPg0ifsWk0lQTdnS+jyGNrPMvhDA=="],
+    "dexie": ["dexie@4.0.8", "", {}, "sha512-1G6cJevS17KMDK847V3OHvK2zei899GwpDiqfEXHP1ASvme6eWJmAp9AU4s1son2TeGkWmC0g3y8ezOBPnalgQ=="],
 
     "dexie-react-hooks": ["dexie-react-hooks@1.1.7", "", { "peerDependencies": { "@types/react": ">=16", "dexie": "^3.2 || ^4.0.1-alpha", "react": ">=16" } }, "sha512-Lwv5W0Hk+uOW3kGnsU9GZoR1er1B7WQ5DSdonoNG+focTNeJbHW6vi6nBoX534VKI3/uwHebYzSw1fwY6a7mTw=="],
 
