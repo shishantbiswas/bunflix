@@ -42,7 +42,7 @@ export default async function Anime({
     ep: string;
     num: string;
   };
-  const newurl = new URL("/watch." + id, "https://bunflix.bsws.in");
+  const newurl = new URL("/watch/" + id, "https://bunflix.bsws.in");
   if (ep) {
     newurl.searchParams.set("ep", ep);
   }
