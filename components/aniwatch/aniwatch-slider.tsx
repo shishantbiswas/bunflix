@@ -36,7 +36,7 @@ export default function AnimeSlider({ anime }: { anime: AniwatchHome }) {
               backgroundImage: `url(${item.poster})`,
             }}
           />
-          <Link href={`/anime/${item.id}`}>
+          <Link href={`/watch/${item.id}`}>
             <animated.div
               style={{
                 ...style,

@@ -316,7 +316,7 @@ const AnimeInSearchArray = ({
 
   return (
     <Link
-      href={`/anime/${anime.id}`}
+      href={`/watch/${anime.id}`}
       target="_blank"
       className=" w-full "
       key={anime.id}

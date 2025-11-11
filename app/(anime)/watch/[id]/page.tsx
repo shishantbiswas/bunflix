@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export async function generateMetadata({
   params,
   searchParams,
-}: PageProps<"/anime/[id]">): Promise<Metadata> {
+}: PageProps<"/watch/[id]">): Promise<Metadata> {
   const { id } = await params;
   const { num } = await searchParams;
 
@@ -35,9 +35,8 @@ export async function generateMetadata({
 export default async function Anime({
   params,
   searchParams,
-}: PageProps<"/anime/[id]">) {
+}: PageProps<"/watch/[id]">) {
   const { id } = await params;
-  redirect(`/watch/${id}`)
   const { num, ep, lang } = (await searchParams) as unknown as {
     lang: "en" | "jp";
     ep: string;

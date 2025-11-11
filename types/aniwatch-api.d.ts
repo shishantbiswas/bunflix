@@ -194,7 +194,7 @@ interface Anime {
 
 interface AniwatchEpisodeSrc {
   data: {
-    tracks: { file: string; kind: string; label: string; default: boolean }[];
+    tracks: { url: string; lang: string; default?: boolean }[];
     intro: { start: number; end: number };
     outro: { start: number; end: number };
     sources: { url: string; type: string }[];

@@ -45,7 +45,7 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
         }
       })
     }, onClick: () => {
-      startTransition(() => router.push(`/anime/${episode.id}`)
+      startTransition(() => router.push(`/watch/${episode.id}`)
       )
     }
   }, { delay: 800 });

@@ -14,7 +14,9 @@
     "@sentry/nextjs": "^10.23.0",
     "@tanstack/react-query": "^5.90.7",
     "artplayer": "^5.2.2",
+    "artplayer-plugin-chapter": "^1.0.1",
     "artplayer-plugin-hls-control": "^1.0.1",
+    "artplayer-plugin-vtt-thumbnail": "^1.0.3",
     "babel-plugin-react-compiler": "1.0.0",
     "dexie": "^4.2.1",
     "dexie-react-hooks": "^4.2.0",
@@ -24,6 +26,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-intersection-observer": "^10.0.0",
+    "sharp": "^0.34.5",
     "sonner": "2.0.7"
   },
   "devDependencies": {

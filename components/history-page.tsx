@@ -53,7 +53,7 @@ export default function History() {
           .splice(0, 6).map(({ show: episode, ep, lang, time, duration, epNum }, i) => (
             <Link
               key={episode.id + i}
-              href={`/anime/${episode.id}?ep=${ep}&lang=${lang}&num=${epNum || 0}&t=${time}`}
+              href={`/watch/${episode.id}?ep=${ep}&lang=${lang}&num=${epNum || 0}&t=${time}`}
               className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
             >
               <img fetchPriority="low" loading="lazy"
@@ -135,7 +135,7 @@ export default function History() {
         {watchedShows && watchedShows?.map(({ show: episode }) => (
           <Link
             key={episode.id}
-            href={`/anime/${episode.id}`}
+            href={`/watch/${episode.id}`}
             className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
           >
             <img fetchPriority="low" loading="lazy"
@@ -214,7 +214,7 @@ function HistoryMenu({ menu, setMenu }: {
           disabled={copied}
           onClick={async () => {
             try {
-              await navigator.clipboard.writeText(`${window.location.href.split("/").splice(0, 3).join("/")}/anime/${menu.show.id}`);
+              await navigator.clipboard.writeText(`${window.location.href.split("/").splice(0, 3).join("/")}/watch/${menu.show.id}`);
               setCopied(true);
               setTimeout(() => setCopied(false), 2000)
             } catch (err) {

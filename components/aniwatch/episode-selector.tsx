@@ -79,7 +79,7 @@ export default function EpisodeSelector({
             key={episode.episodeId}
             id={episode.episodeId}
             scroll
-            href={`/anime/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
+            href={`/watch/${episode.episodeId}&lang=${audioToogle}&num=${episode.number}`}
             style={{
               pointerEvents:
                 audioToogle === "en"

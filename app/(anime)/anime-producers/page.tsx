@@ -42,7 +42,7 @@ export default async function Categories({
         {data?.data.animes.map((episode, animeIndex) => (
           <Link
             key={episode.id + animeIndex}
-            href={`/anime/${episode.id}`}
+            href={`/watch/${episode.id}`}
             className="w-full h-[350px] rounded-md overflow-hidden group  relative text-end"
           >
             <img fetchPriority="low" loading="lazy"

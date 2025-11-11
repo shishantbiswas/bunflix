@@ -47,11 +47,11 @@ export function Menu({ data, setMenu }: {
       <div
         className="p-3 backdrop-blur-lg bg-black/40 rounded-lg flex text-start flex-col gap-2 text-base text-nowrap">
         <h1 className="text-xl font-semibold text-wrap max-w-[240px] leading-tight m-2">{data.show.name || data.show.jname}</h1>
-        <Link className="flex  hover:bg-white/10 px-2 py-1  rounded items-center gap-2 " href={`/anime/${data.show.id}`}>
+        <Link className="flex  hover:bg-white/10 px-2 py-1  rounded items-center gap-2 " href={`/watch/${data.show.id}`}>
           <PlayCircle size={14} /> Play
         </Link>
         {data.show.episodes.dub > 0 && <Link className="flex hover:bg-white/10 px-2 py-1  rounded items-center gap-2 "
-          href={`/anime/${data.show.id}?lang=en`}>
+          href={`/watch/${data.show.id}?lang=en`}>
           <PlayCircle size={14} /> Play (Engligh ver.)
         </Link>}
         <button
@@ -59,7 +59,7 @@ export function Menu({ data, setMenu }: {
           disabled={copied}
           onClick={async () => {
             try {
-              await navigator.clipboard.writeText(`${window.location.href.split("/").splice(0, 3).join("/")}/anime/${data.show.id}`);
+              await navigator.clipboard.writeText(`${window.location.href.split("/").splice(0, 3).join("/")}/watch/${data.show.id}`);
               setCopied(true);
               setTimeout(() => setCopied(false), 2000)
             } catch (err) {
@@ -139,7 +139,7 @@ export function Menu({ data, setMenu }: {
                       toast.error("Select a valid Episode Number")
                       return
                     } else {
-                      router.push(`/anime/${data.show.id}?num=${customEpisode}`)
+                      router.push(`/watch/${data.show.id}?num=${customEpisode}`)
                     }
                   }}>
                   Play {customEpisode} Episode
@@ -152,7 +152,7 @@ export function Menu({ data, setMenu }: {
                       toast.error("Select a valid Episode Number")
                       return
                     } else {
-                      router.push(`/anime/${data.show.id}?num=${customEpisode}&lang=en`)
+                      router.push(`/watch/${data.show.id}?num=${customEpisode}&lang=en`)
                     }
                   }}>
                   Play {customEpisode} Episode Dubbed

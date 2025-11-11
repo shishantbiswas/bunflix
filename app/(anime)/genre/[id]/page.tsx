@@ -24,7 +24,7 @@ export default async function Genre({ params }: { params: Params }) {
             className="w-full h-full rounded-md overflow-hidden group   relative"
             key={show.id}
           >
-            <Link href={`/anime/${show.id}`}>
+            <Link href={`/watch/${show.id}`}>
               <img fetchPriority="low" loading="lazy"
                 className="size-full object-cover group-hover:scale-105 transition-all"
                 src={show.poster}

@@ -149,7 +149,7 @@ function Anime({
 
   return (
     <Link
-      href={`/anime/${episode.id}`}
+      href={`/watch/${episode.id}`}
       className={`${
         settings &&
         settings.hideWatchedShowsInSearch &&

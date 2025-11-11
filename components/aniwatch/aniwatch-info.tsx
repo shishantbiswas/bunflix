@@ -177,7 +177,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
               <div className="flex flex-col gap-3 bg-black/30 p-2 rounded-xs">
                 {data.data.seasons.map((episode) => (
                   <Link
-                    href={`/anime/${episode.id}`}
+                    href={`/watch/${episode.id}`}
                     key={episode.id}
                     className="flex gap-2"
                   >
@@ -203,7 +203,7 @@ export function AniwatchShowInfo({ data, ep, lang, currentEpisodeNum }: {
           <div className="flex flex-col gap-3 bg-black/30 p-2 rounded-xs">
             {show.data.relatedAnimes.map((episode) => (
               <Link
-                href={`/anime/${episode.id}`}
+                href={`/watch/${episode.id}`}
                 key={episode.id}
                 className="flex gap-2"
               >

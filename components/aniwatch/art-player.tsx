@@ -15,26 +15,31 @@ import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useRouter, useSearchParams } from "next/navigation";
+import artplayerPluginChapter from "artplayer-plugin-chapter";
+import { toast } from "sonner";
+import artplayerPluginVttThumbnail from "artplayer-plugin-vtt-thumbnail";
 
 export default function Player({
-  src,
-  track,
-  nextEpUrl
+  data,
+  nextEpUrl,
 }: {
-  src: string;
-  nextEpUrl?:string,
-  track: {
-    file: string;
-    kind: string;
-    label: string;
-    default: boolean;
-  }[];
+  data: AniwatchEpisodeSrc;
+  nextEpUrl?: string;
+
   getInstance?: (art: Artplayer) => void;
 }) {
-  
+  const {
+    data: { sources, tracks, outro, intro },
+  } = data;
+
+  const src = sources[0].url;
+  // const thumbnail = tracks.filter((item) => item.lang === "thumbnails")[0].url;
+  const voiceTracks = tracks.filter((item) => item.lang !== "thumbnails");
+
   const artRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [inFullscreen, setInFullscreen] = useState(false);
 
   class loader extends Hls.DefaultConfig.loader {
     constructor(config: HlsConfig) {
@@ -71,23 +76,29 @@ export default function Player({
     loader: loader,
   };
 
+  const { show } = useShow();
+
+  const showId = `${show?.data.anime.info.id}`;
+  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
+
   const searchParams = useSearchParams();
   const router = useRouter();
-  const time = Number(searchParams.get("t")) || 0;
+  const time = Number(searchParams.get("t")) ?? existingShow?.duration ?? 0;
   const lang = searchParams.get("lang") ?? "jp";
   const num = Number(searchParams.get("num")) ?? 0;
-  const nextUrl = `/anime/${nextEpUrl}&${lang ? "lang="+lang : ""}&${num ? "num="+ (num + 1) : ""}`
-  console.log(lang,nextUrl);
-  
-  const { show } = useShow();
+  const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${
+    num ? "num=" + (num + 1) : ""
+  }`;
 
   Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25];
   Artplayer.LOG_VERSION = false;
   Artplayer.USE_RAF = true;
+  const hls = useRef<Hls | null>(null);
 
   useEffect(() => {
-    let hls: Hls | null = null;
-    const controller = new AbortController();
+    // if (!hls.current) {
+    //   hls.current = new Hls(hlsConfig);
+    // }
 
     const art = new Artplayer({
       url: src,
@@ -97,6 +108,32 @@ export default function Player({
       fullscreenWeb: true,
       playbackRate: true,
       autoPlayback: true,
+      screenshot: true,
+      gesture: true,
+      backdrop: true,
+      hotkey: true,
+      // thumbnails: {
+      //   url: "/api/thumbnail?vtt="+thumbnail+"&t=10",
+      //   width:200,
+      // },
+      // highlight: [
+      //   {
+      //     text: "Intro Start",
+      //     time: intro.start,
+      //   },
+      //   {
+      //     text: "Intro End",
+      //     time: intro.end,
+      //   },
+      //   {
+      //     text: "Outro Start",
+      //     time: outro.start,
+      //   },
+      //   {
+      //     text: "Outro End",
+      //     time: outro.end,
+      //   },
+      // ],
       volume: 0.5,
       muted: false,
       autoplay: true,
@@ -104,6 +141,23 @@ export default function Player({
         crossOrigin: "anonymous",
       },
       plugins: [
+        // artplayerPluginVttThumbnail({
+        //   vtt: thumbnail,
+        // }),
+        artplayerPluginChapter({
+          chapters: [
+            {
+              title: "Opening Song",
+              start: intro.start,
+              end: intro.end,
+            },
+            {
+              title: "Ending Song",
+              start: outro.start,
+              end: outro.end,
+            },
+          ],
+        }),
         artplayerPluginHlsControl({
           quality: {
             control: true,
@@ -122,24 +176,24 @@ export default function Player({
         }),
       ],
       settings: [
-        {
-           width: 200,
-          html: "Auto Play Next",
-          tooltip: "Show",
-          selector:[
-            {
-              html: "Auto Play",
-              tooltip: "Show",
-              switch: !Boolean(localStorage.getItem("autoplay")),
-              onSwitch: function (item) {
-                item.tooltip = item.switch ? "Off" : "On";
-                localStorage.setItem("autoplay",String(Boolean(!item.switch)));
-                art.subtitle.show = !item.switch;
-                return !item.switch;
-              },
-            },
-          ]
-        },
+        // {
+        //   width: 200,
+        //   html: "Auto Play Next",
+        //   tooltip: "Show",
+        //   selector: [
+        //     {
+        //       html: "Auto Play",
+        //       tooltip: "Show",
+        //       switch: !Boolean(localStorage.getItem("autoplay")),
+        //       onSwitch: function (item) {
+        //         item.tooltip = item.switch ? "Off" : "On";
+        //         localStorage.setItem("autoplay", String(Boolean(!item.switch)));
+        //         art.subtitle.show = !item.switch;
+        //         return !item.switch;
+        //       },
+        //     },
+        //   ],
+        // },
         {
           width: 200,
           html: "Subtitle",
@@ -148,17 +202,18 @@ export default function Player({
             {
               html: "Display",
               tooltip: "Show",
-              switch: false,
+              switch: true,
               onSwitch: function (item) {
                 item.tooltip = item.switch ? "Hide" : "Show";
                 art.subtitle.show = !item.switch;
                 return !item.switch;
               },
             },
-            ...track.map((sub) => {
+            ...voiceTracks.map((sub) => {
               return {
-                html: sub.label,
-                url: sub.file,
+                html: sub.lang,
+                url: sub.url,
+                default: sub.lang === "English",
               };
             }),
           ],
@@ -170,8 +225,32 @@ export default function Player({
           },
         },
       ],
+      controls: [
+        {
+          name: "speed",
+          position: "right",
+          html: "Speed",
+          selector: [
+            {
+              html: "1x",
+            },
+            {
+              html: "2x",
+            },
+          ],
+          onSelect: function (item) {
+            console.info(item);
+            const speed = Number((item.html as string).charAt(0));
+            art.storage.set("speed", speed);
+            art.video.playbackRate = speed;
+            return item.html;
+          },
+        },
+      ],
       subtitle: {
-        url: track.filter((sub) => sub.label === "English")[0]?.file || "",
+        url:
+          voiceTracks.filter((sub) => sub.lang === "English")[0]?.url ||
+          "Label Missing",
         escape: true,
         name: "English",
         onVttLoad: (vtt) => {
@@ -187,27 +266,18 @@ export default function Player({
       customType: {
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
-            if ((art.hls as Hls)?.destroy) (art.hls as Hls).destroy();
-            hls = new Hls(hlsConfig);
-            hls.loadSource(url);
-            hls.attachMedia(video);
-            (art as any).hls = hls;
+            // if ((art.hls as Hls)?.destroy) (art.hls as Hls).destroy();
+            hls.current = new Hls(hlsConfig);
+            hls.current?.loadSource(url); // this load for the initial video
+            hls.current?.attachMedia(video);
+            (art as any).hls = hls.current;
             video.currentTime = time;
-            art.on("destroy", () => hls?.destroy());
-            video.addEventListener("ended", () => {
-              if (hls && nextEpUrl) {
-                const shouldAutoplay = Boolean(localStorage.getItem("autoplay"))
-                if (shouldAutoplay) router.push(nextUrl);
-                // hls.destroy();
-                // console.log("HLS instance destroyed");
-              }
-            });
+            const speed = Number(art.storage.get("speed")) ?? 1;
+            if (speed) {
+              video.playbackRate = speed;
+            }
             videoRef.current = video;
-            const handlePlay = () => setIsPlaying(true);
-            const handlePause = () => setIsPlaying(false);
-
-            video.addEventListener("play", handlePlay);
-            video.addEventListener("pause", handlePause);
+            art.on("destroy", () => hls?.current?.destroy());
           } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
             video.src = url;
           } else {
@@ -218,20 +288,85 @@ export default function Player({
     });
 
     return () => {
-      controller.abort();
-
       if (art && art.destroy) {
         art.destroy(false);
       }
       if (hls) {
-        hls.destroy();
+        hls.current?.destroy();
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (!artRef.current || !videoRef.current) return;
+
+    const controller = new AbortController();
+
+    const shortcuts = artRef.current;
+    videoRef.current?.addEventListener("ended", () => {
+      if (hls && nextEpUrl) {
+        toast.info("Playing next episode m'lord");
+        const shouldAutoplay = Boolean(localStorage.getItem("autoplay"));
+        if (shouldAutoplay) router.push(nextUrl);
+      }
+    });
+    videoRef.current?.focus({
+      preventScroll: true,
+    });
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    shortcuts.addEventListener(
+      "keydown",
+      (eve) => {
+        const key = eve.key;
+
+        switch (key) {
+          case " ":
+            eve.preventDefault();
+            isPlaying ? handlePause() : handlePlay();
+            break;
+          case ".":
+            videoRef.current!.currentTime += 5;
+            break;
+          case ",":
+            videoRef.current!.currentTime -= 5;
+            break;
+          case "=":
+            videoRef.current!.playbackRate = 1;
+            break;
+          case "f":
+            if (inFullscreen) {
+              document.exitFullscreen().then(() => {
+                setInFullscreen(false);
+              });
+            } else {
+              shortcuts.requestFullscreen().then(() => {
+                setInFullscreen(true);
+              });
+            }
+            break;
+          case "Escape":
+            if (inFullscreen) {
+              document.exitFullscreen();
+              setInFullscreen(false);
+            }
+            break;
+        }
+      },
+      {
+        signal: controller.signal,
+      }
+    );
+
+    return () => {
+      controller.abort();
+    };
+  }, [videoRef.current, isPlaying, inFullscreen]);
+
+  useEffect(() => {
+    hls.current?.loadSource(src); // this runs for every subsequent video
   }, [src]);
-
-  const showId = `${show?.data.anime.info.id}`;
-
-  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId));
 
   const [createdShow, setCreatedShow] = useState(false);
 
@@ -291,7 +426,8 @@ export default function Player({
   return (
     <div
       ref={artRef}
-      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px]"
+      tabIndex={0}
+      className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px] focus:outline-0 focus-within:outline-0"
     />
   );
 }

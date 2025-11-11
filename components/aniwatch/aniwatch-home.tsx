@@ -86,7 +86,7 @@ export default function AniwatchHome({ anime: { data } }: { anime: AniwatchHome 
             {date.slice(0, 4).map((episode) => (
               <Link
                 key={episode.id}
-                href={`/anime/${episode.id}`}
+                href={`/watch/${episode.id}`}
                 className="flex bg-black/30 p-2 rounded-lg "
               >
                 <img fetchPriority="low" loading="lazy"

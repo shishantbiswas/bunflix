@@ -26,7 +26,7 @@ export default async function AniwatchPlayer({
     server.data.raw.length === 0 &&
     lang === "jp"
   ) {
-    redirect(`/anime/${episodeId}?ep=${ep}&lang=en&num=1`);
+    redirect(`/watch/${episodeId}?ep=${ep}&lang=en&num=1`);
   }
 
   const srcData = await getAniwatchEpisodeSrcWithBackoff(
@@ -52,7 +52,7 @@ export default async function AniwatchPlayer({
     throw new Error("No Sub Available");
   }
   return (
-    <Player nextEpUrl={nextEpUrl} src={srcData.data.sources[0]?.url} track={srcData.data.tracks} />
+    <Player nextEpUrl={nextEpUrl} data={srcData}/>
   );
 }
 
@@ -61,10 +61,10 @@ async function getAniwatchEpisodeSrcWithBackoff(
   ep: string,
   server: string,
   category: string,
-  retries: number = 3,
-  retryDelayMs: number = 100
+  retries: number = 5,
+  retryDelayMs: number = 200
 ): Promise<AniwatchEpisodeSrc> {
-  const cacheKey = `${id}-${ep}-${server}-${category}`;
+  // const cacheKey = `${id}-${ep}-${server}-${category}`;
   // if (await cache.exists(cacheKey)) {
   //   console.log("[CACHE] HIT FOR ", cacheKey);
     
