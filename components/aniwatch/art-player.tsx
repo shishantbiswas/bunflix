@@ -96,10 +96,6 @@ export default function Player({
   const hls = useRef<Hls | null>(null);
 
   useEffect(() => {
-    // if (!hls.current) {
-    //   hls.current = new Hls(hlsConfig);
-    // }
-
     const art = new Artplayer({
       url: src,
       container: artRef.current!,
@@ -316,6 +312,12 @@ export default function Player({
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
+    videoRef.current.addEventListener("play", handlePlay, {
+      signal: controller.signal,
+    });
+    videoRef.current.addEventListener("pause", handlePause, {
+      signal: controller.signal,
+    });
     shortcuts.addEventListener(
       "keydown",
       (eve) => {
@@ -324,7 +326,6 @@ export default function Player({
         switch (key) {
           case " ":
             eve.preventDefault();
-            isPlaying ? handlePause() : handlePlay();
             break;
           case ".":
             videoRef.current!.currentTime += 5;
@@ -375,6 +376,7 @@ export default function Player({
       setCreatedShow(true);
     }
   }, [existingShow]);
+  console.log(isPlaying);
 
   useEffect(() => {
     if (!isPlaying || !show) return;
