@@ -5,9 +5,12 @@ import { auth } from "./lib/auth";
 
 const app = new Hono();
 
-app.use(logger((log) => {
-  return `[${new Date().toISOString()}] ${log}`
-}));
+export const customLogger = (message: string, ...rest: string[]) => {
+  console.log(`[${new Date().toISOString()}] ${message}`, ...rest)
+}
+
+app.use(logger(customLogger))
+
 
 app.use("/api/proxy/*", cors({
   origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["https://bunflix.bsws.in", "http://localhost:3000"],
