@@ -6,7 +6,7 @@ import { auth } from "./lib/auth";
 const app = new Hono();
 app.use(
   cors({
-    origin: ["https://bunflix.bsws.in", "http://localhost:3000"],
+    origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["https://bunflix.bsws.in", "http://localhost:3000"],
   }),
   logger()
 );
@@ -43,16 +43,16 @@ app.get("/api/proxy/*", async (c) => {
   // const userAgent = c.req.header("User-Agent");
   // const accept = c.req.header("Accept");
 
-  
+
   const res = await fetch(sanitizedUrl, {
     method: "GET",
-    keepalive:true,
+    keepalive: true,
     verbose: true,
     redirect: "follow",
     headers: {
-      origin : "localhost",
-      accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng",
-      "user-agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+      origin: "localhost",
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng",
+      "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
       Referer: "https://megacloud.blog/",
     },
   });
@@ -82,6 +82,6 @@ app.get("/api/proxy/*", async (c) => {
 });
 
 export default {
-  port: 3001,
+  port: process.env.PORT || 3001,
   fetch: app.fetch,
 };

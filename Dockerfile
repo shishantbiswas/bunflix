@@ -1,7 +1,7 @@
 FROM oven/bun:latest AS base
 
 RUN apt update
-RUN apt install curl wget -y
+RUN apt install openssl curl wget -y
 WORKDIR /app
 
 # Install dependencies with bun

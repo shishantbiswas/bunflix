@@ -1,28 +1,30 @@
-version: '3'
 services:
   proxy:
-    image: proxy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bunflix-proxy
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - .env
+    environment:
+      - BETTET_AUTH_URL=${BETTET_AUTH_URL:-localhost:${PORT}}
+      - PORT=${PORT:-3001}
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - REDIS_URL=redis://redis:6379
     depends_on:
       - db
       - redis
     networks:
       - proxy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}"]
       interval: 10s
       timeout: 5s
       retries: 3    
   db:
-    image: postgres:15-alpine
+    image: postgres:18-alpine
     deploy:
       replicas: 1
       restart_policy:
@@ -36,14 +38,14 @@ services:
     networks:
       - proxy
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data/db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 3
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     deploy:
       replicas: 1
       restart_policy:
@@ -53,7 +55,7 @@ services:
     networks:
       - proxy
     volumes:
-      - ./redis:/data
+      - ./data/redis:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

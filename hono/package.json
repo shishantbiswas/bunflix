@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "bun run --hot main.ts",
-    "start": "prisma generate --no-engine && bun --bun run  main.ts",
+    "start": "bun db:up && bun --bun run  main.ts",
     "db:gen": "prisma generate --no-engine",
     "db:push": "prisma db push",
-    "db:up": "prisma generate && prisma db push"
+    "db:up": "prisma generate --no-engine && prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

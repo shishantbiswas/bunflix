@@ -1,14 +1,14 @@
 FROM oven/bun:latest
 
-# Create app directory
+RUN apt update
+RUN apt install openssl curl wget -y
 WORKDIR /app
 
 COPY . .
 
-# Default port used by the Hono app in this repo
-ENV PORT=3001
+ENV PORT=${PORT:-3001}
 
-EXPOSE 3001
+EXPOSE ${PORT}
 
 RUN bun install --production
 CMD ["bun", "run", "start"]
