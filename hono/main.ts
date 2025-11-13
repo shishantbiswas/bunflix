@@ -4,12 +4,14 @@ import { logger } from "hono/logger";
 import { auth } from "./lib/auth";
 
 const app = new Hono();
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["https://bunflix.bsws.in", "http://localhost:3000"],
-  }),
-  logger()
-);
+
+app.use(logger((log) => {
+  return `[${new Date().toISOString()}] ${log}`
+}));
+
+app.use("/api/proxy/*", cors({
+  origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["https://bunflix.bsws.in", "http://localhost:3000"],
+}));
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
