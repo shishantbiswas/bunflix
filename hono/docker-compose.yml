@@ -38,7 +38,7 @@ services:
     networks:
       - proxy
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
@@ -55,7 +55,7 @@ services:
     networks:
       - proxy
     volumes:
-      - ./data/redis:/data
+      - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -67,5 +67,5 @@ networks:
   proxy:
 
 volumes:
-  data:
-  redis:
+  postgres_data:
+  redis_data:
