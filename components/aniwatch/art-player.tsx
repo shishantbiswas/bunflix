@@ -36,6 +36,11 @@ export default function Player({
   // const thumbnail = tracks.filter((item) => item.lang === "thumbnails")[0].url;
   const voiceTracks = tracks.filter((item) => item.lang !== "thumbnails");
 
+  const [playerOpts, setPlayerOpts] = useState({
+    speed: 1,
+    resolution: "1080",
+  });
+
   const artRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -79,7 +84,10 @@ export default function Player({
   const { show } = useShow();
 
   const showId = `${show?.data.anime.info.id}`;
-  const existingShow = useLiveQuery(() => indexDB.watchHistory.get(showId),[showId]);
+  const existingShow = useLiveQuery(
+    () => indexDB.watchHistory.get(showId),
+    [showId]
+  );
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -96,7 +104,7 @@ export default function Player({
   const hls = useRef<Hls | null>(null);
 
   useEffect(() => {
-    const controller  = new AbortController();
+    const controller = new AbortController();
     const art = new Artplayer({
       url: src,
       container: artRef.current!,
@@ -109,28 +117,6 @@ export default function Player({
       gesture: true,
       backdrop: true,
       hotkey: true,
-      // thumbnails: {
-      //   url: "/api/thumbnail?vtt="+thumbnail+"&t=10",
-      //   width:200,
-      // },
-      // highlight: [
-      //   {
-      //     text: "Intro Start",
-      //     time: intro.start,
-      //   },
-      //   {
-      //     text: "Intro End",
-      //     time: intro.end,
-      //   },
-      //   {
-      //     text: "Outro Start",
-      //     time: outro.start,
-      //   },
-      //   {
-      //     text: "Outro End",
-      //     time: outro.end,
-      //   },
-      // ],
       volume: 0.5,
       muted: false,
       autoplay: true,
@@ -173,24 +159,6 @@ export default function Player({
         }),
       ],
       settings: [
-        // {
-        //   width: 200,
-        //   html: "Auto Play Next",
-        //   tooltip: "Show",
-        //   selector: [
-        //     {
-        //       html: "Auto Play",
-        //       tooltip: "Show",
-        //       switch: !Boolean(localStorage.getItem("autoplay")),
-        //       onSwitch: function (item) {
-        //         item.tooltip = item.switch ? "Off" : "On";
-        //         localStorage.setItem("autoplay", String(Boolean(!item.switch)));
-        //         art.subtitle.show = !item.switch;
-        //         return !item.switch;
-        //       },
-        //     },
-        //   ],
-        // },
         {
           width: 200,
           html: "Subtitle",
@@ -239,6 +207,7 @@ export default function Player({
             console.info(item);
             const speed = Number((item.html as string).charAt(0));
             art.storage.set("speed", speed);
+            setPlayerOpts({ ...playerOpts, speed });
             art.video.playbackRate = speed;
             return item.html;
           },
@@ -270,15 +239,19 @@ export default function Player({
             hls.current?.loadSource(url); // this load for the initial video
             hls.current?.attachMedia(video);
             (art as any).hls = hls.current;
-            video.addEventListener("ended", () => {
-              if (hls && nextEpUrl) {
-                toast.info("Playing next episode m'lord");
-                const shouldAutoplay = Boolean(
-                  localStorage.getItem("autoplay")
-                );
-                if (shouldAutoplay) router.push(nextUrl);
-              }
-            },{signal:controller.signal});
+            video.addEventListener(
+              "ended",
+              () => {
+                if (hls && nextEpUrl) {
+                  toast.info("Playing next episode m'lord");
+                  const shouldAutoplay = Boolean(
+                    localStorage.getItem("autoplay")
+                  );
+                  if (shouldAutoplay) router.push(nextUrl);
+                }
+              },
+              { signal: controller.signal }
+            );
             if (time) {
               video.currentTime = time;
             }
@@ -301,7 +274,7 @@ export default function Player({
     });
 
     return () => {
-      controller.abort()
+      controller.abort();
       if (art && art.destroy) {
         art.destroy(false);
       }
@@ -350,10 +323,10 @@ export default function Player({
             break;
           case "f":
             if (document.fullscreenElement) {
-              document.exitFullscreen()
+              document.exitFullscreen();
               // setInFullscreen(false);
             } else {
-              shortcuts.requestFullscreen()
+              shortcuts.requestFullscreen();
               // setInFullscreen(true);
             }
             break;
@@ -377,10 +350,13 @@ export default function Player({
 
   useEffect(() => {
     hls.current?.loadSource(src); // this runs for every subsequent video
-    const speed = Number(videoRef.current?.playbackRate);
+    const speed = Number(videoRef.current?.playbackRate) ?? playerOpts.speed;
     if (speed && videoRef.current) {
       videoRef.current.playbackRate = speed;
     }
+    videoRef.current?.focus({
+      preventScroll: true,
+    });
   }, [src]);
 
   const [createdShow, setCreatedShow] = useState(false);

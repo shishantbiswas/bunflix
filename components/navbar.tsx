@@ -10,7 +10,7 @@ import {
   PopcornIcon,
   Search,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchBarFocus } from "@/context/search-context";
 import NavLink from "./nav-link";
 import SearchInput from "./search-input";
@@ -21,19 +21,41 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { indexDB } from "@/lib/index-db";
 
 type LinkArray = {
-  id: number
-  linkName: string,
-  href: string,
+  id: number;
+  linkName: string;
+  href: string;
   icon?: React.ReactNode;
-}
+};
 
 export default function Navbar() {
-
   const { isSearchOpen, setIsSearchOpen } = useSearchBarFocus();
   const linkref = useRef<HTMLDivElement>(null);
   const [openDropdown, setOpenDropdown] = useState(false);
-  const y = useWindowScroll(60)
-  const settings = useLiveQuery(() => indexDB.userPreferences.get(1))
+  const y = useWindowScroll(60);
+  const settings = useLiveQuery(() => indexDB.userPreferences.get(1));
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY) {
+        setIsScrollingDown(true);
+      } else {
+        setIsScrollingDown(false);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navLinks: LinkArray[] = [
     {
@@ -87,14 +109,26 @@ export default function Navbar() {
     },
   ].map((link, i) => ({ ...link, id: i + 1 }));
 
-
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav
-        className={`bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${settings && settings.centerContent == true ? "xl:w-[76rem]" : ""} ${settings && !settings.disableFloatingNavbar && y > 90 ? "w-[calc(100%_-_30px)] mt-4 rounded-lg" : "w-full"} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
-        }>
+        className={`bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${
+          settings && settings.centerContent == true ? "xl:w-[76rem]" : ""
+        } ${
+          settings && !settings.disableFloatingNavbar && y > 90
+            ? "w-[calc(100%_-_30px)] mt-4 rounded-lg"
+            : "w-full"
+        }
+        ${isScrollingDown ? "-translate-y-96":""} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `}
+      >
         <div className="flex items-center">
-          <img fetchPriority="low" loading="lazy" src="/favicon.ico" className="size-4 mr-4" alt="favicon" />
+          <img
+            fetchPriority="low"
+            loading="lazy"
+            src="/favicon.ico"
+            className="size-4 mr-4"
+            alt="favicon"
+          />
           <div ref={linkref} className="group flex">
             {navLinks.slice(0, 3).map((link) => (
               <NavLink
@@ -109,13 +143,13 @@ export default function Navbar() {
               translate={`${(linkref.current?.children[navIndex]?.getBoundingClientRect()
                 .left ?? 0) - 16
                 }px`} /> */}
-
           </div>
 
           <Dropdown
             navLinks={navLinks}
             openDropdown={openDropdown}
-            setOpenDropdown={setOpenDropdown} />
+            setOpenDropdown={setOpenDropdown}
+          />
         </div>
 
         <div className="flex items-center gap-4">
@@ -127,13 +161,13 @@ export default function Navbar() {
           >
             <Search color="white" className=" size-6" />
           </button>
-          <Link href={'/settings'} className="flex items-center">
+          <Link href={"/settings"} className="flex items-center">
             <CogIcon />
           </Link>
-          <Link href={'/history'} className="flex items-center">
+          <Link href={"/history"} className="flex items-center">
             <HistoryIcon />
           </Link>
-          <Link href={'/watch-later'} className="flex items-center">
+          <Link href={"/watch-later"} className="flex items-center">
             <Clock />
           </Link>
           <Link
@@ -150,13 +184,16 @@ export default function Navbar() {
   );
 }
 
-function Dropdown({ navLinks, openDropdown, setOpenDropdown }: {
+function Dropdown({
+  navLinks,
+  openDropdown,
+  setOpenDropdown,
+}: {
   setOpenDropdown: (e: boolean) => void;
   openDropdown: boolean;
-  navLinks: LinkArray[]
+  navLinks: LinkArray[];
 }) {
-
-  const pathname = usePathname()
+  const pathname = usePathname();
   return (
     <div
       onClick={() => setOpenDropdown(!openDropdown)}
@@ -166,9 +203,19 @@ function Dropdown({ navLinks, openDropdown, setOpenDropdown }: {
     >
       <span>More</span>
       <ChevronDown className="size-4 group-hover:rotate-180 transition-transform duration-200" />
-      <div className={`h-12 w-24 -bottom-12 absolute ${openDropdown ? " pointer-events-auto" : "pointer-events-none"}`} />
-      <div className={`rounded-lg bg-black/70 space-y-2 backdrop-blur-3xl p-2 absolute top-20 translate-x-1/2 -right-1/2 transition-all duration-300
-        ${openDropdown ? "opacity-100 pointer-events-auto translate-y-[-30px]" : "opacity-0 pointer-events-none translate-y-0"} `}>
+      <div
+        className={`h-12 w-24 -bottom-12 absolute ${
+          openDropdown ? " pointer-events-auto" : "pointer-events-none"
+        }`}
+      />
+      <div
+        className={`rounded-lg bg-black/70 space-y-2 backdrop-blur-3xl p-2 absolute top-20 translate-x-1/2 -right-1/2 transition-all duration-300
+        ${
+          openDropdown
+            ? "opacity-100 pointer-events-auto translate-y-[-30px]"
+            : "opacity-0 pointer-events-none translate-y-0"
+        } `}
+      >
         {navLinks.slice(3).map((link) => (
           <Link
             onClick={() => setOpenDropdown(!openDropdown)}
@@ -185,18 +232,25 @@ function Dropdown({ navLinks, openDropdown, setOpenDropdown }: {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-
-function LinkFollower({ translate, width }: { width: number, translate: string }) {
-  return <div
-    style={{
-      translate: translate,
-      width: width,
-    }}
-    className="group-hover:bg-white h-2 bottom-2 left-4 absolute transition-all  ease-in-out"
-  />
+function LinkFollower({
+  translate,
+  width,
+}: {
+  width: number;
+  translate: string;
+}) {
+  return (
+    <div
+      style={{
+        translate: translate,
+        width: width,
+      }}
+      className="group-hover:bg-white h-2 bottom-2 left-4 absolute transition-all  ease-in-out"
+    />
+  );
 }
 
 function GithubIcon() {
@@ -210,5 +264,5 @@ function GithubIcon() {
       <title>GitHub</title>
       <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
     </svg>
-  )
+  );
 }
