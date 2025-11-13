@@ -13,6 +13,8 @@ services:
       - PORT=${PORT:-3001}
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
       - REDIS_URL=redis://redis:6379
+    expose:
+      - "${PORT}"
     depends_on:
       - db
       - redis
@@ -29,8 +31,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -50,8 +52,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     networks:
       - proxy
     volumes:
