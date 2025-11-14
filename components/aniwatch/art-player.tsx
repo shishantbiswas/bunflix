@@ -376,11 +376,11 @@ export default function Player({
             break;
           case ".":
             videoRef.current!.currentTime += 5;
-            art.notice.show = `${art.currentTime} / ${art.duration}`;
+            art.notice.show = `${art.currentTime.toFixed(2)} / ${art.duration.toFixed(2)}`;
             break;
           case ",":
             videoRef.current!.currentTime -= 5;
-            art.notice.show = `${art.currentTime} / ${art.duration}`;
+            art.notice.show = `${art.currentTime.toFixed(2)} / ${art.duration.toFixed(2)}`;
             break;
           case "=":
             videoRef.current!.playbackRate = 1;
@@ -420,12 +420,16 @@ export default function Player({
             art.video.playbackRate += 0.1;
             art.notice.show = `Speed to ${art.video.playbackRate.toFixed(1)}x`;
             break;
-          case "m":
+          case "t":
             if (art.fullscreenWeb) {
               art.fullscreenWeb = false
             } else {
               art.fullscreenWeb = true
             }
+            break;
+          case "m":
+            art.muted = !art.muted;
+            art.notice.show = art.muted ? "Muted" : "Unmuted";
             break;
           case "Escape":
             if (document.fullscreenElement) {
@@ -533,6 +537,55 @@ export default function Player({
 
     return () => clearInterval(interval);
   }, [isPlaying, createdShow]);
+
+  useEffect(() => {
+    if (!artRef.current) return;
+    const art = artRef.current;
+    const currentTime = art.currentTime;   
+
+    let inChapter = false;
+    let section = "";
+
+    if (currentTime > intro.start && currentTime < intro.end) {
+      inChapter = true;
+      section = "intro";
+    }
+    if (currentTime > outro.start && currentTime < outro.end) {
+      inChapter = true;
+      section = "outro";
+    }
+    if (art.layers['skip']) {
+      art.layers.update({
+        name: 'skip',
+        html: `<button class="bg-red-600 text-white px-4 py-2 rounded cursor-pointer capitalize">Skip ${section}</button>`,
+        style: {
+          display: inChapter ? 'block' : 'none',
+          bottom: '5rem',
+          right: '3rem',
+          position: 'absolute',
+
+        },
+        click: function () {
+          if (!videoRef.current) return;
+          videoRef.current.currentTime = section === "intro" ? intro.end : outro.end;
+        },
+      });
+      return;
+    }
+    if (inChapter) {
+      art.layers.add({
+        name: 'skip',
+        style: {
+          display: 'none',
+        },
+      });
+    } else {
+      if (art.layers['skip']) {
+        art.layers.remove('skip');
+      }
+    }
+
+  }, [artRef.current?.currentTime]);
 
   return (
     <div
