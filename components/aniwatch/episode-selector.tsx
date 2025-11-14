@@ -15,7 +15,7 @@ export default function EpisodeSelector({
     lang ? lang : "jp"
   );
 
-  const [grid, setGrid] = useState(true);
+  const [grid, setGrid] = useState(episode.data.episodes.length > 24 ? false : true);
 
   const { show: data } = useShow();
 
@@ -70,9 +70,8 @@ export default function EpisodeSelector({
       </div>
       {/* <div className=""> */}
       <ul
-        className={`max-h-[480px]  mb-6 text-sm lg:max-h-[470px] w-full lg:max-w-[500px] lg:min-w-[280px] bg-slate-600 overflow-y-scroll rounded-lg  ${
-          grid ? "grid grid-cols-4 gap-2 p-2" : "flex flex-col items-center"
-        }`}
+        className={`max-h-[480px]  mb-6 text-sm lg:max-h-[470px] w-full lg:max-w-[500px] lg:min-w-[280px] bg-slate-600 overflow-y-scroll rounded-lg  ${grid ? "grid grid-cols-4 gap-2 p-2" : "flex flex-col items-center"
+          }`}
       >
         {episode.data.episodes.map((episode, index) => (
           <Link
@@ -93,26 +92,25 @@ export default function EpisodeSelector({
             <button
               disabled={
                 Number(data?.epNum) == Number(episode.number) &&
-                audioToogle === lang
+                  audioToogle === lang
                   ? true
                   : false
               }
               style={{
                 backgroundColor:
                   Number(data?.epNum) == Number(episode.number) &&
-                  audioToogle === lang
+                    audioToogle === lang
                     ? "#b91c1c"
                     : audioToogle === lang
-                    ? index % 2 === 0
-                      ? "#1f2937"
-                      : "#374151"
-                    : index % 2 === 0
-                    ? "#1e293b"
-                    : "#334155",
+                      ? index % 2 === 0
+                        ? "#1f2937"
+                        : "#374151"
+                      : index % 2 === 0
+                        ? "#1e293b"
+                        : "#334155",
               }}
-              className={`px-4 text-start text-[14px] w-full leading-4 flex not-disabled:cursor-pointer items-center ${
-                grid ? "justify-center p-4" : " justify-between h-20"
-              }`}
+              className={`px-4 text-start text-[14px] w-full leading-4 flex not-disabled:cursor-pointer items-center ${grid ? "justify-center p-4" : " justify-between h-20"
+                }`}
             >
               {episode.number}
               {!grid && <>. {episode.title}</>}

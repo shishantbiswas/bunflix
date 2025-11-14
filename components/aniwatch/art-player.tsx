@@ -11,6 +11,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import artplayerPluginChapter from "artplayer-plugin-chapter";
 import { toast } from "sonner";
+import { useGlobalTransition } from "@/context/transition-context";
 
 // --------------------- see file node_modules/artplayer-plugin-chapter/types/artplayer-plugin-chapter.d.ts
 type Chapters = {
@@ -101,12 +102,24 @@ export default function Player({
   );
 
   const searchParams = useSearchParams();
+  const { startTransition } = useGlobalTransition();
   const router = useRouter();
   const time = Number(searchParams.get("t"));
   const lang = searchParams.get("lang") ?? "jp";
   const num = Number(searchParams.get("num")) ?? 0;
-  const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${num ? "num=" + (num + 1) : ""
-    }`;
+  const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${num ? "num=" + (num + 1) : ""}`;
+
+  function playNext() {
+    toast.info("Playing next episode m'lord");
+    const shouldAutoplay = Boolean(
+      localStorage.getItem("autoplay")
+    );
+    if (shouldAutoplay) {
+      startTransition(() => {
+        router.push(nextUrl);
+      })
+    }
+  }
 
   Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25];
   Artplayer.LOG_VERSION = false;
@@ -222,6 +235,7 @@ export default function Player({
             artRef.current.storage.set("speed", speed);
             setPlayerOpts({ ...playerOpts, speed });
             artRef.current.video.playbackRate = speed;
+            artRef.current.notice.show = `Speed reset to ${speed}x`;
             return item.html;
           },
         },
@@ -316,13 +330,17 @@ export default function Player({
       "keydown",
       (eve) => {
         const key = eve.key;
+        if (!artRef.current) return;
+        const art = artRef.current;
 
         switch (key) {
           case " ":
             if (isPlaying) {
               handlePause();
+              art.notice.show = "Paused";
             } else {
               handlePlay();
+              art.notice.show = "Playing";
             }
             eve.preventDefault();
             break;
@@ -334,12 +352,24 @@ export default function Player({
             break;
           case "=":
             videoRef.current!.playbackRate = 1;
+            art.notice.show = "Speed reset to 1x";
             break;
           case "f":
             if (document.fullscreenElement) {
               document.exitFullscreen();
             } else {
               shortcuts.requestFullscreen();
+            }
+            break;
+          case "n":
+            art.notice.show = "Playing next episode";
+            playNext();
+            break;
+          case "m":
+            if (art.fullscreenWeb) {
+              art.fullscreenWeb = false
+            } else {
+              art.fullscreenWeb = true
             }
             break;
           case "Escape":
@@ -368,13 +398,9 @@ export default function Player({
     }
     videoRef.current?.addEventListener(
       "ended",
-      () => {       
+      () => {
         if (nextEpUrl) {
-          toast.info("Playing next episode m'lord");
-          const shouldAutoplay = Boolean(
-            localStorage.getItem("autoplay")
-          );
-          if (shouldAutoplay) router.push(nextUrl);
+          playNext();
         }
       },
       { signal: controller.signal }
