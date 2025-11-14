@@ -34,28 +34,49 @@ export default function Navbar() {
   const y = useWindowScroll(60);
   const settings = useLiveQuery(() => indexDB.userPreferences.get(1));
   const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [navbarY, setNavbarY] = useState(0);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    const SCROLL_OFFSET = 100; // Offset in pixels before navbar starts showing
+    const DEBOUNCE_DELAY = 100; // Debounce delay in milliseconds
+
+    // Debounce function to limit the rate at which the scroll handler is called
+    const debounce = (func: () => void, wait: number) => {
+      let timeout: NodeJS.Timeout;
+      return () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(), wait);
+      };
+    };
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const navbarHeight = navbarRef.current?.offsetHeight || 0;
 
-      if (currentScrollY > lastScrollY) {
+      // Only update state if scroll position changes by more than 5 pixels
+      if (Math.abs(currentScrollY - lastScrollTop) < 5) return;
+
+      // If scrolled down more than the offset and scrolling down
+      if (currentScrollY > SCROLL_OFFSET && currentScrollY > lastScrollTop) {
         setIsScrollingDown(true);
-      } else {
+        setNavbarY(-navbarHeight);
+      }
+      // If scrolling up
+      else if (currentScrollY < lastScrollTop) {
         setIsScrollingDown(false);
+        setNavbarY(0);
       }
 
-      lastScrollY = currentScrollY;
+      setLastScrollTop(currentScrollY <= 0 ? 0 : currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const debouncedScroll = debounce(handleScroll, DEBOUNCE_DELAY);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    window.addEventListener('scroll', debouncedScroll, { passive: true });
+    return () => window.removeEventListener('scroll', debouncedScroll);
+  }, [lastScrollTop]);
 
   const navLinks: LinkArray[] = [
     {
@@ -109,17 +130,22 @@ export default function Navbar() {
     },
   ].map((link, i) => ({ ...link, id: i + 1 }));
 
+  const navClass = `bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${settings && settings.centerContent == true ? "xl:w-[76rem]" : ""
+    } ${settings && !settings.disableFloatingNavbar && y > 90
+      ? "w-[calc(100%_-_30px)] mt-4 rounded-lg"
+      : "w-full"
+    }
+        ${isScrollingDown ? "-translate-y-96" : ""} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
+
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav
-        className={`bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${
-          settings && settings.centerContent == true ? "xl:w-[76rem]" : ""
-        } ${
-          settings && !settings.disableFloatingNavbar && y > 90
-            ? "w-[calc(100%_-_30px)] mt-4 rounded-lg"
-            : "w-full"
-        }
-        ${isScrollingDown ? "-translate-y-96":""} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `}
+        ref={navbarRef}
+        className={navClass}
+        style={{
+          transform: `translateY(${isScrollingDown ? navbarY : 0}px)`,
+          transition: 'transform 0.3s ease-in-out',
+        }}
       >
         <div className="flex items-center">
           <img
@@ -137,12 +163,6 @@ export default function Navbar() {
                 linkName={link.linkName}
               />
             ))}
-            {/* <LinkFollower
-              width={linkref.current?.children[navIndex]?.getBoundingClientRect()
-                .width || 0}
-              translate={`${(linkref.current?.children[navIndex]?.getBoundingClientRect()
-                .left ?? 0) - 16
-                }px`} /> */}
           </div>
 
           <Dropdown
@@ -204,17 +224,15 @@ function Dropdown({
       <span>More</span>
       <ChevronDown className="size-4 group-hover:rotate-180 transition-transform duration-200" />
       <div
-        className={`h-12 w-24 -bottom-12 absolute ${
-          openDropdown ? " pointer-events-auto" : "pointer-events-none"
-        }`}
+        className={`h-12 w-24 -bottom-12 absolute ${openDropdown ? " pointer-events-auto" : "pointer-events-none"
+          }`}
       />
       <div
         className={`rounded-lg bg-black/70 space-y-2 backdrop-blur-3xl p-2 absolute top-20 translate-x-1/2 -right-1/2 transition-all duration-300
-        ${
-          openDropdown
+        ${openDropdown
             ? "opacity-100 pointer-events-auto translate-y-[-30px]"
             : "opacity-0 pointer-events-none translate-y-0"
-        } `}
+          } `}
       >
         {navLinks.slice(3).map((link) => (
           <Link

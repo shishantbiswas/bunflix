@@ -13,23 +13,22 @@ app.use(logger(customLogger))
 
 
 app.use("/api/proxy/*", cors({
-  origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["https://bunflix.bsws.in", "http://localhost:3000"],
+  origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["http://localhost:3000"],
 }));
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.get(
   "/",
-  async (c) =>
+  async (c) =>{
     await c.text("ok", {
       headers: {
         "Content-Type": "text/plain",
       },
-    })
+    })}
 );
 
 app.get("/api/proxy/*", async (c) => {
-  // Reconstruct the path segments after /api/proxy/
   const incomingUrl = c.req.url;
 
   const parts = incomingUrl.split("/").slice(5);

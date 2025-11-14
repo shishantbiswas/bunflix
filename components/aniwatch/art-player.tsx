@@ -17,7 +17,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useRouter, useSearchParams } from "next/navigation";
 import artplayerPluginChapter from "artplayer-plugin-chapter";
 import { toast } from "sonner";
-import artplayerPluginVttThumbnail from "artplayer-plugin-vtt-thumbnail";
 
 export default function Player({
   data,
@@ -38,7 +37,7 @@ export default function Player({
 
   const [playerOpts, setPlayerOpts] = useState({
     speed: 1,
-    resolution: "1080",
+    // resolution: "1080",
   });
 
   const artRef = useRef<HTMLDivElement>(null);
@@ -94,9 +93,8 @@ export default function Player({
   const time = Number(searchParams.get("t"));
   const lang = searchParams.get("lang") ?? "jp";
   const num = Number(searchParams.get("num")) ?? 0;
-  const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${
-    num ? "num=" + (num + 1) : ""
-  }`;
+  const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${num ? "num=" + (num + 1) : ""
+    }`;
 
   Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25];
   Artplayer.LOG_VERSION = false;
@@ -232,26 +230,15 @@ export default function Player({
       customType: {
         m3u8: function playM3u8(video, url, art) {
           if (Hls.isSupported()) {
-            // if ((art.hls as Hls)?.destroy) (art.hls as Hls).destroy();
-            hls.current = new Hls({
-              ...hlsConfig,
-            });
+            if (!hls.current) {
+              hls.current = new Hls({
+                ...hlsConfig,
+              });
+            }
             hls.current?.loadSource(url); // this load for the initial video
             hls.current?.attachMedia(video);
             (art as any).hls = hls.current;
-            video.addEventListener(
-              "ended",
-              () => {
-                if (hls && nextEpUrl) {
-                  toast.info("Playing next episode m'lord");
-                  const shouldAutoplay = Boolean(
-                    localStorage.getItem("autoplay")
-                  );
-                  if (shouldAutoplay) router.push(nextUrl);
-                }
-              },
-              { signal: controller.signal }
-            );
+
             if (time) {
               video.currentTime = time;
             }
@@ -294,8 +281,15 @@ export default function Player({
     videoRef.current?.focus({
       preventScroll: true,
     });
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => {
+      videoRef.current?.play();
+      setIsPlaying(true)
+    };
+
+    const handlePause = () => {
+      videoRef.current?.pause();
+      setIsPlaying(false)
+    };
 
     videoRef.current.addEventListener("play", handlePlay, {
       signal: controller.signal,
@@ -303,13 +297,18 @@ export default function Player({
     videoRef.current.addEventListener("pause", handlePause, {
       signal: controller.signal,
     });
-    shortcuts.addEventListener(
+    window.addEventListener(
       "keydown",
       (eve) => {
         const key = eve.key;
 
         switch (key) {
           case " ":
+            if (isPlaying) {
+              handlePause();
+            } else {
+              handlePlay();
+            }
             eve.preventDefault();
             break;
           case ".":
@@ -324,16 +323,13 @@ export default function Player({
           case "f":
             if (document.fullscreenElement) {
               document.exitFullscreen();
-              // setInFullscreen(false);
             } else {
               shortcuts.requestFullscreen();
-              // setInFullscreen(true);
             }
             break;
           case "Escape":
             if (document.fullscreenElement) {
               document.exitFullscreen();
-              // setInFullscreen(false);
             }
             break;
         }
@@ -349,15 +345,29 @@ export default function Player({
   }, [videoRef.current, isPlaying]);
 
   useEffect(() => {
+    const controller = new AbortController();
     hls.current?.loadSource(src); // this runs for every subsequent video
     const speed = Number(videoRef.current?.playbackRate) ?? playerOpts.speed;
     if (speed && videoRef.current) {
       videoRef.current.playbackRate = speed;
     }
+    videoRef.current?.addEventListener(
+      "ended",
+      () => {
+        if (hls && nextEpUrl) {
+          toast.info("Playing next episode m'lord");
+          const shouldAutoplay = Boolean(
+            localStorage.getItem("autoplay")
+          );
+          if (shouldAutoplay) router.push(nextUrl);
+        }
+      },
+      { signal: controller.signal }
+    );
     videoRef.current?.focus({
       preventScroll: true,
     });
-  }, [src]);
+  }, [src, nextUrl]);
 
   const [createdShow, setCreatedShow] = useState(false);
 
