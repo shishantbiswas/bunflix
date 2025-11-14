@@ -368,8 +368,8 @@ export default function Player({
     }
     videoRef.current?.addEventListener(
       "ended",
-      () => {
-        if (hls && nextEpUrl) {
+      () => {       
+        if (nextEpUrl) {
           toast.info("Playing next episode m'lord");
           const shouldAutoplay = Boolean(
             localStorage.getItem("autoplay")
@@ -379,7 +379,7 @@ export default function Player({
       },
       { signal: controller.signal }
     );
-    console.log((artRef.current?.plugins.artplayerPluginChapter as Result).update({
+    (artRef.current?.plugins.artplayerPluginChapter as Result).update({
       chapters: [
         {
           title: "Opening Song",
@@ -392,7 +392,7 @@ export default function Player({
           end: outro.end,
         },
       ],
-    }));
+    });
     videoRef.current?.focus({
       preventScroll: true,
     });
