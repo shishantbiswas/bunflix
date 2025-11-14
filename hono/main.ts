@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { auth } from "./lib/auth";
+// import { auth } from "./lib/auth";
 
 const app = new Hono();
 
@@ -16,16 +16,15 @@ app.use("/api/proxy/*", cors({
   origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || ["http://localhost:3000"],
 }));
 
-app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+// app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.get(
   "/",
-  async (c) =>{
-    await c.text("ok", {
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    })}
+  (c) => c.text("ok", {
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  })
 );
 
 app.get("/api/proxy/*", async (c) => {
