@@ -3,13 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Artplayer from "artplayer";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
 import Hls, {
-  FragmentLoaderContext,
   HlsConfig,
-  Loader,
-  LoaderCallbacks,
-  LoaderConfiguration,
-  LoaderContext,
-  PlaylistLoaderContext,
 } from "hls.js";
 import { useShow } from "@/context/show-provider";
 import { indexDB } from "@/lib/index-db";
@@ -18,6 +12,22 @@ import { useRouter, useSearchParams } from "next/navigation";
 import artplayerPluginChapter from "artplayer-plugin-chapter";
 import { toast } from "sonner";
 
+// --------------------- see file node_modules/artplayer-plugin-chapter/types/artplayer-plugin-chapter.d.ts
+type Chapters = {
+  start: number;
+  end: number;
+  title: string;
+}[];
+
+type Option = {
+  chapters?: Chapters;
+};
+
+type Result = {
+  name: 'artplayerPluginChapter';
+  update: (option: Option) => void;
+};
+// ----------------------
 export default function Player({
   data,
   nextEpUrl,
@@ -40,8 +50,10 @@ export default function Player({
     // resolution: "1080",
   });
 
-  const artRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const artRef = useRef<Artplayer | null>(null);
+
   const [isPlaying, setIsPlaying] = useState(false);
 
   class loader extends Hls.DefaultConfig.loader {
@@ -103,9 +115,9 @@ export default function Player({
 
   useEffect(() => {
     const controller = new AbortController();
-    const art = new Artplayer({
+    artRef.current = new Artplayer({
       url: src,
-      container: artRef.current!,
+      container: containerRef.current!,
       setting: true,
       fullscreen: true,
       fullscreenWeb: true,
@@ -168,7 +180,9 @@ export default function Player({
               switch: true,
               onSwitch: function (item) {
                 item.tooltip = item.switch ? "Hide" : "Show";
-                art.subtitle.show = !item.switch;
+                if (artRef.current) {
+                  artRef.current.subtitle.show = !item.switch;
+                }
                 return !item.switch;
               },
             },
@@ -181,7 +195,8 @@ export default function Player({
             }),
           ],
           onSelect: function (item) {
-            art.subtitle.switch(item.url, {
+            if (!artRef.current) return;
+            artRef.current.subtitle.switch(item.url, {
               name: item.html,
             });
             return item.html;
@@ -202,11 +217,11 @@ export default function Player({
             },
           ],
           onSelect: function (item) {
-            console.info(item);
+            if (!artRef.current) return;
             const speed = Number((item.html as string).charAt(0));
-            art.storage.set("speed", speed);
+            artRef.current.storage.set("speed", speed);
             setPlayerOpts({ ...playerOpts, speed });
-            art.video.playbackRate = speed;
+            artRef.current.video.playbackRate = speed;
             return item.html;
           },
         },
@@ -262,8 +277,8 @@ export default function Player({
 
     return () => {
       controller.abort();
-      if (art && art.destroy) {
-        art.destroy(false);
+      if (artRef.current && artRef.current.destroy) {
+        artRef.current.destroy(false);
       }
       if (hls) {
         hls.current?.destroy();
@@ -272,11 +287,11 @@ export default function Player({
   }, []);
 
   useEffect(() => {
-    if (!artRef.current || !videoRef.current) return;
+    if (!containerRef.current || !videoRef.current) return;
 
     const controller = new AbortController();
 
-    const shortcuts = artRef.current;
+    const shortcuts = containerRef.current;
 
     videoRef.current?.focus({
       preventScroll: true,
@@ -364,6 +379,20 @@ export default function Player({
       },
       { signal: controller.signal }
     );
+    console.log((artRef.current?.plugins.artplayerPluginChapter as Result).update({
+      chapters: [
+        {
+          title: "Opening Song",
+          start: intro.start,
+          end: intro.end,
+        },
+        {
+          title: "Ending Song",
+          start: outro.start,
+          end: outro.end,
+        },
+      ],
+    }));
     videoRef.current?.focus({
       preventScroll: true,
     });
@@ -426,7 +455,7 @@ export default function Player({
 
   return (
     <div
-      ref={artRef}
+      ref={containerRef}
       tabIndex={1}
       className="w-full sm:p-4 h-[300px] sm:h-[350px] md:h-[450px] lg:h-[550px] xl:h-[600px] focus:outline-0 focus-within:outline-0"
     />

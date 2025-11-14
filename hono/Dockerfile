@@ -10,6 +10,6 @@ ENV PORT=${PORT:-3001}
 
 EXPOSE ${PORT}
 
-RUN bun install --production
+RUN bun install
 CMD ["bun", "run", "start"]
 

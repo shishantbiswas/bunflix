@@ -13,7 +13,7 @@ export async function generateMetadata({
 
   const data: AniwatchInfo = await fetchAniwatchId(id);
 
-  const title = `${num ? `${num}` : "1"}  - ${data.data.anime?.info.name}`;
+  const title = `${num ? `${num}` : "1"}  - ${data.data?.anime?.info.name}`;
   return {
     title,
     description: data.data.anime?.info.description,
