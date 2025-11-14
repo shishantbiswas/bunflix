@@ -65,6 +65,7 @@ export default async function Anime({
       <div className="flex lg:flex-row flex-col">
         <AniwatchPlayer
           nextEpUrl={episode.data.episodes[epNum + 1]?.episodeId}
+          prevEpUrl={episode.data.episodes[epNum - 1]?.episodeId}
           episodeId={id}
           lang={lang}
           ep={ep}

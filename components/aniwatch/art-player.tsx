@@ -32,9 +32,11 @@ type Result = {
 export default function Player({
   data,
   nextEpUrl,
+  prevEpUrl,
 }: {
   data: AniwatchEpisodeSrc;
   nextEpUrl?: string;
+  prevEpUrl?: string;
 
   getInstance?: (art: Artplayer) => void;
 }) {
@@ -108,17 +110,19 @@ export default function Player({
   const lang = searchParams.get("lang") ?? "jp";
   const num = Number(searchParams.get("num")) ?? 0;
   const nextUrl = `/watch/${nextEpUrl}&${lang ? "lang=" + lang : ""}&${num ? "num=" + (num + 1) : ""}`;
+  const prevUrl = `/watch/${prevEpUrl}&${lang ? "lang=" + lang : ""}&${num ? "num=" + (num - 1) : ""}`;
 
   function playNext() {
     toast.info("Playing next episode m'lord");
-    const shouldAutoplay = Boolean(
-      localStorage.getItem("autoplay")
-    );
-    if (shouldAutoplay) {
-      startTransition(() => {
-        router.push(nextUrl);
-      })
-    }
+    startTransition(() => {
+      router.push(nextUrl);
+    })
+  }
+  function playPrevious() {
+    toast.info("Playing previous episode m'lord");
+    startTransition(() => {
+      router.push(prevUrl);
+    })
   }
 
   Artplayer.PLAYBACK_RATE = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25];
@@ -217,6 +221,32 @@ export default function Player({
         },
       ],
       controls: [
+        {
+          name: "prev",
+          html: "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-skip-back-icon lucide-skip-back'><path d='M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z'/><path d='M3 20V4'/></svg>",
+          tooltip: "Previous",
+          position: "left",
+          disable: !Boolean(prevEpUrl),
+          click: function () {
+            if (!artRef.current) return;
+            if (!prevEpUrl) return;
+            artRef.current.notice.show = "Playing previous episode";
+            playPrevious();
+          },
+        },
+        {
+          name: "next",
+          html: "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-skip-forward-icon lucide-skip-forward'><path d='M21 4v16'/><path d='M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z'/></svg>",
+          tooltip: "Next",
+          position: "right",
+          disable: !Boolean(nextEpUrl),
+          click: function () {
+            if (!artRef.current) return;
+            if (!nextEpUrl) return;
+            artRef.current.notice.show = "Playing next episode";
+            playNext();
+          },
+        },
         {
           name: "speed",
           position: "right",
@@ -346,13 +376,24 @@ export default function Player({
             break;
           case ".":
             videoRef.current!.currentTime += 5;
+            art.notice.show = `${art.currentTime} / ${art.duration}`;
             break;
           case ",":
             videoRef.current!.currentTime -= 5;
+            art.notice.show = `${art.currentTime} / ${art.duration}`;
             break;
           case "=":
             videoRef.current!.playbackRate = 1;
             art.notice.show = "Speed reset to 1x";
+            break;
+          case "s":
+            art.notice.show = "";
+            if (art.subtitle.show) {
+              art.notice.show = "Subtitle off";
+            } else {
+              art.notice.show = "Subtitle on";
+            }
+            art.subtitle.show = !art.subtitle.show;
             break;
           case "f":
             if (document.fullscreenElement) {
@@ -362,8 +403,22 @@ export default function Player({
             }
             break;
           case "n":
+            if (!nextEpUrl) return;
             art.notice.show = "Playing next episode";
             playNext();
+            break;
+          case "p":
+            if (!prevEpUrl) return;
+            art.notice.show = "Playing previous episode";
+            playPrevious();
+            break;
+          case "[":
+            art.video.playbackRate -= (0.1);
+            art.notice.show = `Speed to ${art.video.playbackRate.toFixed(1)}x`;
+            break;
+          case "]":
+            art.video.playbackRate += 0.1;
+            art.notice.show = `Speed to ${art.video.playbackRate.toFixed(1)}x`;
             break;
           case "m":
             if (art.fullscreenWeb) {

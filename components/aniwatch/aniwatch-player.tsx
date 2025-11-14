@@ -8,10 +8,12 @@ export default async function AniwatchPlayer({
   ep,
   lang,
   nextEpUrl,
+  prevEpUrl,
 }: {
   episodeId: string;
   ep: string;
   nextEpUrl?: string;
+  prevEpUrl?: string;
   lang: "en" | "jp";
 }) {
   if (!ep) return;
@@ -57,7 +59,7 @@ export default async function AniwatchPlayer({
     Sentry.captureException(err);
     throw err;
   }
-  return <Player nextEpUrl={nextEpUrl} data={srcData} />;
+  return <Player nextEpUrl={nextEpUrl} prevEpUrl={prevEpUrl} data={srcData} />;
 }
 
 async function getAniwatchEpisodeSrcWithBackoff(
