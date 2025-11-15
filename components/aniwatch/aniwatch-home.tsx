@@ -15,6 +15,10 @@ export default function AniwatchHome({
 }) {
   const [date, setDate] = useState(data.top10Animes.week);
   const widthPreference = useLiveQuery(() => indexDB.userPreferences.get(1));
+  const watchHistory = useLiveQuery(() => indexDB.watchHistory.toArray());
+
+  const titlesInHistory = watchHistory?.map((history) => history.show.name) ?? [];
+
   const [menu, setMenu] = useState<{
     open: boolean;
     x: number;
@@ -42,14 +46,15 @@ export default function AniwatchHome({
       <div className="lg:flex">
         <div
           className={`grid align-top self-start gap-4 md:gap-3 p-4 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  md:grid-cols-4 
-          ${
-            widthPreference && widthPreference.centerContent == true
+          ${widthPreference && widthPreference.centerContent == true
               ? ""
               : "xl:grid-cols-5"
-          }
+            }
           w-full motion-delay-150`}
         >
-          {data.latestEpisodeAnimes.map((episode, i) => (
+          {data.latestEpisodeAnimes
+          .sort((a, b) => Number(titlesInHistory.includes(b.name)) - Number(titlesInHistory.includes(a.name)))
+          .map((episode, i) => (
             <AniwatchAnimeCard
               setMenu={setMenu}
               episode={{ ...episode, rating: "" }}
@@ -176,9 +181,8 @@ function PreviouslyWatching() {
             .map(({ show: episode, ep, lang, time, duration, epNum }, i) => (
               <Link
                 key={episode.id + i}
-                href={`/watch/${episode.id}?ep=${ep}&lang=${lang}&num=${
-                  epNum || 0
-                }&t=${time}`}
+                href={`/watch/${episode.id}?ep=${ep}&lang=${lang}&num=${epNum || 0
+                  }&t=${time}`}
                 className="min-w-[150px] w-full lg:w-full h-[300px] rounded-md overflow-hidden group  relative text-end"
               >
                 <img

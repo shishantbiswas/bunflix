@@ -504,55 +504,53 @@ export default function Player({
 
 
   useEffect(() => {
-    if (!isPlaying || !show) return;
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !show) return;
 
     const controller = new AbortController();
 
-    video?.addEventListener("timeupdate", (eve) => {
-      if (existingShow) {
-        indexDB.watchHistory.get(showId).then((savedShow) => {
-          if (!savedShow) {
-            indexDB.watchHistory.add({
-              id: showId,
-              ep: show.ep,
-              lang: show.lang,
-              updatedAt: new Date(),
-              epNum: show.epNum,
-              time: Math.trunc(video.currentTime),
-              duration: video.duration,
-              show: {
-                duration: show.data.anime.moreInfo.duration,
-                episodes: {// retain resolutionspeed
-                  dub: Number(show.data.anime.info.stats.episodes.dub),
-                  sub: Number(show.data.anime.info.stats.episodes.sub),
-                },
-                poster: show.data.anime.info.poster,
-                id: show.data.anime.info.id,
-                name: show.data.anime.info.name,
-                rating: show.data.anime.info.stats.rating,
-                type: show.data.anime.info.stats.type,
-              },
-            });
-            return;
-          }
-          indexDB.watchHistory.update(showId, {
-            time: Math.trunc(video.currentTime),
-            duration: video.duration,
-            epNum: show.epNum,
+    video.addEventListener("timeupdate", (eve) => {
+      indexDB.watchHistory.get(showId).then((savedShow) => {
+        if (!savedShow) {
+          indexDB.watchHistory.add({
+            id: showId,
+            ep: show.ep,
             lang: show.lang,
             updatedAt: new Date(),
-            ep: show.ep,
+            epNum: show.epNum,
+            time: Math.trunc(video.currentTime),
+            duration: video.duration,
+            show: {
+              duration: show.data.anime.moreInfo.duration,
+              episodes: {// retain resolutionspeed
+                dub: Number(show.data.anime.info.stats.episodes.dub),
+                sub: Number(show.data.anime.info.stats.episodes.sub),
+              },
+              poster: show.data.anime.info.poster,
+              id: show.data.anime.info.id,
+              name: show.data.anime.info.name,
+              rating: show.data.anime.info.stats.rating,
+              type: show.data.anime.info.stats.type,
+            },
           });
+          return;
+        }
+        indexDB.watchHistory.update(showId, {
+          time: Math.trunc(video.currentTime),
+          duration: video.duration,
+          epNum: show.epNum,
+          lang: show.lang,
+          updatedAt: new Date(),
+          ep: show.ep,
         });
-      }
+      });
+
     }, { signal: controller.signal });
 
     return () => {
       controller.abort();
     };
-  }, [isPlaying, artRef.current, videoRef.current]);
+  }, [artRef.current, videoRef.current]);
 
   useEffect(() => {
     if (!artRef.current || !videoRef.current) return;

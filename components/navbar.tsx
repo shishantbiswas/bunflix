@@ -34,49 +34,28 @@ export default function Navbar() {
   const y = useWindowScroll(60);
   const settings = useLiveQuery(() => indexDB.userPreferences.get(1));
   const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [navbarY, setNavbarY] = useState(0);
-  const navbarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const SCROLL_OFFSET = 100; // Offset in pixels before navbar starts showing
-    const DEBOUNCE_DELAY = 100; // Debounce delay in milliseconds
-
-    // Debounce function to limit the rate at which the scroll handler is called
-    const debounce = (func: () => void, wait: number) => {
-      let timeout: NodeJS.Timeout;
-      return () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(), wait);
-      };
-    };
+    let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const navbarHeight = navbarRef.current?.offsetHeight || 0;
 
-      // Only update state if scroll position changes by more than 5 pixels
-      if (Math.abs(currentScrollY - lastScrollTop) < 5) return;
-
-      // If scrolled down more than the offset and scrolling down
-      if (currentScrollY > SCROLL_OFFSET && currentScrollY > lastScrollTop) {
+      if (currentScrollY > lastScrollY) {
         setIsScrollingDown(true);
-        setNavbarY(-navbarHeight);
-      }
-      // If scrolling up
-      else if (currentScrollY < lastScrollTop) {
+      } else {
         setIsScrollingDown(false);
-        setNavbarY(0);
       }
 
-      setLastScrollTop(currentScrollY <= 0 ? 0 : currentScrollY);
+      lastScrollY = currentScrollY;
     };
 
-    const debouncedScroll = debounce(handleScroll, DEBOUNCE_DELAY);
+    window.addEventListener("scroll", handleScroll);
 
-    window.addEventListener('scroll', debouncedScroll, { passive: true });
-    return () => window.removeEventListener('scroll', debouncedScroll);
-  }, [lastScrollTop]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navLinks: LinkArray[] = [
     {
@@ -103,16 +82,6 @@ export default function Navbar() {
       linkName: "Popular Movies",
       href: "/categories/popular%20Movies/movie",
     },
-    // {
-    //   icon: <CrownIcon color="white" className=" size-4" />,
-    //   linkName: "Most Favorite Anime",
-    //   href: "/anime-categories?type=most-favorite",
-    // },
-    // {
-    //   icon: <Badge color="white" className=" size-4" />,
-    //   linkName: "Anime Movie",
-    //   href: "/anime-categories?type=movie",
-    // },
     {
       icon: <Badge color="white" className=" size-4" />,
       linkName: "Netflix",
@@ -130,22 +99,14 @@ export default function Navbar() {
     },
   ].map((link, i) => ({ ...link, id: i + 1 }));
 
-  const navClass = `bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${settings && settings.centerContent == true ? "xl:w-[76rem]" : ""
-    } ${settings && !settings.disableFloatingNavbar && y > 90
-      ? "w-[calc(100%_-_30px)] mt-4 rounded-lg"
-      : "w-full"
-    }
-        ${isScrollingDown ? "-translate-y-96" : ""} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `
-
   return (
     <section className="h-20   w-full relative sm:flex justify-center hidden">
       <nav
-        ref={navbarRef}
-        className={navClass}
-        style={{
-          transform: `translateY(${isScrollingDown ? navbarY : 0}px)`,
-          transition: 'transform 0.3s ease-in-out',
-        }}
+        className={`bg-black/30 backdrop-blur-sm h-20 transition-all delay-500 duration-[500ms] ${settings && settings.centerContent == true ? "xl:w-[76rem]" : ""
+          } ${settings && !settings.disableFloatingNavbar && y > 90
+            ? "w-[calc(100%_-_30px)] mt-4 rounded-lg"
+            : "w-full"
+          } ${isScrollingDown ? "-translate-y-96" : ""} px-6 fixed mb-20 z-500 top-0 flex items-center justify-between `}
       >
         <div className="flex items-center">
           <img
