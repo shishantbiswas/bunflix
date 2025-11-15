@@ -356,6 +356,15 @@ export default function Player({
     videoRef.current.addEventListener("pause", handlePause, {
       signal: controller.signal,
     });
+
+    const formatTime = (time: number) => {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      return `${formattedMinutes}:${formattedSeconds}`;
+    }
+
     window.addEventListener(
       "keydown",
       (eve) => {
@@ -376,11 +385,13 @@ export default function Player({
             break;
           case ".":
             videoRef.current!.currentTime += 5;
-            art.notice.show = `${art.currentTime.toFixed(2)} / ${art.duration.toFixed(2)}`;
+            const currentTimeFormatted = formatTime(art.currentTime);
+            const durationFormatted = formatTime(art.duration);
+            art.notice.show = `${currentTimeFormatted} / ${durationFormatted}`;
             break;
           case ",":
             videoRef.current!.currentTime -= 5;
-            art.notice.show = `${art.currentTime.toFixed(2)} / ${art.duration.toFixed(2)}`;
+            art.notice.show = `${formatTime(art.currentTime)} / ${formatTime(art.duration)}`;
             break;
           case "=":
             videoRef.current!.playbackRate = 1;
@@ -481,7 +492,11 @@ export default function Player({
     videoRef.current?.focus({
       preventScroll: true,
     });
-  }, [src, nextUrl]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [src, nextUrl, videoRef.current]);
 
   const [createdShow, setCreatedShow] = useState(false);
 
@@ -539,53 +554,63 @@ export default function Player({
   }, [isPlaying, createdShow]);
 
   useEffect(() => {
-    if (!artRef.current) return;
+    if (!artRef.current || !videoRef.current) return;
     const art = artRef.current;
-    const currentTime = art.currentTime;   
+    const video = videoRef.current;
+    const controller = new AbortController();
+    
+    video.addEventListener("timeupdate", () => {
+      let inChapter = false;
+      let section = "";
 
-    let inChapter = false;
-    let section = "";
+      const currentTime = video.currentTime;
 
-    if (currentTime > intro.start && currentTime < intro.end) {
-      inChapter = true;
-      section = "intro";
-    }
-    if (currentTime > outro.start && currentTime < outro.end) {
-      inChapter = true;
-      section = "outro";
-    }
-    if (art.layers['skip']) {
-      art.layers.update({
-        name: 'skip',
-        html: `<button class="bg-red-600 text-white px-4 py-2 rounded cursor-pointer capitalize">Skip ${section}</button>`,
-        style: {
-          display: inChapter ? 'block' : 'none',
-          bottom: '5rem',
-          right: '3rem',
-          position: 'absolute',
-
-        },
-        click: function () {
-          if (!videoRef.current) return;
-          videoRef.current.currentTime = section === "intro" ? intro.end : outro.end;
-        },
-      });
-      return;
-    }
-    if (inChapter) {
-      art.layers.add({
-        name: 'skip',
-        style: {
-          display: 'none',
-        },
-      });
-    } else {
-      if (art.layers['skip']) {
-        art.layers.remove('skip');
+      if (currentTime > intro.start && currentTime < intro.end) {
+        inChapter = true;
+        section = "intro";
       }
-    }
+      if (currentTime > outro.start && currentTime < outro.end) {
+        inChapter = true;
+        section = "outro";
+      }
 
-  }, [artRef.current?.currentTime]);
+      if (art.layers['skip']) {
+        art.layers.update({
+          name: 'skip',
+          disable: !inChapter,
+          html: `<button class="bg-red-600 text-white px-4 py-2 rounded cursor-pointer capitalize">Skip ${section}</button>`,
+          style: {
+            display: inChapter ? 'block' : 'none',
+            bottom: '5rem',
+            right: '3rem',
+            position: 'absolute',
+
+          },
+          click: function () {
+            video.currentTime = section === "intro" ? intro.end : outro.end;
+          },
+        });
+        return;
+      }
+      if (inChapter) {
+        art.layers.add({
+          name: 'skip',
+          style: {
+            display: 'none',
+          },
+        });
+      } else {
+        if (art.layers['skip']) {
+          art.layers.remove('skip');
+        }
+      }
+    }, { signal: controller.signal });
+
+    return () => {
+      controller.abort();
+    };
+
+  }, [artRef.current, videoRef.current]);
 
   return (
     <div
