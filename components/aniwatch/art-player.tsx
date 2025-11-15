@@ -463,9 +463,13 @@ export default function Player({
     const controller = new AbortController();
     hls.current?.loadSource(src); // this runs for every subsequent video
     const speed = Number(videoRef.current?.playbackRate) ?? playerOpts.speed;
-    if (speed && videoRef.current) {
-      videoRef.current.playbackRate = speed;
+    if (speed && artRef.current) {
+      artRef.current.video.playbackRate = speed ?? artRef.current.video.playbackRate;
     }
+    if (artRef.current && artRef.current.hls) {
+      (artRef.current.hls as Hls).currentLevel = Number(artRef.current.storage.get("speed")) ?? (artRef.current.hls as Hls).currentLevel ?? artRef.current.video.playbackRate;
+    }
+
     videoRef.current?.addEventListener(
       "ended",
       () => {
@@ -498,67 +502,64 @@ export default function Player({
     };
   }, [src, nextUrl, videoRef.current]);
 
-  const [createdShow, setCreatedShow] = useState(false);
-
-  useEffect(() => {
-    if (existingShow) {
-      setCreatedShow(true);
-    }
-  }, [existingShow]);
 
   useEffect(() => {
     if (!isPlaying || !show) return;
-    const interval = setInterval(() => {
-      if (videoRef.current && !videoRef.current.paused) {
-        if (createdShow) {
-          indexDB.watchHistory.get(showId).then((currentShow) => {
-            if (!currentShow || !videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-            indexDB.watchHistory.update(showId, {
-              time: Math.trunc(videoRef.current.currentTime),
-              duration: currentShow.duration,
-              epNum: show.epNum,
+    const controller = new AbortController();
+
+    video?.addEventListener("timeupdate", (eve) => {
+      if (existingShow) {
+        indexDB.watchHistory.get(showId).then((savedShow) => {
+          if (!savedShow) {
+            indexDB.watchHistory.add({
+              id: showId,
+              ep: show.ep,
               lang: show.lang,
               updatedAt: new Date(),
-              ep: show.ep,
+              epNum: show.epNum,
+              time: Math.trunc(video.currentTime),
+              duration: video.duration,
+              show: {
+                duration: show.data.anime.moreInfo.duration,
+                episodes: {// retain resolutionspeed
+                  dub: Number(show.data.anime.info.stats.episodes.dub),
+                  sub: Number(show.data.anime.info.stats.episodes.sub),
+                },
+                poster: show.data.anime.info.poster,
+                id: show.data.anime.info.id,
+                name: show.data.anime.info.name,
+                rating: show.data.anime.info.stats.rating,
+                type: show.data.anime.info.stats.type,
+              },
             });
-          });
-        } else {
-          indexDB.watchHistory.add({
-            id: showId,
-            ep: show.ep,
+            return;
+          }
+          indexDB.watchHistory.update(showId, {
+            time: Math.trunc(video.currentTime),
+            duration: video.duration,
+            epNum: show.epNum,
             lang: show.lang,
             updatedAt: new Date(),
-            epNum: show.epNum,
-            time: Math.trunc(videoRef.current.currentTime),
-            duration: videoRef.current.duration,
-            show: {
-              duration: show.data.anime.moreInfo.duration,
-              episodes: {
-                dub: Number(show.data.anime.info.stats.episodes.dub),
-                sub: Number(show.data.anime.info.stats.episodes.sub),
-              },
-              poster: show.data.anime.info.poster,
-              id: show.data.anime.info.id,
-              name: show.data.anime.info.name,
-              rating: show.data.anime.info.stats.rating,
-              type: show.data.anime.info.stats.type,
-            },
+            ep: show.ep,
           });
-          setCreatedShow(true);
-        }
+        });
       }
-    }, 5000);
+    }, { signal: controller.signal });
 
-    return () => clearInterval(interval);
-  }, [isPlaying, createdShow]);
+    return () => {
+      controller.abort();
+    };
+  }, [isPlaying, artRef.current, videoRef.current]);
 
   useEffect(() => {
     if (!artRef.current || !videoRef.current) return;
     const art = artRef.current;
     const video = videoRef.current;
     const controller = new AbortController();
-    
+
     video.addEventListener("timeupdate", () => {
       let inChapter = false;
       let section = "";
@@ -578,7 +579,7 @@ export default function Player({
         art.layers.update({
           name: 'skip',
           disable: !inChapter,
-          html: `<button class="bg-red-600 text-white px-4 py-2 rounded cursor-pointer capitalize">Skip ${section}</button>`,
+          html: `<button class="bg-red-600 text-white px-4 py-2 rounded cursor-pointer capitalize z-50 font-bold focus:outline-none focus:ring-2 focus:ring-white">Skip ${section}</button>`,
           style: {
             display: inChapter ? 'block' : 'none',
             bottom: '5rem',
@@ -588,6 +589,8 @@ export default function Player({
           },
           click: function () {
             video.currentTime = section === "intro" ? intro.end : outro.end;
+            art.notice.show = `Skipped ${section}`;
+            art.play();
           },
         });
         return;

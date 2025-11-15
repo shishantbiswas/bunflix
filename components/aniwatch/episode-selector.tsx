@@ -15,7 +15,7 @@ export default function EpisodeSelector({
     lang ? lang : "jp"
   );
 
-  const [grid, setGrid] = useState(episode.data.episodes.length > 24 ? false : true);
+  const [grid, setGrid] = useState(episode.data.episodes.length < 24 ? false : true);
 
   const { show: data } = useShow();
 
