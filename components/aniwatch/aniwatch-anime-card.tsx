@@ -1,13 +1,8 @@
 "use client"
 
-import { MicIcon, CaptionsIcon, HistoryIcon, Clock, Check } from "lucide-react"
-import Link from "../link"
-import { indexDB, WatchedShows, WatchLater } from "@/lib/index-db"
+import { MicIcon, CaptionsIcon, Clock, Check } from "lucide-react"
+import { indexDB } from "@/lib/index-db"
 import { useLiveQuery } from "dexie-react-hooks"
-import useLongPress from "@/hooks/useLongPress"
-import { useRouter } from "next/navigation"
-import { MouseEvent, useRef } from "react"
-import { useGlobalTransition } from "@/context/transition-context"
 
 export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: {
   episode: {
@@ -30,29 +25,17 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
   const watchHistory = useLiveQuery(() => indexDB.watchLater.toArray());
   const watchedShows = useLiveQuery(() => indexDB.watchedShows.toArray());
 
-  const router = useRouter();
-  const ref = useRef<MouseEvent<HTMLDivElement, globalThis.MouseEvent> | null>(null);
-  const { startTransition } = useGlobalTransition();
-
-  const hold = useLongPress({
-    onLongPress: () => {
-      if (!ref.current) return
+  return (
+    <button
+    onClick={(e) => {
       setMenu({
-        open: true, x: ref.current.pageX, y: ref.current.pageY, show: {
+        open: true, x: e.pageX, y: e.pageY, show: {
           ...episode,
           rating: "",
           duration: ""
         }
       })
-    }, onClick: () => {
-      startTransition(() => router.push(`/watch/${episode.id}`)
-      )
-    }
-  }, { delay: 800 });
-
-  return (
-    <button
-      {...hold}
+    }}
       className={`appearance-none cursor-pointer ${widthClassName ? widthClassName : "min-w-[150px] w-full lg:w-full"} h-[300px] rounded-md overflow-hidden group hover:scale-[105%] hover:border-2  border-red-600 transition-transform hover:z-50 relative text-end ${settings && settings.hideWatchedShows && watchedShows?.some((show) => show.id == episode.id) ? "hidden" : "block"}`}
     >
       <img fetchPriority="low" loading="lazy"
@@ -61,9 +44,6 @@ export default function AniwatchAnimeCard({ episode, setMenu, widthClassName }: 
         alt={episode.name}
       />
       <div
-        onMouseEnter={(e) => {
-          ref.current = e;
-        }}
         onContextMenu={(e) => {
           e.preventDefault();
           setMenu({

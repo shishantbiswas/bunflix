@@ -353,6 +353,7 @@ export default function Player({
     };
   }, []);
 
+  // handle play and pause
   useEffect(() => {
     if (!containerRef.current || !videoRef.current) return;
 
@@ -482,6 +483,7 @@ export default function Player({
     };
   }, [videoRef.current, isPlaying]);
 
+  // load video on src change
   useEffect(() => {
     const controller = new AbortController();
     hls.current?.loadSource(src); // this runs for every subsequent video
@@ -536,10 +538,11 @@ export default function Player({
     };
   }, [src, nextUrl, videoRef.current]);
 
-
+  // update watch history
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !show) return;
+    console.log(show.data.anime.info.stats);
 
     const controller = new AbortController();
 
@@ -564,7 +567,7 @@ export default function Player({
               id: show.data.anime.info.id,
               name: show.data.anime.info.name,
               rating: show.data.anime.info.stats.rating,
-              type: show.data.anime.info.stats.type,
+              type: show.data.anime.info.stats.type === "1h" ? "movie" : show.data.anime.info.stats.type,
             },
           });
           return;
@@ -586,6 +589,7 @@ export default function Player({
     };
   }, [artRef.current, videoRef.current, show]);
 
+  // show skip button for chapters
   useEffect(() => {
     if (!artRef.current || !videoRef.current) return;
     const art = artRef.current;
